@@ -16,17 +16,17 @@ Số tính bằng `src/lab13.py`. Mọi con số tính từ cột `_simulated` g
 
 | Khoản | Số tiền (đ) | Nguồn | Nhãn |
 | --- | ---: | --- | --- |
-| Token | 245.585 | `logix_runs.csv` | đo từ trace |
-| Tool | 84.000 | `logix_runs.csv` | đo từ trace |
-| Trong đó, phần của lần chạy thứ 2 và 3 | 93.804 | attempt lớn hơn 1 | đo từ trace |
-| Xem lại | 1.780.000 | `phut_xem_lai_simulated` | simulated |
-| Làm lại | 2.264.000 | `phut_lam_lai_simulated` | simulated |
-| Tổng chi phí | 4.373.585 | | |
-| Số việc thành công | 978 | `ket_qua` | |
-| Chi phí mỗi việc thành công | 4.472 | | |
-| Hoá đơn token và tool chia cho số yêu cầu | 274,7 | | |
+| Token | 245.585 | `logix_runs.csv`: 5.771.712 token vào ÷ 1.000 × 26 + 734.774 token ra ÷ 1.000 × 130, mọi 1.624 lần chạy (kể cả `loi`) | đo từ trace |
+| Tool | 84.000 | `logix_runs.csv`: 5.600 lần gọi × 15 | đo từ trace |
+| Trong đó, phần của lần chạy thứ 2 và 3 | 93.804 | `logix_runs.csv`: 424 lần chạy có attempt lớn hơn 1 | đo từ trace |
+| Xem lại | 1.780.000 | `phut_xem_lai_simulated`: 890 phút × 2.000 | simulated |
+| Làm lại | 2.264.000 | `phut_lam_lai_simulated`: 1.132 phút × 2.000 | simulated |
+| Tổng chi phí | 4.373.585 | Token + Tool + Xem lại + Làm lại | có phần simulated |
+| Số việc thành công | 978 | `ket_qua` bằng `thanh_cong` | đo từ dữ liệu |
+| Chi phí mỗi việc thành công | 4.472 | 4.373.585 ÷ 978 | simulated |
+| Hoá đơn token và tool chia cho số yêu cầu | 274,7 | (245.585 + 84.000) ÷ 1.200 | đo từ trace |
 
-> **Người kiểm số (Nhài):** điền cột Nguồn và Nhãn cho 4 dòng cuối. Dòng "Chi phí mỗi việc thành công" bắt buộc có nhãn `simulated` vì tử số chứa hai cột `_simulated`. Trước khi điền, tính tay 890 phút × 2.000 đ và 1.132 phút × 2.000 đ để đối chiếu hai dòng xem lại / làm lại.
+Kiểm số (người kiểm số): tính tay độc lập cả 9 dòng từ tổng cột CSV, khớp output `python lab13.py`, lệch 0%.
 
 - Chi phí mỗi việc thành công gấp bao nhiêu lần "hoá đơn chia số yêu cầu"? 4.472 đ so với 274,7 đ, tức **gấp 16,3 lần** [simulated]. Phần chênh là giờ nhân viên, khoản mà hoá đơn token không nhìn thấy.
 - Khoản nào chiếm tỉ trọng lớn nhất trong tổng chi phí, bao nhiêu phần trăm? **Làm lại: 2.264.000 đ = 51,8%** [simulated], tiếp theo là xem lại 1.780.000 đ = 40,7%. Giờ nhân viên chiếm 92,5% tổng chi phí; token và tool chỉ 7,5%.
@@ -69,17 +69,18 @@ Ba con số của phạm vi, **đừng lẫn vào nhau** khi ghi mục 3 của h
 
 | Kịch bản | Cách tính | Chi phí mỗi việc thành công | Thay đổi (%) |
 | --- | --- | ---: | ---: |
-| Giá token gấp đôi | 52 đ và 260 đ cho 1.000 token; giá tool giữ nguyên | ... | ... |
-| Giá token giảm một nửa | 13 đ và 65 đ | ... | ... |
-| Tỉ lệ xem lại gấp đôi | Tiền xem lại × 2 | ... | ... |
-| Tỉ lệ xem lại giảm một nửa | Tiền xem lại ÷ 2 | ... | ... |
-| Số ca làm lại gấp đôi | Tiền làm lại × 2 | ... | ... |
-| Số ca làm lại giảm một nửa | Tiền làm lại ÷ 2 | ... | ... |
-| Lương nhân viên tăng 25% | 2.500 đ mỗi phút | ... | ... |
-| Chỉ cho chạy tối đa 2 lần | Bỏ lần chạy có attempt > 2; yêu cầu có so_lan_chay > 2 coi là chuyen_nhan_vien | ... | ... |
-| Chỉ cho chạy 1 lần | Như trên với giới hạn 1 | ... | ... |
+| Giá token gấp đôi | 52 đ và 260 đ cho 1.000 token; giá tool giữ nguyên | 4.723 đ | +5,6% |
+| Giá token giảm một nửa | 13 đ và 65 đ | 4.346 đ | −2,8% |
+| Tỉ lệ xem lại gấp đôi | Tiền xem lại × 2 | 6.292 đ | +40,7% |
+| Tỉ lệ xem lại giảm một nửa | Tiền xem lại ÷ 2 | 3.562 đ | −20,3% |
+| Số ca làm lại gấp đôi | Tiền làm lại × 2 | 6.787 đ | +51,8% |
+| Số ca làm lại giảm một nửa | Tiền làm lại ÷ 2 | 3.315 đ | −25,9% |
+| Lương nhân viên tăng 25% | 2.500 đ mỗi phút | 5.506 đ | +23,1% |
+| Chỉ cho chạy tối đa 2 lần | Bỏ lần chạy có attempt > 2; yêu cầu có so_lan_chay > 2 coi là chuyen_nhan_vien | 4.237 đ | −5,2% |
+| Chỉ cho chạy 1 lần | Như trên với giới hạn 1 | 4.111 đ | −8,1% |
 
-> **Người kiểm số (Nhài):** chạy `cd src && python lab13.py`, phần `B1 · Độ nhạy` in sẵn 9 dòng (chi phí và % thay đổi so với gốc 4.472 đ). Nhập vào bảng trên, rồi **kiểm tính đối xứng**: mỗi kịch bản "giảm một nửa" phải làm chi phí giảm đúng bằng nửa mức tăng của kịch bản "gấp đôi" tương ứng. Không đúng thì code sai, báo lại người viết code. Mọi dòng ghi nhãn [simulated].
+Gốc (A2): 4.472 đ. Mọi dòng là số [simulated] vì chi phí mỗi việc thành công có phần tính từ hai cột `_simulated`.
+Kiểm đối xứng (người kiểm số): token +5,6% ↔ −2,8% · xem lại +40,7% ↔ −20,3% · làm lại +51,8% ↔ −25,9%; mỗi kịch bản "giảm một nửa" giảm đúng nửa mức tăng của "gấp đôi" (sai lệch ≤ 0,05 điểm do làm tròn) → code đúng.
 
 ## B2 · Đổi một cặp và xếp hạng
 
