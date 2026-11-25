@@ -59,6 +59,12 @@ Một điểm hội đồng ghi lại để nhóm tham khảo, không trừ đi�
 
 **4mems trả lời (ghi tại buổi):**
 
+> *Ghi sau buổi duyệt chéo. Nội dung dưới đây là câu trả lời của chính nhóm 4mems, dẫn lại từ `report/team/pilot_plan.yaml` và điều kiện 3 của `ho_so_launch_v0.md` sau khi đã sửa theo phiếu. Không phải bản ghi âm, không ghi thay lời nhóm teamrandom.*
+
+Ngưỡng ra quyết định thật là **5.980 yêu cầu thực tế mỗi nhóm** (`m ≥ 299` yêu cầu/người × 20 người). Con số **859** là **cỡ mẫu hiệu dụng**, tức 5.980 chia hệ số thiết kế **6,96**; hai số nói về cùng một điều kiện chứ không phải hai ngưỡng khác nhau. Hội đồng đúng ở chỗ điều kiện 3 của hồ sơ chỉ ghi 859 nên đọc ra thành số yêu cầu phải thu, mâu thuẫn với mục 6 của chính hồ sơ và với `pilot_plan.yaml` — **nhóm đã sửa**, điều kiện 3 nay ghi cả hai số và nói rõ quan hệ giữa chúng.
+
+Về thời gian: nhóm **không khẳng định chắc chắn đủ dữ liệu** trước 2027-01-12. Pilot bắt đầu 2026-12-01, ba bước rollout mỗi bước một tuần, đo chỉ số chính từ bước 0,50, cộng 7 ngày theo dõi mở lại — phần còn lại đủ hay không phụ thuộc lưu lượng yêu cầu thực tế mỗi nhân viên mỗi ngày, mà đó là số nhóm **chưa đo được** từ dữ liệu đợt chạy thử. Vì vậy điều kiện 3 gắn quyết định vào **điều kiện đủ mẫu**, không gắn vào ngày: chỉ ra quyết định khi đã đo đủ 5.980 yêu cầu mỗi nhóm. Nếu đến 2027-01-12 chưa đủ thì gia hạn, chứ không kết luận trên mẫu thiếu. Đây là điểm yếu nhóm đã nêu trong hồ sơ chứ không che.
+
 ---
 
 *Hội đồng: nhóm 4mems. Người điền: Trần Hải Long (2A202603891), đối chiếu số với Trần Minh Đức (2A202603977). Mọi con số dẫn trong phiếu lấy từ `report/team/` của nhóm teamrandom; hội đồng tính lại cỡ mẫu bằng công thức hai tỉ lệ với alpha 0,05 và power 0,80 để đối chiếu.*

@@ -50,7 +50,9 @@ Cách tiếp cận: đo chi phí thật từ trace thay vì từ hoá đơn toke
 
 **Câu hỏi hội đồng đặt:** Điều kiện 3 ghi “chỉ ra quyết định khi bước 0,50 đo đủ 859 yêu cầu mỗi nhóm”, nhưng `pilot_plan.yaml` ghi cần ít nhất 5.980 yêu cầu mỗi nhóm (20 người × 299). Ngưỡng ra quyết định thật là bao nhiêu, và với 2 tuần ở bước 0,50 cộng 7 ngày theo dõi mở lại thì nhóm có đủ dữ liệu trước ngày quyết định 2027-01-12 không?
 
-**Câu trả lời của nhóm tại buổi:** _(ghi tại buổi duyệt chéo, không viết trước)_
+**Câu trả lời của nhóm tại buổi:** Ngưỡng ra quyết định thật là **5.980 yêu cầu thực tế mỗi nhóm** (`m ≥ 299` yêu cầu/người × 20 người). Con số **859** là **cỡ mẫu hiệu dụng**, tức 5.980 chia hệ số thiết kế **6,96**; hai số nói về cùng một điều kiện chứ không phải hai ngưỡng khác nhau. Hội đồng đúng ở chỗ điều kiện 3 của hồ sơ chỉ ghi 859 nên đọc ra thành số yêu cầu phải thu, mâu thuẫn với mục 6 của chính hồ sơ và với `pilot_plan.yaml` — **nhóm đã sửa**, điều kiện 3 nay ghi cả hai số và nói rõ quan hệ giữa chúng.
+
+Về thời gian: nhóm **không khẳng định chắc chắn đủ dữ liệu** trước 2027-01-12. Pilot bắt đầu 2026-12-01, ba bước rollout mỗi bước một tuần, đo chỉ số chính từ bước 0,50, cộng 7 ngày theo dõi mở lại — phần còn lại đủ hay không phụ thuộc lưu lượng yêu cầu thực tế mỗi nhân viên mỗi ngày, mà đó là số nhóm **chưa đo được** từ dữ liệu đợt chạy thử. Vì vậy điều kiện 3 gắn quyết định vào **điều kiện đủ mẫu**, không gắn vào ngày: chỉ ra quyết định khi đã đo đủ 5.980 yêu cầu mỗi nhóm. Nếu đến 2027-01-12 chưa đủ thì gia hạn, chứ không kết luận trên mẫu thiếu. Đây là điểm yếu nhóm đã nêu trong hồ sơ chứ không che.
 
 **Nhóm đã làm gì với ba ý trên:** xem mục 5.5 dưới đây.
 
