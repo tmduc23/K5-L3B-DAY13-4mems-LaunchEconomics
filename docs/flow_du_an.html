@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow dự án — Lab 13 LogiX-VN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#15232E; --paper:#F7F6F1; --card:#FFFFFF; --line:#DFDCD2;
+    --muted:#5A6873; --rust:#A8402B; --rust-soft:#F6E9E5; --teal:#1F5F5B;
+    --teal-soft:#E6F0EE; --amber:#8A6414; --amber-soft:#FAF0DA;
+    --duc:#A8402B; --nhai:#1F5F5B; --hai:#4A4E8C; --long:#8A5A14;
+    --h:"Be Vietnam Pro","Segoe UI",Verdana,sans-serif;
+    --b:"Inter","Segoe UI",Arial,sans-serif;
+    --r:14px; --sh:0 1px 2px rgba(21,35,46,.06), 0 8px 24px rgba(21,35,46,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--b);font-size:15px;line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 28px 96px}
+  h1,h2,h3,h4{font-family:var(--h);line-height:1.2}
+  a{color:var(--rust)}
+
+  /* header */
+  header{background:var(--ink);color:#EFEDE6;padding:44px 0 36px;margin-bottom:34px}
+  header .wrap{padding-bottom:0}
+  .kicker{font-family:var(--h);font-size:12px;font-weight:600;letter-spacing:.22em;
+    text-transform:uppercase;color:#E59178;margin-bottom:12px}
+  header h1{font-size:34px;font-weight:700;letter-spacing:-.01em}
+  header p{color:#A9BAC4;margin-top:10px;max-width:72ch}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .chip{font-size:12.5px;font-weight:500;padding:5px 12px;border-radius:99px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#D8E3EA}
+  .chip b{font-weight:600;color:#fff}
+
+  /* section */
+  section{margin-top:52px}
+  .shead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .snum{font-family:var(--h);font-size:12px;font-weight:700;letter-spacing:.18em;color:var(--rust)}
+  section h2{font-size:24px;font-weight:600}
+  .sdesc{color:var(--muted);max-width:86ch;margin-bottom:22px}
+
+  /* people filter */
+  .people{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+  .pbtn{display:flex;align-items:center;gap:9px;background:var(--card);border:1.5px solid var(--line);
+    border-radius:99px;padding:7px 16px 7px 10px;cursor:pointer;font-family:var(--b);font-size:14px;
+    transition:border-color .15s, box-shadow .15s, transform .12s}
+  .pbtn:hover{transform:translateY(-1px);box-shadow:var(--sh)}
+  .pbtn .dot{width:11px;height:11px;border-radius:50%;flex:none}
+  .pbtn .ro{color:var(--muted);font-size:12.5px}
+  .pbtn[aria-pressed="true"]{border-color:currentColor;box-shadow:var(--sh)}
+  .pbtn[data-p="duc"]{color:var(--duc)} .pbtn[data-p="nhai"]{color:var(--nhai)}
+  .pbtn[data-p="hai"]{color:var(--hai)} .pbtn[data-p="long"]{color:var(--long)}
+  .pbtn .nm{color:var(--ink);font-weight:600}
+  .dot.duc{background:var(--duc)} .dot.nhai{background:var(--nhai)}
+  .dot.hai{background:var(--hai)} .dot.long{background:var(--long)}
+
+  /* flow */
+  .flow{display:grid;grid-template-columns:1fr 24px 1.15fr 24px 1.25fr 24px .9fr;gap:0;align-items:start}
+  .col{display:flex;flex-direction:column;gap:12px}
+  .colhead{font-family:var(--h);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .arrow{display:flex;align-items:center;justify-content:center;padding-top:46px;color:#B9B4A7;font-size:19px}
+  .node{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:13px 15px;
+    transition:opacity .18s, border-color .18s, box-shadow .18s, transform .12s}
+  .node h4{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .node .meta{font-size:12.5px;color:var(--muted);margin-top:5px}
+  .node code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;
+    background:#F2F0EA;padding:1px 5px;border-radius:5px}
+  .node .own{width:9px;height:9px;border-radius:50%;flex:none}
+  .node.data{background:#FBFAF6;border-style:dashed}
+  .node.gate{background:var(--ink);color:#EFEDE6;border-color:var(--ink)}
+  .node.gate .meta{color:#A9BAC4}
+  .node.lit{border-color:var(--rust);box-shadow:0 0 0 3px var(--rust-soft);transform:translateY(-1px)}
+  .dim{opacity:.26}
+
+  /* timeline */
+  .tl{overflow-x:auto;padding-bottom:6px}
+  .tlgrid{display:grid;grid-template-columns:168px repeat(6,minmax(176px,1fr));gap:10px;min-width:1180px}
+  .tlh{font-family:var(--h);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);padding:0 2px 8px;position:sticky;top:0;background:var(--paper)}
+  .tlh span{display:block;font-family:var(--b);font-size:11.5px;font-weight:500;letter-spacing:0;
+    text-transform:none;color:#8A949C;margin-top:2px}
+  .lane{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;padding:12px 2px}
+  .cell{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;
+    font-size:12.8px;line-height:1.45;transition:opacity .18s}
+  .cell.empty{background:transparent;border-style:dashed;color:#A8A299;font-size:12px}
+  .cell b{display:block;font-family:var(--h);font-size:12.5px;margin-bottom:3px}
+  .cell.duc{border-left:4px solid var(--duc)} .cell.nhai{border-left:4px solid var(--nhai)}
+  .cell.hai{border-left:4px solid var(--hai)} .cell.long{border-left:4px solid var(--long)}
+
+  /* numbers */
+  .nums{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:20px}
+  .nbtn{background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:9px 13px;
+    cursor:pointer;font-family:var(--b);text-align:left;transition:border-color .15s,box-shadow .15s,transform .12s}
+  .nbtn:hover{transform:translateY(-1px);box-shadow:var(--sh)}
+  .nbtn[aria-pressed="true"]{border-color:var(--rust);box-shadow:0 0 0 3px var(--rust-soft)}
+  .nbtn .v{font-family:var(--h);font-size:17px;font-weight:700;display:block}
+  .nbtn .k{font-size:11.5px;color:var(--muted);display:block;margin-top:1px}
+  .trace{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px 22px;
+    box-shadow:var(--sh);min-height:132px}
+  .trace .t-title{font-family:var(--h);font-size:19px;font-weight:700;margin-bottom:3px}
+  .trace .t-sub{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+  .tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr));gap:16px}
+  .tbox h5{font-family:var(--h);font-size:11.5px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .tbox ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .tbox li{font-size:13px;padding-left:15px;position:relative}
+  .tbox li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;
+    border-radius:50%;background:var(--rust)}
+  .tbox.who li::before{background:var(--teal)}
+  .empty-hint{color:var(--muted);font-size:13.5px}
+
+  /* status */
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .st{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:15px 17px}
+  .st h4{font-size:14.5px;font-weight:600;display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .st .meta{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .tag{font-family:var(--b);font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;flex:none}
+  .tag.ok{background:var(--teal-soft);color:var(--teal)}
+  .tag.wait{background:var(--amber-soft);color:var(--amber)}
+  .tag.todo{background:var(--rust-soft);color:var(--rust)}
+
+  footer{margin-top:62px;padding-top:22px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
+  @media (max-width:980px){
+    .flow{grid-template-columns:1fr;gap:12px}
+    .arrow{display:none}
+    .colhead{margin-top:14px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">Lab 13 · Launch &amp; Economics · Gate 2a</p>
+    <h1>Flow dự án — trợ lý hoàn phí LogiX-VN</h1>
+    <p>Một trang để thấy toàn bộ mạch chạy: dữ liệu đi vào đâu, con số sinh ra ở đâu, chảy vào file nào, và ai chịu trách nhiệm từng khúc. Bấm vào tên người để lọc, bấm vào một con số để truy vết nó.</p>
+    <div class="chips">
+      <span class="chip">Nhóm <b>4mems</b> · Lớp L3B</span>
+      <span class="chip"><b>1.200</b> yêu cầu · <b>1.624</b> lần chạy</span>
+      <span class="chip">Đề xuất <b>Go có điều kiện</b></span>
+      <span class="chip">Mọi số từ cột <b>_simulated</b> là giả lập</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="people" id="people">
+  <button class="pbtn" data-p="duc" aria-pressed="false"><span class="dot duc"></span><span><span class="nm">Trần Minh Đức</span> <span class="ro">· code phiên 1, trưởng nhóm</span></span></button>
+  <button class="pbtn" data-p="nhai" aria-pressed="false"><span class="dot nhai"></span><span><span class="nm">Trần Thị Nhài</span> <span class="ro">· kiểm số, code phiên 2</span></span></button>
+  <button class="pbtn" data-p="hai" aria-pressed="false"><span class="dot hai"></span><span><span class="nm">Ngô Ngọc Hải</span> <span class="ro">· gắn nhãn 1, chỉ số</span></span></button>
+  <button class="pbtn" data-p="long" aria-pressed="false"><span class="dot long"></span><span><span class="nm">Trần Hải Long</span> <span class="ro">· gắn nhãn 2, giữ hồ sơ</span></span></button>
+</div>
+
+<!-- ============ 1. FLOW ============ -->
+<section>
+  <div class="shead"><span class="snum">01</span><h2>Dòng chảy của dự án</h2></div>
+  <p class="sdesc">Bốn khúc, chảy một chiều từ trái sang phải. Chỉ nhiệm vụ C không đi qua code: 20 ca lỗi nằm trong đề bài, hai người gắn nhãn bằng tay.</p>
+
+  <div class="flow">
+    <div class="col">
+      <p class="colhead">Dữ liệu vào</p>
+      <div class="node data" id="n-runs"><h4>logix_runs.csv</h4><p class="meta">1.624 lần chạy · <code>attempt</code>, <code>tokens_in/out</code>, <code>tool_calls</code>, <code>status</code></p></div>
+      <div class="node data" id="n-reqs"><h4>logix_requests.csv</h4><p class="meta">1.200 yêu cầu · <code>loai</code>, <code>ket_qua</code>, hai cột <code>_simulated</code></p></div>
+      <div class="node data" id="n-docx"><h4>Đề bài · 20 ca lỗi</h4><p class="meta">Không qua code — gắn nhãn bằng tay</p></div>
+      <div class="node data" id="n-gd"><h4>Giả định của lab</h4><p class="meta">Giá token, 2.000 đ/phút, mốc 12.000 đ, cố định 40 tr/tháng, ICC 0,02</p></div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <div class="col">
+      <p class="colhead">Tính toán · src/lab13.py</p>
+      <div class="node" data-own="duc" id="n-a1"><h4><span class="own dot duc"></span>A1 · Ba phép thử</h4><p class="meta">Hệ số rút gọn thành <code>1/p</code> → <b>1,20 · 1,25 · 1,25</b>. Chưa ĐẠT thì cả nhóm dừng.</p></div>
+      <div class="node" data-own="duc" id="n-a2"><h4><span class="own dot duc"></span>A2 · <code>mo_hinh()</code></h4><p class="meta">Tử số mọi lần chạy · mẫu số chỉ việc xong → <b>4.472 đ</b></p></div>
+      <div class="node" data-own="duc" id="n-a34"><h4><span class="own dot duc"></span>A3 · A4 · tách loại, cố định</h4><p class="meta">4 loại yêu cầu · chi phí cố định ở 2 mức khối lượng</p></div>
+      <div class="node" data-own="duc" id="n-b"><h4><span class="own dot duc"></span>B1–B4 · độ nhạy</h4><p class="meta">9 kịch bản · 1 cặp · 3 mức giới hạn · xem lại 100%</p></div>
+      <div class="node" data-own="nhai" id="n-d1"><h4><span class="own dot nhai"></span>D1 · <code>co_mau()</code></h4><p class="meta">5 câu cỡ mẫu · tỉ lệ nền của chỉ số an toàn</p></div>
+      <div class="node" data-own="nhai" id="n-e1"><h4><span class="own dot nhai"></span>E1 · ba chỉ số</h4><p class="meta">Chính · dùng · an toàn, kèm mẫu số</p></div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <div class="col">
+      <p class="colhead">Sáu file hồ sơ · report/team</p>
+      <div class="node" data-own="duc" id="f-chiphi"><h4><span class="own dot duc"></span>bang_chi_phi.md</h4><p class="meta">A1–A4 và B1–B4 · Nhài kiểm số và nhập B1</p></div>
+      <div class="node" data-own="hai" id="f-loi"><h4><span class="own dot hai"></span>bang_loi.md</h4><p class="meta">Hai bộ nhãn độc lập · đồng thuận · bảng khắc phục 5 ca</p></div>
+      <div class="node" data-own="duc" id="f-yaml"><h4><span class="own dot duc"></span>pilot_plan.yaml</h4><p class="meta">Đức: trường + 3 luật dừng · Nhài: cỡ mẫu · Hải: D2 · Long: <code>scope</code></p></div>
+      <div class="node" data-own="hai" id="f-chiso"><h4><span class="own dot hai"></span>chi_so.md</h4><p class="meta">Hải: E1 + 10 event · Long: E2 rủi ro kinh tế</p></div>
+      <div class="node" data-own="long" id="f-hoso"><h4><span class="own dot long"></span>ho_so_launch_v0.md</h4><p class="meta">Bảy mục · hợp lưu của cả năm nhiệm vụ · dòng cuối là đề xuất</p></div>
+      <div class="node" data-own="long" id="f-phieu"><h4><span class="own dot long"></span>phieu_cham.md</h4><p class="meta">Nhóm mình làm hội đồng, chấm nhóm kế tiếp</p></div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <div class="col">
+      <p class="colhead">Cổng duyệt</p>
+      <div class="node gate" id="g-gate"><h4>Hội đồng Gate 2a</h4><p class="meta">Chấm 30 điểm theo bằng chứng: đề xuất khớp số · nhãn giả lập và phạm vi · pilot ra được quyết định</p></div>
+      <div class="node" id="g-ta"><h4>Trợ giảng · 70 điểm</h4><p class="meta">Đối chiếu đáp án, nhận số nếu lệch ≤ 2%</p></div>
+      <div class="node" id="g-lms"><h4>Nộp LMS</h4><p class="meta">Cả 4 người nộp cùng một link repo</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. TIMELINE ============ -->
+<section>
+  <div class="shead"><span class="snum">02</span><h2>Ai làm gì, lúc nào</h2></div>
+  <p class="sdesc">Hai chỗ bắt buộc đồng thời: lúc 15:35 hai người gắn nhãn phải ngồi tách nhau trong 8 phút, và lúc 15:20 code đổi tay từ Đức sang Nhài để ít nhất hai người tự tính được chi phí.</p>
+
+  <div class="tl">
+    <div class="tlgrid">
+      <div class="tlh">Người</div>
+      <div class="tlh">CP1 · A <span>14:10 → 14:53</span></div>
+      <div class="tlh">CP2 · B <span>14:53 → 15:20</span></div>
+      <div class="tlh">CP3 · C <span>15:35 → 16:08</span></div>
+      <div class="tlh">CP4 · D <span>16:08 → 16:36</span></div>
+      <div class="tlh">CP5 · E <span>16:36 → 17:00</span></div>
+      <div class="tlh">Gate 2a <span>17:00 → 18:00</span></div>
+
+      <div class="lane" data-own="duc"><span class="dot duc"></span>Đức</div>
+      <div class="cell duc" data-own="duc"><b>Viết code A</b>3 hàm A1 · <code>mo_hinh()</code> · A3 · A4 · đổ số vào bảng chi phí</div>
+      <div class="cell duc" data-own="duc"><b>Viết code B</b>9 kịch bản · cặp · B3 · B4 · bàn giao code lúc 15:20</div>
+      <div class="cell duc" data-own="duc"><b>Hỗ trợ</b>Bấm giờ 8 phút cho hai người gắn nhãn · soát nếu đồng thuận thấp</div>
+      <div class="cell duc" data-own="duc"><b>Trường YAML + luật dừng</b>owner · assignment · rollback · 3 luật dừng đủ bốn vế</div>
+      <div class="cell duc" data-own="duc"><b>Soát toàn bộ</b>Chạy lại code từ đầu · kiểm YAML · kiểm từ cấm</div>
+      <div class="cell duc" data-own="duc"><b>Trình 1 phút</b>Rồi merge nhánh, push, nhắc cả nhóm nộp LMS</div>
+
+      <div class="lane" data-own="nhai"><span class="dot nhai"></span>Nhài</div>
+      <div class="cell nhai" data-own="nhai"><b>Kiểm số A2</b>Tính tay độc lập 4 khoản · lệch &gt; 2% thì nhóm dừng tìm lỗi</div>
+      <div class="cell nhai" data-own="nhai"><b>Kiểm đối xứng B1</b>Giảm nửa phải bằng nửa mức gấp đôi · nhập 9 dòng</div>
+      <div class="cell nhai" data-own="nhai"><b>Nhận code</b>Chạy lại trên máy mình · cùng Đức chốt B3, B4</div>
+      <div class="cell nhai" data-own="nhai"><b>Cỡ mẫu D1</b>5 câu · tỉ lệ nền 3,97% đưa cho nhóm trước khi đặt ngưỡng</div>
+      <div class="cell nhai" data-own="nhai"><b>Ba chỉ số E1</b>Đưa Hải số và mẫu số · rà nhãn simulated lần cuối</div>
+      <div class="cell nhai" data-own="nhai"><b>Trả lời về số</b>Cỡ mẫu, hệ số thiết kế, cách tính chi phí</div>
+
+      <div class="lane" data-own="hai"><span class="dot hai"></span>Hải</div>
+      <div class="cell empty" data-own="hai">Đọc công thức và định nghĩa 5 loại lỗi</div>
+      <div class="cell empty" data-own="hai">Đọc kỹ 20 ca — chưa gắn nhãn</div>
+      <div class="cell hai" data-own="hai"><b>Bộ nhãn 1</b>8 phút, ngồi tách · so nhãn · viết quy tắc phân biệt · bảng khắc phục</div>
+      <div class="cell hai" data-own="hai"><b>Năm câu D2</b>Tách được tác động → thành trường <code>identifiability</code></div>
+      <div class="cell hai" data-own="hai"><b>Chỉ số và event</b>Bảng E1 · 10 event có <code>trace_id</code> · kiểm tra chéo</div>
+      <div class="cell hai" data-own="hai"><b>Trả lời về lỗi</b>PAIR, phân biệt lộ ra vs ngầm, event nào đo chỉ số nào</div>
+
+      <div class="lane" data-own="long"><span class="dot long"></span>Long</div>
+      <div class="cell long" data-own="long"><b>Mở hồ sơ ngay</b>Điền mục 1 và 3 khi có số A2, A4 — không đợi đến CP5</div>
+      <div class="cell long" data-own="long"><b>Mục 2 hồ sơ</b>Ba yếu tố nhạy nhất</div>
+      <div class="cell long" data-own="long"><b>Bộ nhãn 2</b>8 phút, ngồi tách · chọn 5 ca cho bảng khắc phục</div>
+      <div class="cell long" data-own="long"><b>Phạm vi pilot</b><code>scope</code> kèm lý do bằng số cho cả 4 loại</div>
+      <div class="cell long" data-own="long"><b>E2 và đề xuất</b>Hai dòng rủi ro · chốt Go có điều kiện với 3 điều kiện</div>
+      <div class="cell long" data-own="long"><b>Làm hội đồng</b>Điền phiếu chấm nhóm kế tiếp, mỗi lý do có số</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. TRACE ============ -->
+<section>
+  <div class="shead"><span class="snum">03</span><h2>Truy vết một con số</h2></div>
+  <p class="sdesc">Bấm một con số để xem nó sinh ra ở đâu, chảy vào đâu, và ai phải trả lời về nó. Đây là phần quan trọng nhất của flow: mỗi nhiệm vụ sau đều dùng lại số của nhiệm vụ trước, nên một số sai sẽ sai theo dây.</p>
+
+  <div class="nums" id="nums">
+    <button class="nbtn" data-n="cps"   aria-pressed="false"><span class="v">4.472 đ</span><span class="k">chi phí mỗi việc thành công</span></button>
+    <button class="nbtn" data-n="fair"  aria-pressed="false"><span class="v">0,49×</span><span class="k">so với nhân viên, cả hệ thống</span></button>
+    <button class="nbtn" data-n="qt"    aria-pressed="false"><span class="v">1,88×</span><span class="k">quoc_te — lý do loại khỏi phạm vi</span></button>
+    <button class="nbtn" data-n="rank"  aria-pressed="false"><span class="v">±51,8%</span><span class="k">số ca làm lại — yếu tố nhạy nhất</span></button>
+    <button class="nbtn" data-n="b4"    aria-pressed="false"><span class="v">1,03×</span><span class="k">xem lại 100% — con số bất lợi</span></button>
+    <button class="nbtn" data-n="agree" aria-pressed="false"><span class="v">20/20</span><span class="k">đồng thuận gắn nhãn</span></button>
+    <button class="nbtn" data-n="e1"    aria-pressed="false"><span class="v">82,83%</span><span class="k">chỉ số chính trong đợt chạy thử</span></button>
+    <button class="nbtn" data-n="n"     aria-pressed="false"><span class="v">859</span><span class="k">cỡ mẫu mỗi nhóm</span></button>
+    <button class="nbtn" data-n="power" aria-pressed="false"><span class="v">0,64</span><span class="k">power ở mức chênh 5 điểm</span></button>
+    <button class="nbtn" data-n="base"  aria-pressed="false"><span class="v">3,97%</span><span class="k">tỉ lệ mở lại nền trong phạm vi</span></button>
+  </div>
+
+  <div class="trace" id="trace">
+    <p class="empty-hint">Chưa chọn con số nào. Bấm một ô phía trên để xem đường đi của nó.</p>
+  </div>
+</section>
+
+<!-- ============ 4. STATUS ============ -->
+<section>
+  <div class="shead"><span class="snum">04</span><h2>Mười sản phẩm phải nộp</h2></div>
+  <p class="sdesc">Sáu file hồ sơ giữ nguyên tên, cộng code, báo cáo nhóm, thông tin nhóm và bốn báo cáo cá nhân.</p>
+
+  <div class="grid3">
+    <div class="st"><h4>src/lab13.py <span class="tag ok">Xong</span></h4><p class="meta">A1–A4, B1–B4, D1, E1 · chạy hết, exit 0 · đã sửa lỗi console cp1252 để chạy được trên mọi máy Windows</p></div>
+    <div class="st"><h4>bang_chi_phi.md <span class="tag ok">Xong</span></h4><p class="meta">A1–A4 và B1–B4 đầy đủ · hai dòng giả lập có nhãn</p></div>
+    <div class="st"><h4>bang_loi.md <span class="tag ok">Xong</span></h4><p class="meta">Hai bộ nhãn độc lập · đồng thuận 20/20 · bảng khắc phục đủ năm loại</p></div>
+    <div class="st"><h4>pilot_plan.yaml <span class="tag ok">Xong</span></h4><p class="meta">11 trường · 0 dấu <code>?</code> · 3 luật dừng đủ bốn vế · <code>yaml.safe_load</code> đọc được</p></div>
+    <div class="st"><h4>chi_so.md <span class="tag ok">Xong</span></h4><p class="meta">Ba chỉ số · 10 event có <code>trace_id</code> · kiểm tra chéo · hai dòng rủi ro</p></div>
+    <div class="st"><h4>ho_so_launch_v0.md <span class="tag ok">Xong</span></h4><p class="meta">Bảy mục, mỗi mục có số, trạng thái, một vai trò · đề xuất Go có điều kiện</p></div>
+    <div class="st"><h4>phieu_cham.md <span class="tag wait">Chờ 17:00</span></h4><p class="meta">Chỉ điền được sau khi nhận hồ sơ của nhóm kế tiếp</p></div>
+    <div class="st"><h4>group_report.md <span class="tag wait">Chờ kết quả duyệt chéo</span></h4><p class="meta">Tám mục đã viết · còn dòng kết quả hội đồng, điền sau 17:40</p></div>
+    <div class="st"><h4>TEAM.md <span class="tag ok">Xong</span></h4><p class="meta">Bốn thành viên, vai, đóng góp có số · còn hash commit chốt điền lúc 17:45</p></div>
+    <div class="st"><h4>Bốn báo cáo cá nhân <span class="tag ok">Xong</span></h4><p class="meta">Đúng định dạng <code>MSSV_HoTen.md</code> · mỗi người khai công cụ AI và cách tự kiểm</p></div>
+  </div>
+</section>
+
+<footer>
+  <span>Nguồn: <a href="../report/team/bang_chi_phi.md">bang_chi_phi.md</a> · <a href="../report/team/pilot_plan.yaml">pilot_plan.yaml</a> · <a href="../PHAN_CONG.md">PHAN_CONG.md</a> · <a href="gate2a_slides.html">slide trình bày</a></span>
+  <span>Mọi con số dẫn từ hai cột <code>_simulated</code> là giả lập</span>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  /* ---- people filter ---- */
+  var pbtns = document.querySelectorAll('#people .pbtn');
+  var owned = document.querySelectorAll('[data-own]');
+  function filter(p){
+    owned.forEach(function(el){
+      el.classList.toggle('dim', !!p && el.getAttribute('data-own') !== p);
+    });
+  }
+  pbtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var on = b.getAttribute('aria-pressed') === 'true';
+      pbtns.forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      if (on) { filter(null); } else { b.setAttribute('aria-pressed','true'); filter(b.dataset.p); }
+    });
+  });
+
+  /* ---- number tracing ---- */
+  var DATA = {
+    cps: { title:'4.472 đ · chi phí mỗi việc thành công',
+      sub:'(token + tool + xem lại + làm lại) ÷ số việc thành công = 4.373.585 ÷ 978 · [simulated]',
+      from:['A2 trong src/lab13.py, hàm mo_hinh()','Tử số cộng cả 1.624 lần chạy, kể cả lần status = loi','Mẫu số chỉ đếm 978 yêu cầu ket_qua = thanh_cong'],
+      to:['bang_chi_phi.md bảng A2','ho_so_launch_v0.md mục 1','Ngưỡng 8.000 đ trong luật dừng chi phí','group_report.md mục Kết quả'],
+      who:['Đức tính · Nhài kiểm tay độc lập'],
+      nodes:['n-runs','n-reqs','n-a2','f-chiphi','f-hoso','f-yaml']
+    },
+    fair: { title:'0,49× · so với nhân viên tự làm',
+      sub:'(4.373.585 + 222 × 12.000) ÷ 1.200 = 5.865 đ mỗi yêu cầu · [simulated]',
+      from:['Chi phí trợ lý cộng 12.000 đ × 222 yêu cầu không thành công','222 ca = 148 chuyen_nhan_vien + 74 lam_lai'],
+      to:['bang_chi_phi.md ghi chú A2','ho_so_launch_v0.md mục 3','Câu thứ hai của bài trình 1 phút'],
+      who:['Long điền hồ sơ · Nhài giải thích cách tính'],
+      nodes:['n-a2','f-chiphi','f-hoso','g-gate']
+    },
+    qt: { title:'1,88× · quoc_te đắt hơn nhân viên tự làm',
+      sub:'22.515 đ mỗi việc thành công, tỉ lệ thành công chỉ 27,3% · [simulated]',
+      from:['A3: gọi lại mo_hinh() cho từng giá trị cột loai','Bảng tỉ lệ ok theo attempt: 30,0% → 11,4% → 2,2%'],
+      to:['bang_chi_phi.md bảng A3','Trường scope trong pilot_plan.yaml','ho_so_launch_v0.md mục 6','Lý do loại quoc_te và doi_tac khỏi pilot'],
+      who:['Đức tính · Long viết scope và bảo vệ phạm vi'],
+      nodes:['n-reqs','n-a34','f-chiphi','f-yaml','f-hoso']
+    },
+    rank: { title:'±51,8% · số ca làm lại là yếu tố nhạy nhất',
+      sub:'Gấp đôi số ca làm lại đẩy chi phí lên 6.787 đ; giảm một nửa còn 3.315 đ · [simulated]',
+      from:['B1: gọi lại mo_hinh() với he_so_lam_lai = 2 và 0.5','Kiểm đối xứng: +51,8% ↔ −25,9%'],
+      to:['bang_chi_phi.md bảng B1 và xếp hạng B2','ho_so_launch_v0.md mục 2','chi_so.md dòng rủi ro E2','Ngưỡng làm lại 7%/tuần trong luật dừng chi phí'],
+      who:['Đức tính · Nhài kiểm đối xứng · Long dùng cho E2'],
+      nodes:['n-b','f-chiphi','f-chiso','f-yaml','f-hoso']
+    },
+    b4: { title:'1,03× · xem lại 100% thì đắt hơn làm tay',
+      sub:'11.743 đ với 9 phút làm lại mỗi ca, lên 12.415 đ với 15,3 phút thực · hoà vốn ≤ 5,1 phút · [simulated]',
+      from:['B4: 948 yêu cầu có ít nhất một lần ok × 5 phút + 48 ca làm lại + token/tool trong phạm vi','Chia cho 900 việc thành công của phạm vi'],
+      to:['bang_chi_phi.md mục B4','chi_so.md dòng rủi ro thứ hai','ho_so_launch_v0.md mục 7 và danh sách con số bất lợi','Điều kiện giảm xem lại theo bậc'],
+      who:['Đức tính · Long nêu khi bảo vệ đề xuất'],
+      nodes:['n-b','f-chiphi','f-chiso','f-hoso','g-gate']
+    },
+    agree: { title:'20/20 · đồng thuận hai bộ nhãn độc lập',
+      sub:'Hai người gắn nhãn tách nhau 8 phút, không trao đổi; mốc yêu cầu là 80%',
+      from:['20 ca lỗi trong đề bài, không đi qua code','Bộ nhãn 1 của Hải và bộ nhãn 2 của Long, giữ nguyên trong file'],
+      to:['bang_loi.md hai cột nhãn và tỉ lệ đồng thuận','ho_so_launch_v0.md mục 5','Bảng khắc phục 5 ca, mỗi loại một ca'],
+      who:['Hải và Long gắn nhãn · Hải trả lời về phân loại PAIR'],
+      nodes:['n-docx','f-loi','f-hoso']
+    },
+    e1: { title:'82,83% · chỉ số chính trong đợt chạy thử',
+      sub:'994/1.200 yêu cầu đóng trong 24 giờ và không mở lại trong 7 ngày',
+      from:['E1 trong src/lab13.py: dong_trong_24h = 1 và mo_lai_trong_7_ngay = 0'],
+      to:['chi_so.md bảng E1','ho_so_launch_v0.md mục 4','Trường primary_metric trong pilot_plan.yaml'],
+      who:['Nhài tính · Hải điền bảng và trả lời về cách đo'],
+      nodes:['n-reqs','n-e1','f-chiso','f-yaml','f-hoso']
+    },
+    n: { title:'859 · cỡ mẫu mỗi nhóm',
+      sub:'Cỡ mẫu cho mức chênh 6 điểm; mức 5 điểm cần 1.251 mà trần của 20 cụm chỉ là 1.000',
+      from:['D1: hàm co_mau(0.70, 0.76)','Hệ số thiết kế DE = 1 + (299 − 1) × 0,02 = 6,96','Trần cỡ mẫu hiệu dụng c ÷ ICC = 20 ÷ 0,02 = 1.000'],
+      to:['pilot_plan.yaml: n_per_arm, design_effect, clusters_per_arm, mde = 0,06','ho_so_launch_v0.md mục 6','Khối chú thích đánh đổi đã chấp nhận'],
+      who:['Nhài tính và điền · Đức chốt thiết kế'],
+      nodes:['n-gd','n-d1','f-yaml','f-hoso']
+    },
+    power: { title:'0,64 · power nếu tác động thật chỉ 5 điểm',
+      sub:'Tức khoảng 36% khả năng không phát hiện được một tác động có thật',
+      from:['Hệ quả của việc chọn mức chênh 6 điểm với n = 859','Vì 20 cụm mỗi nhóm không đủ mẫu cho mức 5 điểm'],
+      to:['Khối chú thích đánh đổi trong pilot_plan.yaml','ho_so_launch_v0.md: con số bất lợi và điều kiện 3','Câu thứ tư của bài trình 1 phút'],
+      who:['Nhài giải thích · Long nêu trong phần điều kiện'],
+      nodes:['n-d1','f-yaml','f-hoso','g-gate']
+    },
+    base: { title:'3,97% · tỉ lệ mở lại nền trong phạm vi',
+      sub:'39/982 yêu cầu noi_dia + hang_nang; toàn mẫu là 4,25% · [simulated]',
+      from:['Tính từ cột mo_lai_trong_7_ngay, TRƯỚC khi nhóm đặt ngưỡng an toàn'],
+      to:['Luật dừng an toàn: cao hơn đối chứng ≥ 2 điểm, trần tuyệt đối 6%','Khối chú thích ngưỡng an toàn trong pilot_plan.yaml'],
+      who:['Nhài tính và đưa cho Đức, Long · Long bảo vệ ngưỡng'],
+      nodes:['n-reqs','n-d1','f-yaml','f-hoso']
+    }
+  };
+
+  var trace = document.getElementById('trace');
+  var nbtns = document.querySelectorAll('#nums .nbtn');
+  function litNodes(ids){
+    document.querySelectorAll('.node').forEach(function(n){ n.classList.remove('lit'); });
+    (ids || []).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.classList.add('lit');
+    });
+  }
+  function list(items){ return items.map(function(t){ return '<li>' + t + '</li>'; }).join(''); }
+  function render(key){
+    var d = DATA[key];
+    trace.innerHTML =
+      '<p class="t-title">' + d.title + '</p>' +
+      '<p class="t-sub">' + d.sub + '</p>' +
+      '<div class="tgrid">' +
+        '<div class="tbox"><h5>Sinh ra ở đâu</h5><ul>' + list(d.from) + '</ul></div>' +
+        '<div class="tbox"><h5>Chảy vào đâu</h5><ul>' + list(d.to) + '</ul></div>' +
+        '<div class="tbox who"><h5>Ai trả lời về nó</h5><ul>' + list(d.who) + '</ul></div>' +
+      '</div>';
+    litNodes(d.nodes);
+  }
+  nbtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var on = b.getAttribute('aria-pressed') === 'true';
+      nbtns.forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      if (on) {
+        b.setAttribute('aria-pressed','false');
+        litNodes([]);
+        trace.innerHTML = '<p class="empty-hint">Chưa chọn con số nào. Bấm một ô phía trên để xem đường đi của nó.</p>';
+      } else {
+        b.setAttribute('aria-pressed','true');
+        render(b.dataset.n);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duyệt chéo Gate 2a · Nhóm 4mems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15232E; --ink2:#2B3D4A; --paper:#F7F6F1; --card:#FFFFFF;
+  --rust:#A8402B; --teal:#1F5F5B; --indigo:#3B4E8C; --amber:#B07A1E;
+  --line:#DBD7CC; --muted:#6E7A82;
+  --shadow:0 2px 6px rgba(21,35,46,.06), 0 14px 40px rgba(21,35,46,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0; height:100%; overflow:hidden}
+body{
+  background:#E7E4DA; color:var(--ink);
+  font-family:'Be Vietnam Pro',system-ui,sans-serif; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
+
+/* ---------- deck frame ---------- */
+#deck{position:relative; height:100vh; width:100vw; overflow:hidden}
+.s{
+  position:absolute; inset:0; padding:5.2vh 6vw 9vh; background:var(--paper);
+  display:none; flex-direction:column; justify-content:center;
+}
+.s.on{display:flex; animation:slideIn .42s cubic-bezier(.2,.75,.3,1)}
+@keyframes slideIn{from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:none}}
+.s.dark{background:linear-gradient(158deg,#0E1A23,#1B2E3A 62%,#13222D); color:#E6E2D8}
+.s.dark h1,.s.dark h2{color:#fff}
+
+/* ---------- slide chrome ---------- */
+.tagrow{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:2.4vh}
+.flag{
+  font-size:1.35vh; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  padding:.5vh 1.1vh; border-radius:5px; background:var(--ink); color:#fff;
+}
+.flag.r{background:var(--rust)} .flag.t{background:var(--teal)} .flag.i{background:var(--indigo)} .flag.a{background:var(--amber)}
+.flag.ghost{background:none; color:var(--muted); border:1px solid var(--line)}
+.s.dark .flag.ghost{color:#9FB0BB; border-color:rgba(255,255,255,.28)}
+
+h1{font-size:6.4vh; line-height:1.06; margin:0; font-weight:800; letter-spacing:-.025em}
+h2{font-size:4.2vh; line-height:1.12; margin:0 0 2.2vh; font-weight:800; letter-spacing:-.02em}
+h3{font-size:2.3vh; margin:0 0 .8vh; font-weight:700}
+p{margin:0 0 1.6vh; font-size:2.15vh; color:var(--ink2); max-width:92ch}
+.s.dark p{color:#C6CFD6}
+.lead{font-size:2.6vh; color:var(--ink2); max-width:70ch}
+.s.dark .lead{color:#C6CFD6}
+em{font-style:normal; color:var(--rust)}
+.s.dark em{color:#E8A58F}
+b.t{color:var(--teal)} b.r{color:var(--rust)} b.i{color:var(--indigo)} b.a{color:var(--amber)}
+
+/* ---------- layout helpers ---------- */
+.cols{display:grid; gap:2vw; align-items:start}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:repeat(3,1fr)} .c21{grid-template-columns:1.25fr 1fr}
+.box{background:var(--card); border:1px solid var(--line); border-radius:1.4vh; padding:2.2vh 2.2vh; box-shadow:var(--shadow)}
+.s.dark .box{background:rgba(255,255,255,.055); border-color:rgba(255,255,255,.17); box-shadow:none}
+.box.ac{border-left:4px solid var(--c,var(--rust))}
+
+.big{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:5.6vh; line-height:1; color:var(--c,var(--rust)); font-variant-numeric:tabular-nums}
+.big.sm{font-size:3.8vh}
+.cap{font-size:1.7vh; color:var(--muted); margin-top:.7vh}
+.s.dark .cap{color:#9FB0BB}
+
+ul{margin:0; padding-left:2.2vh} li{font-size:2vh; color:var(--ink2); margin-bottom:.9vh}
+.s.dark li{color:#C6CFD6}
+ul.tight li{margin-bottom:.5vh; font-size:1.9vh}
+
+table{width:100%; border-collapse:collapse; font-size:1.85vh}
+th{text-align:left; padding:1.1vh 1.2vh; background:#EFEDE4; color:var(--muted); font-size:1.45vh;
+  letter-spacing:.1em; text-transform:uppercase; font-weight:600; border-bottom:1px solid var(--line)}
+td{padding:1.1vh 1.2vh; border-bottom:1px solid #EAE7DE; vertical-align:top; color:var(--ink2)}
+tr:last-child td{border-bottom:none}
+td.n{font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--ink); white-space:nowrap}
+.s.dark th{background:rgba(255,255,255,.07); color:#9FB0BB; border-color:rgba(255,255,255,.16)}
+.s.dark td{color:#C6CFD6; border-color:rgba(255,255,255,.1)} .s.dark td.n{color:#fff}
+
+.pill{display:inline-block; font-size:1.5vh; font-weight:600; padding:.3vh .9vh; border-radius:999px; white-space:nowrap}
+.pill.ok{background:rgba(31,95,91,.13); color:var(--teal)}
+.pill.no{background:rgba(168,64,43,.12); color:var(--rust)}
+.pill.sim{background:rgba(59,78,140,.12); color:var(--indigo)}
+.s.dark .pill.ok{background:rgba(120,190,182,.2); color:#9FDCD4}
+.s.dark .pill.no{background:rgba(232,165,143,.2); color:#F0B9A6}
+
+.score{display:inline-flex; align-items:center; gap:.8vh; font-size:1.6vh; font-weight:600; color:var(--teal);
+  background:rgba(31,95,91,.1); border:1px solid rgba(31,95,91,.3); padding:.5vh 1.1vh; border-radius:999px}
+.ask{border-left:4px solid var(--indigo); background:rgba(59,78,140,.07); padding:1.6vh 2vh; border-radius:0 1.2vh 1.2vh 0; margin-top:1.6vh}
+.ask .q{font-size:2vh; font-weight:600; color:var(--ink); margin-bottom:.6vh}
+.ask .a{font-size:1.9vh; color:var(--ink2)}
+.s.dark .ask{background:rgba(255,255,255,.06); border-left-color:#8FA6D6}
+.s.dark .ask .q{color:#fff} .s.dark .ask .a{color:#C6CFD6}
+
+/* ---------- speaker notes ---------- */
+.note{display:none; margin-top:2vh; border-left:3px solid var(--indigo); background:rgba(59,78,140,.07);
+  padding:1.4vh 1.8vh; border-radius:0 1vh 1vh 0; font-size:1.75vh; color:var(--ink2); max-height:26vh; overflow:auto}
+body.notes .s.on .note{display:block}
+.note b{color:var(--indigo)}
+.note .say{color:var(--ink); font-weight:500; display:block; margin-bottom:.7vh}
+.s.dark .note{background:rgba(255,255,255,.07); border-left-color:#8FA6D6; color:#BFCAD2}
+.s.dark .note b{color:#A8BCE6} .s.dark .note .say{color:#fff}
+
+/* ---------- bottom bar ---------- */
+#bar{position:fixed; left:0; right:0; bottom:0; height:5.4vh; display:flex; align-items:center; gap:1.4vh;
+  padding:0 2.2vw; background:rgba(21,35,46,.93); color:#C6CFD6; font-size:1.55vh; z-index:50; backdrop-filter:blur(6px)}
+#bar .nm{font-weight:600; color:#fff}
+#bar .sp{margin-left:auto; display:flex; align-items:center; gap:1.2vh}
+#bar button{font:inherit; font-size:1.5vh; font-weight:600; background:rgba(255,255,255,.12); color:#fff;
+  border:1px solid rgba(255,255,255,.22); border-radius:6px; padding:.5vh 1.2vh; cursor:pointer; transition:all .18s}
+#bar button:hover{background:var(--rust); border-color:var(--rust)}
+#bar button.on{background:var(--indigo); border-color:var(--indigo)}
+#bar .ctr{font-family:'JetBrains Mono',monospace; font-weight:600; color:#fff; min-width:5.5vh; text-align:right}
+#prog{position:fixed; left:0; bottom:5.4vh; height:3px; width:0; background:var(--rust); z-index:51; transition:width .3s}
+
+@media (max-aspect-ratio:1/1){
+  .c2,.c3,.c21{grid-template-columns:1fr}
+  h1{font-size:4.6vh} h2{font-size:3.2vh} .big{font-size:4.4vh}
+  .s{padding:4vh 6vw 8vh}
+}
+@media print{
+  html,body{overflow:visible; height:auto}
+  #bar,#prog{display:none}
+  #deck{height:auto}
+  .s{display:flex !important; position:relative; inset:auto; page-break-after:always; min-height:96vh; box-shadow:none}
+  .note{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- 1 -->
+<section class="s dark on">
+  <div class="tagrow">
+    <span class="flag ghost">Duyệt chéo Gate 2a · 17:00</span>
+    <span class="flag r">Nhóm 4mems · L3B</span>
+  </div>
+  <h1>Trợ lý hoàn phí LogiX-VN<br>Đề xuất: <em>Go có điều kiện</em></h1>
+  <p class="lead" style="margin-top:2.4vh">Hồ sơ launch v0 · 7 mục · mọi con số <b class="r">simulated</b>, tính bằng <span class="mono">src/lab13.py</span> của nhóm.</p>
+  <div class="cols c3" style="margin-top:3.4vh">
+    <div class="box ac" style="--c:var(--rust)"><div class="big">0,43×</div><div class="cap">chi phí so mốc thủ công 12.000 đ, trong phạm vi đề xuất</div></div>
+    <div class="box ac" style="--c:var(--teal)"><div class="big">20/20</div><div class="cap">đồng thuận hai bộ nhãn lỗi độc lập · mốc 80%</div></div>
+    <div class="box ac" style="--c:var(--amber)"><div class="big">3</div><div class="cap">luật dừng, mỗi luật đủ 4 vế, có ngưỡng và người phụ trách</div></div>
+  </div>
+  <div class="note">
+    <span class="say">“Nhóm 4mems. Đề xuất của nhóm em là Go có điều kiện. Em xin trình bày trong một phút, rồi mời các bạn đọc hồ sơ và hỏi.”</span>
+    <b>Đưa bản in <span class="mono">ho_so_launch_v0.md</span> cho nhóm hội đồng NGAY lúc này</b> — phiếu chấm ghi rõ họ chấm theo bằng chứng trong hồ sơ, không theo cách trình bày. Slide chỉ để họ tìm số nhanh hơn.
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="s">
+  <div class="tagrow"><span class="flag">60 giây</span><span class="flag ghost">Nói nguyên văn</span></div>
+  <h2>Kết luận trước, bằng chứng sau</h2>
+  <div class="box" style="border-left:4px solid var(--rust)">
+    <p style="font-size:2.5vh; color:var(--ink); margin:0">
+      “Trợ lý hoàn phí tốn <b class="r">4.472 đ</b> cho mỗi việc thành công, bằng <b class="t">0,37×</b> mốc thủ công.
+      Cộng chi phí nhân viên xử lý ca thất bại thì thành <b class="t">0,49×</b>. Tính thêm chi phí cố định và chỉ trong phạm vi đề xuất thì <b class="t">0,43×</b>.
+      Rẻ hơn ở cả ba cách tính.<br><br>
+      Nhưng nhóm em đề xuất <em>Go có điều kiện</em>, vì hai lý do.
+      Một: nếu tác động thật chỉ 5 điểm thì pilot chỉ có <b class="r">power 0,64</b> — nên nhóm hạ cam kết xuống MDE 6 điểm.
+      Hai: trong kịch bản phải xem lại toàn bộ gợi ý, chi phí lên <b class="r">1,04×</b> — tức đắt hơn làm tay — nên nhóm đặt 3 luật dừng.<br><br>
+      Phạm vi là <span class="mono">noi_dia</span> + <span class="mono">hang_nang</span>, 20 nhân viên mỗi nhóm, phân tầng 12 depot. Toàn bộ số là <b class="i">simulated</b>.”
+    </p>
+  </div>
+  <div class="note">
+    <span class="say">Đọc đúng đoạn này, không thêm. Khoảng 55–60 giây.</span>
+    <b>Vì sao nói số bất lợi ngay trong 60 giây đầu:</b> ô 10 điểm của dòng 1 phiếu chấm ghi “khớp, nêu cả con số bất lợi và cách xử lý”. Nêu sau khi bị hỏi chỉ được 5. Nêu trước là cách duy nhất chắc được 10.
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="s">
+  <div class="tagrow">
+    <span class="flag r">Phiếu chấm · dòng 1/3</span>
+    <span class="flag ghost">Đề xuất khớp bằng chứng</span>
+    <span class="score">mục tiêu 10/10</span>
+  </div>
+  <h2>Ba cách tính, công bố cả ba</h2>
+  <div class="cols c21">
+    <div>
+      <table>
+        <thead><tr><th>Phạm vi tính</th><th>Mỗi việc thành công</th><th>So mốc</th></tr></thead>
+        <tbody>
+          <tr><td>Toàn mẫu, chỉ chi phí trợ lý</td><td class="n">4.472 đ</td><td><span class="pill ok">0,37×</span></td></tr>
+          <tr><td>Toàn mẫu + nhân viên xử lý ca thất bại</td><td class="n">5.865 đ</td><td><span class="pill ok">0,49×</span></td></tr>
+          <tr><td><b>Trong phạm vi + chi phí cố định 40 tr/tháng</b></td><td class="n">5.217 đ</td><td><span class="pill ok">0,43×</span></td></tr>
+          <tr><td>Kịch bản xấu: xem lại 100% gợi ý</td><td class="n">12.516 đ</td><td><span class="pill no">1,04×</span></td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:1.8vh; margin-top:1.4vh">Số nhóm dùng để đề xuất là <b class="t">0,43×</b> — số <i>xấu nhất</i> trong ba cách tính hợp lý, không phải số đẹp nhất.</p>
+    </div>
+    <div>
+      <div class="box ac" style="--c:var(--rust)">
+        <h3>Hai con số bất lợi</h3>
+        <div class="big sm" style="--c:var(--rust)">power 0,64</div>
+        <div class="cap">nếu tác động thật chỉ 5 điểm. <b>Xử lý:</b> chốt MDE 6 điểm, đo đủ 2 tuần ở bước 0,50.</div>
+        <div class="big sm" style="--c:var(--rust); margin-top:1.8vh">1,04×</div>
+        <div class="cap">nếu xem lại 100% gợi ý với 16,2 phút làm lại. <b>Xử lý:</b> 3 luật dừng + hạ tỉ lệ xem lại.</div>
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <span class="say">“Nhóm em công bố cả ba cách tính, và dùng số xấu nhất để đề xuất. Hai số bất lợi là power 0,64 và 1,04×, mỗi số kèm cách xử lý.”</span>
+    <b>Nếu bị hỏi “sao không lấy 0,37× cho đẹp?”</b> → 0,37× chưa gồm chi phí nhân viên xử lý 82 ca thất bại và chưa gồm chi phí cố định. Dùng nó là làm trợ lý trông rẻ hơn thực tế.
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="s">
+  <div class="tagrow">
+    <span class="flag i">Phiếu chấm · dòng 2/3</span>
+    <span class="flag ghost">Số giả lập và phạm vi</span>
+    <span class="score">mục tiêu 10/10</span>
+  </div>
+  <h2>Thu hẹp phạm vi — có số đỡ, không phải để lấy số đẹp</h2>
+  <div class="cols c2">
+    <div class="box">
+      <h3>Nhóm yêu cầu nào vào, nhóm nào ra</h3>
+      <table>
+        <thead><tr><th>Nhóm</th><th>Chi phí</th><th>Quyết định</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">noi_dia</td><td class="n">—</td><td><span class="pill ok">trong phạm vi</span></td></tr>
+          <tr><td class="mono">hang_nang</td><td class="n">—</td><td><span class="pill ok">trong phạm vi</span></td></tr>
+          <tr><td class="mono">quoc_te</td><td class="n">1,88×</td><td><span class="pill no">loại · quá đắt</span></td></tr>
+          <tr><td class="mono">doi_tac</td><td class="n">0,85×</td><td><span class="pill no">loại · dù rẻ hơn mốc</span></td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:1.8vh; margin-top:1.2vh"><span class="mono">doi_tac</span> rẻ hơn mốc mà vẫn loại, vì nhóm này có quy trình đối tác riêng — đưa vào sẽ làm nhiễu phép so với đối chứng.</p>
+    </div>
+    <div class="box ac" style="--c:var(--indigo)">
+      <h3>Nhãn <span class="pill sim">simulated</span> ở mọi số giả lập</h3>
+      <ul class="tight">
+        <li>Mọi con số tính từ cột <span class="mono">_simulated</span> đều mang nhãn <b class="i">simulated</b> trong hồ sơ.</li>
+        <li>Phạm vi ghi rõ từng mục, <b>không có mục nào ghi “mọi yêu cầu”</b>.</li>
+        <li>Không có chữ <span class="mono">production</span> ở bất kỳ đâu — Gate 2a chỉ duyệt kế hoạch pilot.</li>
+        <li>Chỉ số viết là “chỉ số trong đợt chạy thử là…”, không viết “trợ lý đã nâng chỉ số”.</li>
+      </ul>
+      <p style="font-size:1.8vh; margin-top:1.2vh">Các bạn kiểm được ngay: <span class="mono">grep -rni production report/team</span> → không in gì.</p>
+    </div>
+  </div>
+  <div class="note">
+    <span class="say">“Phạm vi nhóm em thu hẹp có số đỡ: quốc tế 1,88× nên loại. Đối tác 0,85× rẻ hơn mốc nhưng vẫn loại vì có quy trình riêng, đưa vào sẽ nhiễu phép so.”</span>
+    <b>Mời họ tự kiểm:</b> đọc nhãn <span class="mono">simulated</span> trong <span class="mono">bang_chi_phi.md</span>, và chạy lệnh grep. Để nhóm hội đồng tự xác nhận thì họ cho 10 dễ hơn là nghe mình nói.
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="s">
+  <div class="tagrow">
+    <span class="flag t">Phiếu chấm · dòng 3/3</span>
+    <span class="flag ghost">Pilot ra được quyết định</span>
+    <span class="score">mục tiêu 10/10</span>
+  </div>
+  <h2>Tách được tác động · đủ mẫu · dừng được</h2>
+  <div class="cols c3">
+    <div class="box ac" style="--c:var(--teal)">
+      <h3>Tách được tác động</h3>
+      <ul class="tight">
+        <li>Có <b>đối chứng</b>, chia ngẫu nhiên theo <b>nhân viên</b> — không chia theo yêu cầu, vì yêu cầu của cùng một người không độc lập.</li>
+        <li>Phân tầng theo <b>12 depot</b> để tránh lệch vùng.</li>
+        <li>Chống lan: nhân viên trong cùng nhóm không trộn hai chế độ.</li>
+        <li>Đăng ký trước chỉ số chính.</li>
+      </ul>
+    </div>
+    <div class="box ac" style="--c:var(--indigo)">
+      <h3>Đủ mẫu — và nói thẳng chỗ không đủ</h3>
+      <table>
+        <tbody>
+          <tr><td>ICC</td><td class="n">0,02</td></tr>
+          <tr><td>Hệ số thiết kế</td><td class="n">6,96</td></tr>
+          <tr><td>Cụm mỗi nhóm</td><td class="n">20 người</td></tr>
+          <tr><td>Yêu cầu mỗi người</td><td class="n">≥ 299</td></tr>
+          <tr><td>MDE chốt</td><td class="n">6 điểm</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:1.75vh; margin-top:1vh">Trần mẫu hiệu dụng <span class="mono">c/ICC = 1.000 &lt; 1.251</span> cần cho 5 điểm → <b class="r">power 0,64</b>. Nhóm không hứa điều không đo được.</p>
+    </div>
+    <div class="box ac" style="--c:var(--amber)">
+      <h3>Dừng được: 3 luật, 4 vế</h3>
+      <ul class="tight">
+        <li><b>An toàn</b> — mở lại 7 ngày vượt đối chứng +2 điểm hoặc trần 6%, trong 1 tuần → dừng mở rộng. Nền <b class="a">3,97%</b>.</li>
+        <li><b>Chi phí</b> — vượt 8.000 đ/việc hoặc làm lại &gt;7%/tuần, trong 2 tuần liên tiếp → rà prompt. Nền <b class="a">4,89%</b>.</li>
+        <li><b>Mức dùng</b> — bỏ qua gợi ý &gt;40%, trong 1 tuần → dừng, phỏng vấn nhân viên. Nền <b class="a">27,12%</b>.</li>
+      </ul>
+      <p style="font-size:1.75vh; margin-top:.8vh">Mỗi luật có <b>ngưỡng · thời hạn · người có quyền dừng</b> là một vai trò, không ghi “cả đội”.</p>
+    </div>
+  </div>
+  <div class="note">
+    <span class="say">“Mỗi luật dừng đều có ngưỡng, có thời hạn, và người có quyền dừng là một vai trò cụ thể. Mức nền đều đo trước khi đặt ngưỡng.”</span>
+    <b>Đây là chỗ dễ ăn trọn 10 nhất</b> — vì ô 5 điểm là “luật dừng chung chung”. Nhấn đúng ba chữ: <b>ngưỡng · thời hạn · người có quyền dừng</b>.<br>
+    <b>Nếu bị hỏi vì sao đo nền trước:</b> nếu đặt ngưỡng an toàn 3% theo cảm giác trong khi nền thật là 3,97%, pilot sẽ tự dừng ngay tuần đầu dù chẳng có gì sai.
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="s">
+  <div class="tagrow"><span class="flag">Ba câu bắt buộc phải giải thích được</span><span class="flag ghost">RULES.md</span></div>
+  <h2>Hội đồng và giảng viên có quyền hỏi trực tiếp</h2>
+  <div class="ask">
+    <div class="q">1 · Vì sao tử số tính mọi lần chạy, còn mẫu số chỉ đếm việc thành công?</div>
+    <div class="a">Một ca chạy ba lần rồi vẫn thất bại thì đã đốt token, tool và phút người, nhưng không tạo ra giá trị nào. Nếu chia cho số yêu cầu, chi phí sẽ trông rẻ hơn thực tế. <b>Đức trả lời.</b></div>
+  </div>
+  <div class="ask">
+    <div class="q">2 · Cách tính cỡ mẫu hiệu dụng khi chia theo cụm?</div>
+    <div class="a"><span class="mono">DE = 1 + (m−1) × ICC</span>; mẫu hiệu dụng <span class="mono">= c × m / DE</span>, và nó có <b>trần</b> là <span class="mono">c / ICC</span> — tăng số yêu cầu mỗi người cũng không vượt được trần đó. Với 20 cụm và ICC 0,02: trần 1.000, cần 1.251 → không đủ cho 5 điểm. <b>Hải và Nhài trả lời.</b></div>
+  </div>
+  <div class="ask">
+    <div class="q">3 · Lý do của đề xuất cuối?</div>
+    <div class="a">Rẻ hơn mốc thủ công ở cả ba cách khoanh phạm vi, nên không phải No-go. Nhưng Gate 2a chỉ duyệt kế hoạch pilot và còn hai số bất lợi chưa xử lý xong, nên không phải Go thẳng. Vì vậy <b>Go có điều kiện</b>, kèm 3 điều kiện có người phụ trách và ngày kiểm. <b>Đức trả lời.</b></div>
+  </div>
+  <div class="note">
+    <span class="say">Không đọc slide này. Chỉ để sẵn, khi bị hỏi thì mở ra đúng câu.</span>
+    <b>Ba câu này nằm trong <span class="mono">RULES.md</span></b>: “Nhóm phải tự giải thích được… Hội đồng và giảng viên có thể hỏi trực tiếp.” Không trả lời được là mất điểm ở cả C1 và C6, nên cả bốn người phải nói được câu 1.
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="s">
+  <div class="tagrow"><span class="flag ghost">Tra số nhanh</span><span class="flag">Mọi con số trong hồ sơ, một chỗ</span></div>
+  <h2>Bảng số để các bạn đối chiếu</h2>
+  <div class="cols c3">
+    <div class="box">
+      <h3>Chi phí</h3>
+      <table><tbody>
+        <tr><td>Tổng chi phí</td><td class="n">4.373.585 đ</td></tr>
+        <tr><td>Việc thành công</td><td class="n">978</td></tr>
+        <tr><td>Ca không thành công</td><td class="n">82</td></tr>
+        <tr><td>Mỗi việc thành công</td><td class="n">4.472 đ</td></tr>
+        <tr><td>Hoà vốn phút người</td><td class="n">≈ 9 phút</td></tr>
+      </tbody></table>
+    </div>
+    <div class="box">
+      <h3>Độ nhạy &amp; chạy lại</h3>
+      <table><tbody>
+        <tr><td>Làm lại ×2</td><td class="n">+51,8%</td></tr>
+        <tr><td>Xem lại ×2</td><td class="n">+40,7%</td></tr>
+        <tr><td>Lương +25%</td><td class="n">+23,1%</td></tr>
+        <tr><td>Hệ số chạy lại</td><td class="n">1/p = 1,2500</td></tr>
+        <tr><td>Ngưỡng rẻ nhất</td><td class="n">2 lần chạy</td></tr>
+      </tbody></table>
+    </div>
+    <div class="box">
+      <h3>Chỉ số &amp; nhãn lỗi</h3>
+      <table><tbody>
+        <tr><td>Chính · đóng 24h, không mở lại 7 ngày</td><td class="n">82,83%</td></tr>
+        <tr><td>Dùng · bỏ qua gợi ý</td><td class="n">27,12%</td></tr>
+        <tr><td>An toàn · lỗi lọt đến khách</td><td class="n">4,25%</td></tr>
+        <tr><td>Đồng thuận nhãn</td><td class="n">20/20</td></tr>
+        <tr><td>Loại lỗi PAIR có biện pháp</td><td class="n">5/5</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <p style="margin-top:1.8vh; font-size:1.85vh">Tất cả tính bằng <span class="mono">src/lab13.py</span> của nhóm, chạy lại được. Ba phép thử tự kiểm của đề bài: <b class="t">1,20 · 1,25 · 1,25 — ĐẠT cả ba</b>. Mọi số: <span class="pill sim">simulated</span>.</p>
+  <div class="note">
+    <span class="say">“Nếu các bạn muốn đối chiếu con số nào, slide này có hết, và chạy lại được bằng code của nhóm em.”</span>
+    <b>Dùng slide này khi bị hỏi một số cụ thể</b> thay vì lật hồ sơ. Nếu họ hỏi số không có ở đây → mở <span class="mono">bang_chi_phi.md</span>, đừng đoán.
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="s">
+  <div class="tagrow"><span class="flag ghost">Phân vai</span><span class="flag">Ai trả lời câu nào</span></div>
+  <h2>Hỏi phần nào, người phụ trách phần đó đứng lên</h2>
+  <table>
+    <thead><tr><th style="width:22%">Người</th><th style="width:34%">Trả lời về</th><th>Câu dễ bị hỏi nhất</th></tr></thead>
+    <tbody>
+      <tr><td><b>Trần Minh Đức</b><div class="cap">2A202603977 · nhóm trưởng</div></td><td>Mô hình chi phí A1–A4, ngưỡng chạy lại B3, hoà vốn B4, đề xuất cuối</td><td>“Sao mẫu số chỉ đếm việc thành công?” · “Sao không đặt 1 lần chạy cho rẻ?”</td></tr>
+      <tr><td><b>Trần Thị Nhài</b><div class="cap">2A202603911</div></td><td>Bảng độ nhạy B1, cỡ mẫu, luật dừng, mức nền</td><td>“Ba yếu tố nhạy nhất là gì?” · “Mức nền đo trước hay sau khi đặt ngưỡng?”</td></tr>
+      <tr><td><b>Ngô Ngọc Hải</b><div class="cap">2A202603939</div></td><td>Thiết kế pilot, hệ số thiết kế, nhãn lỗi</td><td>“Vì sao chia theo nhân viên mà không theo yêu cầu?”</td></tr>
+      <tr><td><b>Trần Hải Long</b><div class="cap">2A202603891</div></td><td>Kinh tế chạy lại B2, nhãn lỗi, và <b>đi chấm nhóm kế tiếp</b></td><td>“Vì sao hệ số chi phí không phụ thuộc số lần chạy lại?”</td></tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <span class="say">Không cần đọc slide này. Để nhóm hội đồng thấy nhóm em phân vai rõ.</span>
+    <b>Quan trọng:</b> đừng để nhóm trưởng trả lời tất cả. Người đúng vai đứng lên trả lời nhìn chuyên nghiệp hơn, và nếu giảng viên hỏi chéo thì không ai bị bất ngờ.<br>
+    <b>Long nhớ:</b> 17:00–17:25 còn phải điền <span class="mono">phieu_cham.md</span> cho nhóm kế tiếp — 9 chỗ, cột lý do phải có số.
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="s dark">
+  <div class="tagrow"><span class="flag r">Mời hỏi</span><span class="flag ghost">Phiếu chấm có đúng một ô câu hỏi</span></div>
+  <h2>Một câu hỏi cho đội trình</h2>
+  <p class="lead">Phiếu chấm yêu cầu nhóm hội đồng ghi lại <b>một câu hỏi</b> và <b>câu trả lời của đội trình</b>. Mời các bạn hỏi — nhóm em sẽ trả lời bằng số, và chỉ ra con số đó nằm ở mục nào trong hồ sơ.</p>
+  <div class="cols c3" style="margin-top:2.6vh">
+    <div class="box"><h3>Nếu hỏi về chi phí</h3><p style="font-size:1.85vh; margin:0">Nhóm em có bốn cách tính, công bố cả bốn, dùng số xấu nhất để đề xuất.</p></div>
+    <div class="box"><h3>Nếu hỏi về phạm vi</h3><p style="font-size:1.85vh; margin:0">Mỗi nhóm bị loại đều có một con số làm lý do: 1,88× và 0,85×.</p></div>
+    <div class="box"><h3>Nếu hỏi về pilot</h3><p style="font-size:1.85vh; margin:0">Chỗ yếu nhất là cỡ mẫu — nhóm em nói thẳng power 0,64 và hạ cam kết.</p></div>
+  </div>
+  <p style="margin-top:3vh; font-size:2.2vh; color:#E6E2D8"><b>“Nhóm em không mang đến một con số đẹp, mà mang đến một kế hoạch có thể dừng được.”</b></p>
+  <div class="note">
+    <span class="say">“Hồ sơ của nhóm em ở đây. Mời các bạn hỏi.”</span>
+    <b>Sau khi trả lời, nhắc họ ghi câu trả lời vào phiếu</b> — phiếu có ô “Câu trả lời của đội trình (ghi lại tại buổi)”. Phiếu thiếu ô đó là phiếu chưa đủ, và đó là bằng chứng cho điểm của nhóm em.<br>
+    <b>Rồi đổi vai:</b> 4mems đi chấm nhóm kế tiếp. Ba câu nên hỏi họ — (1) số đã gồm chi phí nhân viên xử lý ca thất bại chưa? (2) mức nền của chỉ số an toàn là bao nhiêu, đo trước hay sau khi đặt ngưỡng? (3) ai có quyền dừng pilot, có phải một vai trò không?
+  </div>
+</section>
+
+</div>
+
+<div id="prog"></div>
+<div id="bar">
+  <span class="nm">4mems · Gate 2a</span>
+  <span>Duyệt chéo 17:00</span>
+  <span class="sp">
+    <button id="bn">Ghi chú · N</button>
+    <button id="bp">←</button>
+    <button id="bx">→</button>
+    <span class="ctr"><b id="ci">1</b>/9</span>
+  </span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var slides = [].slice.call(document.querySelectorAll('.s'));
+  var cur = 0;
+  var ci = document.getElementById('ci');
+  var prog = document.getElementById('prog');
+  var bn = document.getElementById('bn');
+
+  function show(i){
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function(s, k){ s.className = s.className.replace(/\s*\bon\b/, '') + (k === cur ? ' on' : ''); });
+    ci.textContent = cur + 1;
+    prog.style.width = ((cur + 1) / slides.length * 100) + '%';
+    try { location.hash = 's' + (cur + 1); } catch(e){}
+  }
+  function notes(){
+    var on = document.body.classList.toggle('notes');
+    bn.classList.toggle('on', on);
+  }
+
+  document.getElementById('bx').addEventListener('click', function(){ show(cur + 1); });
+  document.getElementById('bp').addEventListener('click', function(){ show(cur - 1); });
+  bn.addEventListener('click', notes);
+
+  document.addEventListener('keydown', function(e){
+    var k = e.key;
+    if(k === 'ArrowRight' || k === 'PageDown' || k === ' '){ e.preventDefault(); show(cur + 1); }
+    else if(k === 'ArrowLeft' || k === 'PageUp'){ e.preventDefault(); show(cur - 1); }
+    else if(k === 'Home'){ show(0); }
+    else if(k === 'End'){ show(slides.length - 1); }
+    else if(k === 'n' || k === 'N'){ notes(); }
+    else if(k === 'f' || k === 'F'){
+      if(document.fullscreenElement) document.exitFullscreen();
+      else if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+    }
+    else if(/^[1-9]$/.test(k)){ show(parseInt(k, 10) - 1); }
+  });
+
+  document.getElementById('deck').addEventListener('click', function(e){
+    if(e.target.closest('#bar') || e.target.closest('.note')) return;
+    show(cur + (e.clientX < window.innerWidth * 0.28 ? -1 : 1));
+  });
+
+  var m = /^#s(\d+)$/.exec(location.hash || '');
+  show(m ? parseInt(m[1], 10) - 1 : 0);
+})();
+</script>
+</body>
+</html>

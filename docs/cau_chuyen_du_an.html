@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Câu chuyện dự án · Trợ lý hoàn phí LogiX-VN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15232E; --ink2:#2B3D4A; --paper:#F7F6F1; --card:#FFFFFF;
+  --rust:#A8402B; --teal:#1F5F5B; --indigo:#3B4E8C; --amber:#B07A1E;
+  --line:#DBD7CC; --muted:#6E7A82;
+  --shadow:0 1px 2px rgba(21,35,46,.05), 0 8px 24px rgba(21,35,46,.07);
+  --shadow-lg:0 2px 4px rgba(21,35,46,.06), 0 18px 50px rgba(21,35,46,.13);
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Be Vietnam Pro',system-ui,sans-serif; font-size:16px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 24px}
+h1,h2,h3,h4{line-height:1.2; margin:0; font-weight:800; letter-spacing:-.02em}
+p{margin:0 0 14px}
+code,.mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-size:.9em}
+.num{font-family:'JetBrains Mono',monospace; font-weight:600; font-variant-numeric:tabular-nums}
+
+/* ---------- progress rail ---------- */
+#rail{position:fixed; top:0; left:0; height:3px; width:0%; background:var(--rust); z-index:90; transition:width .1s linear}
+
+/* ---------- side nav ---------- */
+#dots{position:fixed; right:18px; top:50%; transform:translateY(-50%); z-index:80; display:flex; flex-direction:column; gap:14px}
+#dots a{width:10px; height:10px; border-radius:50%; background:#C9C4B6; display:block; position:relative; transition:transform .25s, background .25s}
+#dots a:hover{transform:scale(1.5)}
+#dots a.on{background:var(--rust); transform:scale(1.45)}
+#dots a span{
+  position:absolute; right:20px; top:50%; transform:translateY(-50%) translateX(6px);
+  background:var(--ink); color:#fff; font-size:11px; padding:3px 9px; border-radius:6px;
+  white-space:nowrap; opacity:0; pointer-events:none; transition:all .2s;
+}
+#dots a:hover span{opacity:1; transform:translateY(-50%) translateX(0)}
+@media (max-width:1180px){#dots{display:none}}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1; transform:none}
+.rv.d1{transition-delay:.08s} .rv.d2{transition-delay:.16s} .rv.d3{transition-delay:.24s}
+.rv.d4{transition-delay:.32s} .rv.d5{transition-delay:.40s} .rv.d6{transition-delay:.48s}
+
+/* ---------- hero ---------- */
+header{
+  position:relative; overflow:hidden; color:#EDE9DF;
+  background:
+    radial-gradient(900px 440px at 12% -10%, rgba(168,64,43,.42), transparent 62%),
+    radial-gradient(760px 420px at 92% 8%, rgba(31,95,91,.40), transparent 60%),
+    linear-gradient(160deg,#0E1A23,#1A2C38 60%,#13222D);
+  padding:92px 0 76px;
+}
+header .glow{position:absolute; inset:0; opacity:.5;
+  background:radial-gradient(520px 300px at 50% 120%, rgba(176,122,30,.35), transparent 70%);
+  animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.35; transform:scale(1)} 50%{opacity:.6; transform:scale(1.08)}}
+header .wrap{position:relative}
+.kicker{font-size:12.5px; letter-spacing:.2em; text-transform:uppercase; color:#C8B9A6; margin-bottom:18px}
+header h1{font-size:clamp(34px,5.4vw,62px); color:#FFF; max-width:18ch}
+header h1 em{font-style:normal; color:#E8A58F}
+.lede{font-size:clamp(16px,1.9vw,20px); color:#C6CFD6; max-width:62ch; margin-top:20px}
+.chips{display:flex; flex-wrap:wrap; gap:9px; margin-top:28px}
+.chip{font-size:12.5px; padding:6px 13px; border-radius:999px; border:1px solid rgba(255,255,255,.26); color:#DCE3E8}
+.chip b{color:#fff}
+
+/* animated equation in hero */
+.eq{margin-top:38px; padding:22px; border-radius:var(--r); border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.055); backdrop-filter:blur(4px)}
+.eq-line{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:15px}
+.tk{padding:5px 11px; border-radius:8px; background:rgba(255,255,255,.1); color:#F0EDE5; opacity:0; transform:translateY(8px) scale(.94);
+  animation:pop .5s cubic-bezier(.2,.8,.3,1) forwards}
+.tk.op{background:none; padding:0 2px; color:#9FB0BB}
+.tk.hot{background:rgba(168,64,43,.45); color:#FFE6DE; box-shadow:0 0 0 1px rgba(232,165,143,.45)}
+.tk.cool{background:rgba(31,95,91,.45); color:#D9F0EC; box-shadow:0 0 0 1px rgba(120,190,182,.4)}
+@keyframes pop{to{opacity:1; transform:none}}
+.eq-note{font-size:13px; color:#9FB0BB; margin:14px 0 0}
+
+/* ---------- sections ---------- */
+section{padding:88px 0; position:relative}
+section.alt{background:#F1EFE7; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.act{display:flex; align-items:baseline; gap:14px; margin-bottom:10px}
+.act .no{font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; color:var(--rust);
+  border:1px solid currentColor; border-radius:999px; padding:3px 11px; letter-spacing:.06em; flex:none}
+section h2{font-size:clamp(26px,3.6vw,40px)}
+.sub{color:var(--muted); max-width:70ch; margin:14px 0 40px; font-size:17px}
+
+/* ---------- act 1: animated intake ---------- */
+.stage{position:relative; background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:26px; box-shadow:var(--shadow); overflow:hidden}
+.pipe{display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:14px; align-items:center}
+.pbox{border:1px solid var(--line); border-radius:12px; padding:16px; background:#FBFAF6; text-align:center}
+.pbox .t{font-weight:700; font-size:15px} .pbox .s{font-size:12.5px; color:var(--muted); margin-top:4px}
+.arrow{position:relative; height:2px; background:var(--line); min-width:46px}
+.arrow::after{content:''; position:absolute; right:-1px; top:-4px; border-left:8px solid var(--line); border-top:5px solid transparent; border-bottom:5px solid transparent}
+.arrow .dot{position:absolute; top:-3px; left:0; width:8px; height:8px; border-radius:50%; background:var(--rust);
+  animation:slide 2.4s linear infinite}
+.arrow .dot:nth-child(2){animation-delay:.8s} .arrow .dot:nth-child(3){animation-delay:1.6s}
+@keyframes slide{0%{left:0; opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{left:100%; opacity:0}}
+.split{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+.outcome{border-radius:12px; padding:14px 16px; border:1px solid var(--line)}
+.outcome.good{background:rgba(31,95,91,.07); border-color:rgba(31,95,91,.3)}
+.outcome.bad{background:rgba(168,64,43,.07); border-color:rgba(168,64,43,.3)}
+.outcome .big{font-size:26px; font-weight:800; font-family:'JetBrains Mono',monospace}
+.outcome.good .big{color:var(--teal)} .outcome.bad .big{color:var(--rust)}
+.outcome .lbl{font-size:13px; color:var(--ink2)}
+
+/* ---------- problem cards ---------- */
+.grid{display:grid; gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
+.pcard{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:22px; box-shadow:var(--shadow);
+  transition:transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s; position:relative; overflow:hidden}
+.pcard::before{content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--c,var(--rust));
+  transform:scaleY(0); transform-origin:top; transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.rv.in .pcard::before, .pcard.rv.in::before{transform:scaleY(1)}
+.pcard:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg)}
+.pcard .tag{font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--c,var(--rust)); font-weight:600}
+.pcard h3{font-size:19px; margin:8px 0 10px}
+.pcard p{font-size:14.5px; color:var(--ink2); margin:0 0 10px}
+.pcard .fix{font-size:14px; border-top:1px dashed var(--line); padding-top:11px; margin-top:12px; color:var(--ink)}
+.pcard .fix b{color:var(--c,var(--rust))}
+.stat{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:28px; color:var(--c,var(--rust)); line-height:1}
+.stat small{font-size:13px; font-weight:400; color:var(--muted); font-family:'Be Vietnam Pro',sans-serif; display:block; margin-top:5px}
+
+/* ---------- workflow player ---------- */
+.player{background:var(--card); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
+.ptop{display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--line); background:#FBFAF6; flex-wrap:wrap}
+.btn{font:inherit; font-size:13.5px; font-weight:600; border:1px solid var(--ink); background:var(--ink); color:#fff;
+  padding:8px 16px; border-radius:9px; cursor:pointer; transition:all .2s}
+.btn:hover{background:var(--rust); border-color:var(--rust)}
+.btn.ghost{background:none; color:var(--ink)} .btn.ghost:hover{background:var(--ink); color:#fff}
+.ptop .sc{margin-left:auto; font-size:13px; color:var(--muted)} .ptop .sc b{color:var(--ink)}
+.steps{display:flex; gap:0; padding:0; margin:0; list-style:none; border-bottom:1px solid var(--line); overflow-x:auto}
+.steps li{flex:1 0 auto; min-width:92px; padding:11px 10px; text-align:center; font-size:12.5px; color:var(--muted);
+  border-right:1px solid var(--line); cursor:pointer; position:relative; transition:all .25s; white-space:nowrap}
+.steps li:last-child{border-right:none}
+.steps li.on{color:#fff; background:var(--ink); font-weight:600}
+.steps li.done{color:var(--teal); background:rgba(31,95,91,.07)}
+.pbody{padding:26px 24px; min-height:300px}
+.slide{display:none; animation:fadeUp .45s cubic-bezier(.2,.7,.3,1)}
+.slide.on{display:block}
+@keyframes fadeUp{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+.slide h3{font-size:22px; margin-bottom:6px}
+.slide .who{font-size:12.5px; color:var(--rust); font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:12px}
+.slide p{font-size:15.5px; color:var(--ink2); max-width:78ch}
+.kv{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:20px}
+.kv div{background:#FBFAF6; border:1px solid var(--line); border-radius:11px; padding:13px 15px}
+.kv .k{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.kv .v{font-family:'JetBrains Mono',monospace; font-weight:600; font-size:18px; margin-top:4px}
+.warnbox{margin-top:18px; border-left:3px solid var(--amber); background:rgba(176,122,30,.08); padding:12px 16px; border-radius:0 10px 10px 0; font-size:14.5px}
+.warnbox b{color:var(--amber)}
+
+/* ---------- cases ---------- */
+.tabs{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px}
+.tab{font:inherit; font-size:13.5px; border:1px solid var(--line); background:var(--card); color:var(--ink2);
+  padding:8px 15px; border-radius:999px; cursor:pointer; transition:all .22s}
+.tab:hover{border-color:var(--ink)}
+.tab.on{background:var(--ink); color:#fff; border-color:var(--ink)}
+.cpane{display:none; animation:fadeUp .4s cubic-bezier(.2,.7,.3,1)}
+.cpane.on{display:block}
+.ctable{width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:var(--r); overflow:hidden; font-size:14.5px}
+.ctable th{background:#F1EFE7; text-align:left; padding:11px 14px; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; border-bottom:1px solid var(--line)}
+.ctable td{padding:12px 14px; border-bottom:1px solid #EDEAE1; vertical-align:top}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr{opacity:0; animation:rowIn .4s ease forwards}
+@keyframes rowIn{to{opacity:1}}
+.pill{display:inline-block; font-size:12px; font-weight:600; padding:3px 10px; border-radius:999px}
+.pill.sys{background:rgba(59,78,140,.12); color:var(--indigo)}
+.pill.q{background:rgba(176,122,30,.14); color:var(--amber)}
+.pill.ok{background:rgba(31,95,91,.13); color:var(--teal)}
+.pill.no{background:rgba(168,64,43,.12); color:var(--rust)}
+
+/* ---------- gate ---------- */
+.gate{background:linear-gradient(150deg,#13222D,#1E3440); color:#E6E2D8; border-radius:18px; padding:34px; box-shadow:var(--shadow-lg); position:relative; overflow:hidden}
+.gate::after{content:''; position:absolute; inset:-40%; background:conic-gradient(from 0deg, transparent, rgba(168,64,43,.16), transparent 40%);
+  animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gate > *{position:relative}
+.verdict{font-size:clamp(28px,4.4vw,46px); font-weight:800; color:#fff}
+.verdict span{color:#E8A58F}
+.conds{display:grid; gap:14px; margin-top:26px}
+.cond{border:1px solid rgba(255,255,255,.18); border-radius:12px; padding:16px 18px; background:rgba(255,255,255,.05)}
+.cond .ct{font-weight:700; color:#fff; font-size:15.5px}
+.cond .cd{font-size:14px; color:#BFCAD2; margin-top:6px}
+.cond .cm{font-size:12.5px; color:#93A3AD; margin-top:9px; font-family:'JetBrains Mono',monospace}
+
+
+/* ---------- speaker notes ---------- */
+#noteBtn{
+  position:fixed; right:18px; bottom:18px; z-index:95; font:inherit; font-size:13.5px; font-weight:600;
+  border:1px solid var(--ink); background:var(--ink); color:#fff; padding:10px 17px; border-radius:999px;
+  cursor:pointer; box-shadow:var(--shadow-lg); transition:all .22s; display:flex; align-items:center; gap:9px;
+}
+#noteBtn:hover{background:var(--indigo); border-color:var(--indigo)}
+#noteBtn.on{background:var(--indigo); border-color:var(--indigo)}
+#noteBtn kbd{font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; border:1px solid rgba(255,255,255,.4);
+  border-radius:5px; padding:1px 6px; opacity:.85}
+@media (max-width:620px){#noteBtn{right:12px; bottom:12px; padding:9px 13px; font-size:12.5px} #noteBtn kbd{display:none}}
+
+.note{
+  display:none; margin-top:20px; border-left:3px solid var(--indigo); background:rgba(59,78,140,.065);
+  padding:15px 19px; border-radius:0 12px 12px 0; font-size:14.5px; color:var(--ink2);
+}
+body.notes-on .note{display:block; animation:fadeUp .35s cubic-bezier(.2,.7,.3,1)}
+.note .nh{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:9px}
+.note .nh b{font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--indigo)}
+.note .nh .t{font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:600; color:var(--muted);
+  border:1px solid var(--line); border-radius:999px; padding:2px 9px; background:var(--card)}
+.note p{margin:0 0 9px; font-size:14.5px} .note p:last-child{margin:0}
+.note .say{color:var(--ink); font-weight:500}
+.note .q{border-top:1px dashed rgba(59,78,140,.3); padding-top:10px; margin-top:11px; font-size:13.8px}
+.note .q b{color:var(--indigo)}
+header .note{background:rgba(255,255,255,.07); border-left-color:#8FA6D6; color:#BFCAD2}
+header .note .nh b{color:#A8BCE6}
+header .note .nh .t{background:transparent; border-color:rgba(255,255,255,.26); color:#9FB0BB}
+header .note .say{color:#fff}
+header .note .q{border-top-color:rgba(255,255,255,.22)} header .note .q b{color:#A8BCE6}
+@media print{.note{display:block !important} #noteBtn{display:none}}
+
+footer{padding:50px 0 70px; color:var(--muted); font-size:13.5px; border-top:1px solid var(--line)}
+footer a{color:var(--rust)}
+
+@media (max-width:860px){
+  .g3,.g2{grid-template-columns:1fr}
+  .pipe{grid-template-columns:1fr; }
+  .arrow{height:34px; width:2px; margin:0 auto; min-width:0}
+  .arrow::after{right:-4px; top:auto; bottom:-1px; border:none; border-top:8px solid var(--line); border-left:5px solid transparent; border-right:5px solid transparent}
+  .arrow .dot{animation:slideV 2.4s linear infinite; left:-3px; top:0}
+  @keyframes slideV{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+  .split{grid-template-columns:1fr}
+  section{padding:60px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
+  .rv{opacity:1; transform:none}
+}
+@media print{#dots,#rail,.ptop{display:none} .slide,.cpane{display:block !important}}
+</style>
+</head>
+<body>
+<div id="rail"></div>
+<nav id="dots">
+  <a href="#act0" class="on"><span>Mở đầu</span></a>
+  <a href="#act1"><span>01 · Bài toán</span></a>
+  <a href="#act2"><span>02 · Vấn đề</span></a>
+  <a href="#act3"><span>03 · Cách giải</span></a>
+  <a href="#act4"><span>04 · Các case</span></a>
+  <a href="#act5"><span>05 · Quyết định</span></a>
+</nav>
+
+<button id="noteBtn" title="Hien/an ghi chu trinh bay">Ghi chú trình bày <kbd>N</kbd></button>
+
+<header id="act0">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div class="kicker">AI20K K5 · Day 13 · Lab 13 · Gate 2a</div>
+    <h1>Trợ lý hoàn phí có <em>đáng tiền</em> không?</h1>
+    <p class="lede">Một câu hỏi, bảy vấn đề phát sinh, và một bộ số đủ để hội đồng nói <b>Go</b> hay <b>No-Go</b>. Đây là đường đi của toàn bộ dự án — từ bài toán gốc đến kế hoạch pilot.</p>
+    <div class="chips">
+      <span class="chip">Nhóm <b>4mems</b> · Lớp <b>L3B</b></span>
+      <span class="chip">LogiX-VN · <b>45.000</b> yêu cầu/tháng</span>
+      <span class="chip">Mốc thủ công <b>12.000 đ</b>/yêu cầu</span>
+      <span class="chip">Toàn bộ số: <b>simulated</b></span>
+    </div>
+
+    <div class="eq">
+      <div class="eq-line" id="eqline"></div>
+      <p class="eq-note">Chú ý mẫu số: <b>chỉ</b> việc thành công. Tử số cộng <b>mọi</b> lần chạy, kể cả lần lỗi. Đặt sai một trong hai chỗ này là sai toàn bộ hồ sơ.</p>
+    </div>
+
+    <div class="note"><div class="nh"><b>Mở đầu</b><span class="t">0:00 – 0:30</span></div><p class="say">“Chào hội đồng. Nhóm 4mems trình bày hồ sơ kinh tế của trợ lý hoàn phí LogiX-VN. Em xin nói trước kết luận: trợ lý rẻ hơn mốc thủ công, nhưng chúng em đề xuất Go <i>có điều kiện</i>, và em sẽ nói rõ hai con số bất lợi ở cuối.”</p><p>Chỉ tay vào công thức. Nhấn đúng một ý: <b>tủ số cộng mọi lần chạy kể cả lần lỗi, mẫu số chỉ đếm việc thành công.</b> Nói xong câu này thì dừng một nhịp — đây là nền của mọi con số phía sau.</p><p class="q"><b>Đừng</b> đọc hết các chip ở trên. Chỉ cần nói “toàn bộ số là simulated” rồi đi tiếp.</p></div>
+  </div>
+</header>
+
+<!-- ACT 1 -->
+<section id="act1">
+  <div class="wrap">
+    <div class="act rv"><span class="no">ACT 01</span><h2>Bài toán gốc</h2></div>
+    <p class="sub rv d1">LogiX-VN có một trợ lý AI xử lý yêu cầu hoàn phí vận chuyển. Ban giám đốc không hỏi "nó thông minh không", họ hỏi <b>"nó rẻ hơn nhân viên không, và nếu triển khai thì triển khai thế nào cho an toàn"</b>. Mọi thứ phía sau chỉ là hai câu hỏi đó.</p>
+
+    <div class="stage rv d2">
+      <div class="pipe">
+        <div class="pbox">
+          <div class="t">Yêu cầu hoàn phí</div>
+          <div class="s">1.000 yêu cầu trong mẫu</div>
+        </div>
+        <div class="arrow"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+        <div class="pbox">
+          <div class="t">Trợ lý chạy</div>
+          <div class="s">token · tool · có thể chạy lại nhiều lần</div>
+        </div>
+        <div class="arrow"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+        <div class="pbox">
+          <div class="t">Người xem lại</div>
+          <div class="s">phút xem lại + phút làm lại × 2.000 đ/phút</div>
+        </div>
+      </div>
+      <div class="split">
+        <div class="outcome good">
+          <div class="big" data-count="978">0</div>
+          <div class="lbl">việc <b>thành công</b> — đây là mẫu số duy nhất được phép dùng</div>
+        </div>
+        <div class="outcome bad">
+          <div class="big" data-count="82">0</div>
+          <div class="lbl">ca <b>không thành công</b> trong phạm vi — vẫn tốn tiền, và còn đẩy sang nhân viên 12.000 đ/ca</div>
+        </div>
+      </div>
+
+      <div class="note"><div class="nh"><b>Hồi 01 · Bài toán</b><span class="t">0:30 – 1:10</span></div><p class="say">“Ban giám đốc không hỏi trợ lý có thông minh không. Họ hỏi hai câu: nó có rẻ hơn nhân viên không, và nếu triển khai thì triển khai thế nào cho an toàn. Cả bài làm của nhóm em chỉ trả lời hai câu đó.”</p><p>Chỉ vào hai ô số: <b>978 việc thành công</b> là mẫu số duy nhất được phép dùng; <b>82 ca không thành công</b> vẫn tốn tiền chạy, và còn đẩy sang nhân viên 12.000 đ mỗi ca.</p><p class="q"><b>Nếu bị hỏi ngay:</b> “sao không chia cho 1.000 yêu cầu?” → vì một ca chạy ba lần rồi vẫn thất bại thì đã đốt tiền mà không tạo ra giá trị nào. Chia cho số yêu cầu sẽ làm chi phí trông rẻ hơn thực tế.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACT 2 -->
+<section class="alt" id="act2">
+  <div class="wrap">
+    <div class="act rv"><span class="no">ACT 02</span><h2>Bảy vấn đề phát sinh</h2></div>
+    <p class="sub rv d1">Mỗi vấn đề dưới đây đều làm hồ sơ sai nếu bỏ qua. Thứ tự là thứ tự chúng tôi gặp phải trong lúc làm.</p>
+
+    <div class="grid g3">
+      <article class="pcard rv d1" style="--c:var(--rust)">
+        <div class="tag">Vấn đề 1 · mẫu số</div>
+        <h3>Chia cho sai thứ</h3>
+        <p>Chia tổng chi phí cho <i>số yêu cầu</i> nghe rất hợp lý — và sai. Một ca chạy 3 lần rồi vẫn thất bại thì vẫn đốt tiền nhưng không tạo ra giá trị nào.</p>
+        <div class="stat" data-count="4472" data-suffix=" đ">0</div>
+        <small style="color:var(--muted)">chi phí mỗi <b>việc thành công</b></small>
+        <div class="fix"><b>Giải:</b> tử số cộng mọi lần chạy kể cả <code>status=='loi'</code>; mẫu số chỉ đếm <code>ket_qua=='thanh_cong'</code>.</div>
+      </article>
+
+      <article class="pcard rv d2" style="--c:var(--teal)">
+        <div class="tag">Vấn đề 2 · chạy lại</div>
+        <h3>Cho chạy lại bao nhiêu lần?</h3>
+        <p>Trực giác nói: cho chạy lại nhiều thì tốn nhiều. Nhưng khi tính kỳ vọng, số lần cho phép <b>k</b> triệt tiêu — hệ số chi phí chỉ phụ thuộc tỉ lệ thành công một lần <b>p</b>.</p>
+        <div class="stat">1 / p</div>
+        <small style="color:var(--muted)">p = 0,8 → hệ số <b>1,25×</b> với mọi k</small>
+        <div class="fix"><b>Giải:</b> đừng mặc cả số lần chạy lại, hãy nâng <b>p</b>. Kiểm chứng bằng code: k = 1, 2, 3, 5, ∞ đều ra 1,2500.</div>
+      </article>
+
+      <article class="pcard rv d3" style="--c:var(--indigo)">
+        <div class="tag">Vấn đề 3 · phạm vi</div>
+        <h3>Con số nào mới là con số thật?</h3>
+        <p>Cùng một bộ dữ liệu cho ba kết quả khác nhau tuỳ cách khoanh phạm vi. Nếu chỉ đưa số đẹp nhất ra hội đồng thì đó là gian lận bằng cách chọn lọc.</p>
+        <div class="stat">0,28–0,43×</div>
+        <small style="color:var(--muted)">so với mốc thủ công 12.000 đ</small>
+        <div class="fix"><b>Giải:</b> công bố cả ba, nêu rõ phạm vi của từng số, và <b>đề xuất theo số xấu nhất</b> (0,43×).</div>
+      </article>
+
+      <article class="pcard rv d1" style="--c:var(--amber)">
+        <div class="tag">Vấn đề 4 · độ nhạy</div>
+        <h3>Giả định nào làm sập mô hình?</h3>
+        <p>Chi phí trung bình không nói gì về rủi ro. Phải biết nó lệch bao nhiêu khi một giả định sai, và yếu tố nào nguy hiểm nhất.</p>
+        <div class="stat" data-count="51.8" data-suffix="%" data-dec="1">0</div>
+        <small style="color:var(--muted)">tăng, khi số ca làm lại gấp đôi</small>
+        <div class="fix"><b>Giải:</b> quét độ nhạy từng yếu tố + từng cặp, kiểm tra tính cộng tính và đối xứng. Ba yếu tố nhạy nhất: <b>làm lại · xem lại · lương</b>.</div>
+      </article>
+
+      <article class="pcard rv d2" style="--c:var(--rust)">
+        <div class="tag">Vấn đề 5 · bẫy Goodhart</div>
+        <h3>Tối ưu cho ai?</h3>
+        <p>Giới hạn 1 lần chạy rẻ nhất <i>tính trên mỗi việc</i>. Nhưng ca bị chặn sẽ đẩy sang nhân viên 12.000 đ — nên rẻ nhất <i>cho công ty</i> lại là 2 lần.</p>
+        <div class="stat">1 ≠ 2</div>
+        <small style="color:var(--muted)">tối ưu cục bộ ≠ tối ưu toàn hệ thống</small>
+        <div class="fix"><b>Giải:</b> luôn cộng chi phí ngoại biên (12.000 đ × ca thất bại) vào trước khi chọn ngưỡng.</div>
+      </article>
+
+      <article class="pcard rv d3" style="--c:var(--teal)">
+        <div class="tag">Vấn đề 6 · nhãn lỗi</div>
+        <h3>Lỗi do đâu, ai nói?</h3>
+        <p>Nếu một người tự gắn nhãn 20 ca lỗi thì đó là ý kiến, không phải bằng chứng. Khó nhất là phân biệt lỗi <b>Hệ thống</b> (lộ ra ngay) với lỗi <b>Ngầm</b> (chỉ lộ khi soát sổ).</p>
+        <div class="stat" data-count="100" data-suffix="%">0</div>
+        <small style="color:var(--muted)">đồng thuận 20/20 · mốc cần đạt 80%</small>
+        <div class="fix"><b>Giải:</b> hai người gắn nhãn <b>độc lập, không trao đổi</b>, rồi mới so. Mỗi loại PAIR có một ca và một biện pháp khắc phục kèm event + ngưỡng.</div>
+      </article>
+
+      <article class="pcard rv d1" style="--c:var(--indigo)">
+        <div class="tag">Vấn đề 7 · cỡ mẫu</div>
+        <h3>Pilot không thể chứng minh điều ta muốn</h3>
+        <p>Chia theo nhân viên thì các yêu cầu của cùng một người tương quan với nhau (ICC 0,02). Hệ số thiết kế đẩy cỡ mẫu cần thiết lên <b>gần 7 lần</b>, và trần mẫu hiệu dụng là <code>c/ICC</code> — thêm yêu cầu cũng không vượt được.</p>
+        <div class="stat" data-count="0.64" data-dec="2">0</div>
+        <small style="color:var(--muted)">power nếu tác động thật chỉ 5 điểm</small>
+        <div class="fix"><b>Giải:</b> không hứa điều không đo được. Chốt MDE <b>6 điểm</b>, công bố thẳng power 0,64 ở 5 điểm như một số bất lợi.</div>
+      </article>
+
+      <article class="pcard rv d2" style="--c:var(--amber)">
+        <div class="tag">Vấn đề 8 · ngưỡng</div>
+        <h3>Đặt ngưỡng trước khi đo nền</h3>
+        <p>Nhóm gần như đặt ngưỡng an toàn 3% theo cảm giác. Mức nền thật của tỉ lệ mở lại trong 7 ngày là <b>3,97%</b> — pilot sẽ tự dừng ngay tuần đầu dù chẳng có gì sai.</p>
+        <div class="stat" data-count="3.97" data-suffix="%" data-dec="2">0</div>
+        <small style="color:var(--muted)">mức nền, đo <b>trước</b> khi chốt ngưỡng</small>
+        <div class="fix"><b>Giải:</b> đo nền trước → ngưỡng theo <b>chênh lệch</b> so với đối chứng (+2 điểm) kèm trần tuyệt đối 6%.</div>
+      </article>
+
+      <article class="pcard rv d3" style="--c:var(--rust)">
+        <div class="tag">Vấn đề 9 · tiếng Việt</div>
+        <h3>Code chạy máy mình, sập máy người khác</h3>
+        <p>Console Windows mặc định cp1252 nên <code>print</code> tiếng Việt ném <code>UnicodeEncodeError</code>, dù mọi assert đã pass. Chính câu lệnh kiểm YAML trong đề bài cũng sập vì <code>open()</code> không chỉ định encoding.</p>
+        <div class="stat">cp1252</div>
+        <small style="color:var(--muted)">≠ UTF-8</small>
+        <div class="fix"><b>Giải:</b> <code>sys.stdout.reconfigure(encoding='utf-8')</code> có bọc <code>hasattr</code>, và ghi rõ cho người chấm cách chạy lệnh kiểm YAML trên Windows.</div>
+      </article>
+    </div>
+
+    <div class="note"><div class="nh"><b>Hồi 02 · Vấn đề</b><span class="t">1:10 – 2:10</span></div><p><b>Không đọc cả chín thẻ.</b> Chỉ nói ba thẻ, mỗi thẻ một câu, rồi mời hội đồng tự đọc phần còn lại:</p><p class="say">“Thẻ 2 — chạy lại: siết số lần chạy lại không làm giảm chi phí, vì hệ số luôn bằng một chia p. Thẻ 5 — tối ưu cho mỗi việc và tối ưu cho công ty ra hai đáp án khác nhau. Thẻ 8 — nhóm em gần như đặt ngưỡng an toàn 3% theo cảm giác, trong khi mức nền thật là 3,97%; làm vậy thì pilot tự dừng ngay tuần đầu dù chẳng có gì sai.”</p><p>Thẻ 8 là thẻ nên kể dài nhất. Nó cho thấy nhóm <i>đo trước rồi mới đặt ngưỡng</i>, chứ không đặt ngưỡng theo mong muốn.</p><p class="q"><b>Ai trả lời:</b> thẻ 1–5 và 9 · Đức · thẻ 4 và 8 · Nhài · thẻ 6 · Hải và Long · thẻ 7 · Hải.</p></div>
+  </div>
+</section>
+
+<!-- ACT 3 -->
+<section id="act3">
+  <div class="wrap">
+    <div class="act rv"><span class="no">ACT 03</span><h2>Cách giải, theo đúng thứ tự</h2></div>
+    <p class="sub rv d1">Bấm <b>Chạy</b> để xem dòng công việc tự chạy qua từng bước, hoặc bấm vào tên bước để nhảy thẳng. Thứ tự này không đổi được: mỗi bước cần đầu ra của bước trước.</p>
+
+    <div class="player rv d2">
+      <div class="ptop">
+        <button class="btn" id="play">▶ Chạy</button>
+        <button class="btn ghost" id="prev">←</button>
+        <button class="btn ghost" id="next">→</button>
+        <div class="sc">Bước <b id="scn">1</b> / 7</div>
+      </div>
+      <ul class="steps" id="steps">
+        <li class="on">A · Đo chi phí</li>
+        <li>B1 · Độ nhạy</li>
+        <li>B2 · Chạy lại</li>
+        <li>B3 · Ngưỡng</li>
+        <li>B4 · Hoà vốn</li>
+        <li>C · Nhãn lỗi</li>
+        <li>D · Pilot</li>
+      </ul>
+      <div class="pbody" id="pbody">
+
+        <div class="slide on">
+          <h3>A · Đo chi phí mỗi việc thành công</h3>
+          <div class="who">Nhiệm vụ A1–A4 · Trần Minh Đức</div>
+          <p>Viết ba hàm tính tiền token, tiền tool, tiền người; rồi gộp thành <code>mo_hinh()</code> nhận đủ tham số giá và hệ số. Tách riêng bốn khoản để sau này quét độ nhạy chỉ cần đổi hệ số, không phải sửa công thức.</p>
+          <div class="kv">
+            <div><div class="k">Tổng chi phí</div><div class="v">4.373.585 đ</div></div>
+            <div><div class="k">Việc thành công</div><div class="v">978</div></div>
+            <div><div class="k">Mỗi việc thành công</div><div class="v" style="color:var(--rust)">4.472 đ</div></div>
+            <div><div class="k">So mốc thủ công</div><div class="v" style="color:var(--teal)">0,37×</div></div>
+          </div>
+          <div class="warnbox"><b>Bẫy đã tránh:</b> chi phí toàn hệ thống phải cộng thêm 12.000 đ cho mỗi yêu cầu không thành công — tính cả khoản đó thì tỉ lệ thành <b>0,49×</b>, không còn 0,37×.</div>
+          <div class="note"><div class="nh"><b>Bước A</b><span class="t">2:10 – 2:40</span></div><p class="say">“Chúng em tách riêng bốn khoản tiền: token, tool, phút xem lại, phút làm lại. Tách ra để khi quét độ nhạy chỉ cần đổi hệ số, không phải sửa công thức — nên con số nào cũng truy lại được nguồn.”</p><p>Đọc to <b>4.472 đ</b> rồi nói ngay: <b>nhưng đó chưa phải số em dùng để đề xuất.</b> Cộng chi phí nhân viên xử lý ca thất bại thì thành 0,49×. Nói câu này trước khi hội đồng kịp hỏi.</p></div>
+        </div>
+
+        <div class="slide">
+          <h3>B1 · Yếu tố nào nhạy nhất</h3>
+          <div class="who">Nhiệm vụ B1 · Trần Thị Nhài</div>
+          <p>Nhân đôi và chia nửa từng giả định, ghi lại phần trăm thay đổi. Rồi làm thêm hai việc ít người làm: thử <b>từng cặp</b> để xem tác động có cộng tính hay không, và kiểm <b>đối xứng</b> — chia nửa phải ra đúng một nửa của nhân đôi.</p>
+          <div class="kv">
+            <div><div class="k">Làm lại ×2</div><div class="v" style="color:var(--rust)">+51,8%</div></div>
+            <div><div class="k">Xem lại ×2</div><div class="v">+40,7%</div></div>
+            <div><div class="k">Lương +25%</div><div class="v">+23,1%</div></div>
+            <div><div class="k">Mô hình</div><div class="v">cộng tính</div></div>
+          </div>
+          <div class="warnbox"><b>Vì sao quan trọng:</b> mô hình cộng tính nghĩa là có thể cộng thẳng tác động của hai yếu tố mà không sai — nên hội đồng có thể tự tính kịch bản xấu của họ ngay tại chỗ.</div>
+          <div class="note"><div class="nh"><b>Bước B1</b><span class="t">2:40 – 3:05</span></div><p class="say">“Chi phí trung bình không nói gì về rủi ro. Nhóm em nhân đôi và chia nửa từng giả định, rồi làm thêm hai việc: thử từng cặp để xem tác động có cộng tính không, và kiểm đối xứng.”</p><p>Nhấn <b>+51,8%</b>: số ca làm lại là yếu tố nguy hiểm nhất. Rồi mời hội đồng dùng tính cộng tính: “nếu quý vị muốn kịch bản làm lại gấp đôi <i>và</i> lương tăng 25%, cộng thẳng hai số lại là được.”</p><p class="q"><b>Nhài trả lời phần này.</b> Nếu bị hỏi vì sao biết là cộng tính → vì tác động của từng cặp bằng tổng tác động riêng lẻ, nhóm đã kiểm bằng code.</p></div>
+        </div>
+
+        <div class="slide">
+          <h3>B2 · Kinh tế của việc chạy lại</h3>
+          <div class="who">Nhiệm vụ B2 · Trần Hải Long</div>
+          <p>Với tỉ lệ thành công mỗi lần <b>p</b> và tối đa <b>k</b> lần, số lần chạy kỳ vọng là <code>E[N] = (1−(1−p)^k)/p</code> còn xác suất thành công là <code>1−(1−p)^k</code>. Lấy tỉ số, <b>k triệt tiêu</b> — hệ số chi phí luôn bằng <code>1/p</code>.</p>
+          <div class="kv">
+            <div><div class="k">k = 1</div><div class="v">1,2500</div></div>
+            <div><div class="k">k = 2</div><div class="v">1,2500</div></div>
+            <div><div class="k">k = 3</div><div class="v">1,2500</div></div>
+            <div><div class="k">k = ∞</div><div class="v">1,2500</div></div>
+          </div>
+          <div class="warnbox"><b>Hệ quả quản trị:</b> siết số lần chạy lại <i>không</i> làm giảm chi phí mỗi việc thành công. Muốn giảm thì phải nâng p — tức sửa prompt, tool, dữ liệu, chứ không phải sửa cấu hình.</div>
+          <div class="note"><div class="nh"><b>Bước B2</b><span class="t">3:05 – 3:30</span></div><p><b>Đây là phần dễ gây ấn tượng nhất — đừng bỏ.</b> Viết lên bảng nếu có bảng.</p><p class="say">“Số lần chạy kỳ vọng chia cho xác suất thành công thì k triệt tiêu. Hệ số chi phí luôn bằng một chia p, không phụ thuộc số lần cho chạy lại. Nhóm em kiểm với k bằng 1, 2, 3, 5 và không giới hạn — đều ra 1,2500.”</p><p>Chốt bằng hệ quả quản trị: <b>muốn giảm chi phí thì phải nâng p, tức sửa prompt, tool, dữ liệu — không phải sửa cấu hình số lần chạy.</b></p><p class="q"><b>Long trả lời phần này.</b></p></div>
+        </div>
+
+        <div class="slide">
+          <h3>B3 · Chọn ngưỡng chạy lại — và cái bẫy</h3>
+          <div class="who">Nhiệm vụ B3 · Trần Minh Đức</div>
+          <p>So chi phí ở các ngưỡng 1, 2, 3, không giới hạn. Nhìn riêng chi phí mỗi việc thành công thì <b>ngưỡng 1 rẻ nhất</b>. Nhưng ca bị chặn sẽ chuyển sang nhân viên, mỗi ca 12.000 đ — cộng vào thì <b>ngưỡng 2 mới rẻ nhất cho công ty</b>.</p>
+          <div class="kv">
+            <div><div class="k">Rẻ nhất mỗi việc</div><div class="v">1 lần chạy</div></div>
+            <div><div class="k">Rẻ nhất toàn hệ thống</div><div class="v" style="color:var(--teal)">2 lần chạy</div></div>
+            <div><div class="k">Tên của cái bẫy</div><div class="v" style="font-size:15px">Goodhart</div></div>
+          </div>
+          <div class="warnbox"><b>Đây là câu hỏi hội đồng hay hỏi nhất:</b> "sao không đặt 1 lần cho rẻ?" — trả lời bằng hai con số, không bằng lý thuyết.</div>
+          <div class="note"><div class="nh"><b>Bước B3</b><span class="t">3:30 – 3:55</span></div><p><b>Dự đoán: hội đồng sẽ hỏi “sao không đặt 1 lần cho rẻ?” Hãy hỏi hộ họ rồi tự trả lời.</b></p><p class="say">“Nếu chỉ nhìn chi phí mỗi việc thành công thì ngưỡng 1 lần rẻ nhất. Nhưng ca bị chặn sẽ đẩy sang nhân viên, mỗi ca 12.000 đ. Cộng khoản đó vào thì ngưỡng 2 lần mới rẻ nhất cho công ty.”</p><p>Gọi tên nó: <b>đây là bẩy Goodhart</b> — tối ưu một chỉ số cục bộ làm xấu kết quả toàn hệ thống. Nói tên rồi dừng, đừng giảng thêm về lý thuyết.</p></div>
+        </div>
+
+        <div class="slide">
+          <h3>B4 · Điểm hoà vốn tính theo phút người</h3>
+          <div class="who">Nhiệm vụ B4 · Trần Minh Đức</div>
+          <p>Đảo ngược câu hỏi: nếu <i>không</i> có trợ lý, mỗi việc cần bao nhiêu phút người thì mới đáng? Giữ nguyên tiền máy và tiền làm lại, giải ra số phút làm cho hai bên bằng nhau.</p>
+          <div class="kv">
+            <div><div class="k">Việc thành công</div><div class="v">948</div></div>
+            <div><div class="k">Tiền máy</div><div class="v">224.513 đ</div></div>
+            <div><div class="k">Phút hoà vốn</div><div class="v" style="color:var(--rust)">≈ 9 phút</div></div>
+          </div>
+          <div class="warnbox"><b>Minh bạch về sai khác:</b> số phút làm lại trung bình là 15,30 trên toàn bộ dữ liệu nhưng 16,25 nếu chỉ tính trong phạm vi. Hồ sơ ghi cả hai; chênh lệch nằm trong ngưỡng chấp nhận 2%.</div>
+          <div class="note"><div class="nh"><b>Bước B4</b><span class="t">3:55 – 4:15</span></div><p class="say">“Chúng em đảo ngược câu hỏi: nếu không có trợ lý thì mỗi việc cần bao nhiêu phút người mới đáng? Đáp số khoảng 9 phút. Dưới 9 phút thì làm tay rẻ hơn.”</p><p><b>Chủ động nói ra chỗ chênh:</b> số phút làm lại trung bình là 15,30 trên toàn bộ dữ liệu nhưng 16,25 nếu chỉ tính trong phạm vi. Hồ sơ ghi cả hai, chênh lệch nằm trong ngưỡng 2%. Nói trước thì đó là sự cẩn thận; để hội đồng tìm ra thì đó là lỗi.</p></div>
+        </div>
+
+        <div class="slide">
+          <h3>C · Gắn nhãn lỗi độc lập</h3>
+          <div class="who">Nhiệm vụ C · Ngô Ngọc Hải + Trần Hải Long</div>
+          <p>Hai người đọc 20 ca lỗi và gắn nhãn theo 5 loại của Google PAIR, <b>không trao đổi với nhau</b>, nộp xong mới so. Đây là phần duy nhất của dự án không đi qua code — nên cũng là phần duy nhất mà tính độc lập là bằng chứng.</p>
+          <div class="kv">
+            <div><div class="k">Số ca</div><div class="v">20</div></div>
+            <div><div class="k">Đồng thuận</div><div class="v" style="color:var(--teal)">20/20 = 100%</div></div>
+            <div><div class="k">Mốc cần</div><div class="v">80%</div></div>
+            <div><div class="k">Biện pháp</div><div class="v">5 / 5 loại</div></div>
+          </div>
+          <div class="warnbox"><b>Quy tắc đã viết ra để khỏi tranh nhau:</b> lỗi <b>Hệ thống</b> là lỗi lộ ra ngay lúc xử lý; lỗi <b>Ngầm</b> chỉ lộ ra khi đi soát sổ sách. Cùng một hiện tượng, khác nhau ở chỗ ai phát hiện.</div>
+          <div class="note"><div class="nh"><b>Bước C</b><span class="t">4:15 – 4:45</span></div><p class="say">“Hai bạn trong nhóm đọc 20 ca lỗi và gắn nhãn độc lập, không trao đổi, nộp xong mới so. Đồng thuận 20 trên 20. Đây là phần duy nhất không đi qua code, nên tính độc lập chính là bằng chứng.”</p><p>Nếu bị hỏi về <b>Ca 8</b> — ca từng lệch nhãn: trả lời thẳng rằng <b>người gắn nhãn tự sửa bản ghi của mình và ghi rõ là sửa chép nhầm; không ai sửa hộ ai.</b> Đừng vòng vo, trả lời thẳng là điểm cộng.</p><p class="q"><b>Hải và Long trả lời phần này.</b> Nhắc quy tắc phân biệt: Hệ thống là lỗi lộ ra ngay lúc xử lý; Ngầm là lỗi chỉ lộ khi đi soát sổ sách.</p></div>
+        </div>
+
+        <div class="slide">
+          <h3>D · Thiết kế pilot và luật dừng</h3>
+          <div class="who">Nhiệm vụ D · Ngô Ngọc Hải + Trần Thị Nhài</div>
+          <p>Chia theo <b>nhân viên</b> (không chia theo yêu cầu, vì cùng nhân viên thì các yêu cầu không độc lập), phân tầng theo 12 depot, 20 người mỗi nhóm. Tính hệ số thiết kế từ ICC rồi mới chốt MDE — không chốt MDE theo mong muốn.</p>
+          <div class="kv">
+            <div><div class="k">Đơn vị chia</div><div class="v" style="font-size:15px">nhân viên</div></div>
+            <div><div class="k">Mỗi nhóm</div><div class="v">20 người</div></div>
+            <div><div class="k">Hệ số thiết kế</div><div class="v">6,96</div></div>
+            <div><div class="k">MDE chốt</div><div class="v" style="color:var(--teal)">6 điểm</div></div>
+          </div>
+          <div class="warnbox"><b>Ba luật dừng, mỗi luật đủ bốn vế</b> NẾU – TRONG – THÌ – KHÔNG THÌ, và chỉ được xem số giữa kỳ ở chỉ số an toàn; xem giữa kỳ ở chỉ số chính sẽ làm phồng alpha.</div>
+          <div class="note"><div class="nh"><b>Bước D</b><span class="t">4:45 – 5:20</span></div><p class="say">“Nhóm em chia theo nhân viên, không chia theo yêu cầu — vì các yêu cầu của cùng một nhân viên không độc lập với nhau. Tương quan nội cụm 0,02 đẩy hệ số thiết kế lên 6,96, nghĩa là cần gần bảy lần cỡ mẫu.”</p><p>Nói thứ tự làm việc, vì nó quan trọng hơn con số: <b>tính hệ số thiết kế trước, rồi mới chốt MDE. Không chốt MDE theo mong muốn.</b></p><p class="q"><b>Hải trả lời thiết kế, Nhài trả lời cỡ mẫu và luật dừng.</b> Nếu bị hỏi sao không xem số giữa kỳ cho nhanh → chỉ được xem ở chỉ số an toàn; xem giữa kỳ ở chỉ số chính sẽ làm phồng alpha, tức tăng khả năng kết luận sai là có tác động.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACT 4 -->
+<section class="alt" id="act4">
+  <div class="wrap">
+    <div class="act rv"><span class="no">ACT 04</span><h2>Các case cụ thể</h2></div>
+    <p class="sub rv d1">Hội đồng ít hỏi công thức, họ hỏi "ca này thì sao". Bốn nhóm case dưới đây là bốn kiểu câu hỏi hay gặp.</p>
+
+    <div class="tabs rv d2">
+      <button class="tab on">5 loại lỗi PAIR</button>
+      <button class="tab">Ca lỗi đáng nhớ</button>
+      <button class="tab">Kịch bản chi phí</button>
+      <button class="tab">Luật dừng</button>
+    </div>
+
+    <div class="cpane on">
+      <table class="ctable">
+        <thead><tr><th style="width:21%">Loại lỗi</th><th style="width:34%">Biểu hiện trong dữ liệu</th><th>Biện pháp khắc phục · event · ngưỡng</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill sys">Hệ thống</span></td><td>Trợ lý báo hoàn phí thành công trong khi sổ cái ghi lỗi.</td><td>Khoá chống hoàn trùng; không báo thành công khi sổ cái lỗi. Đo tỉ lệ lệch sổ, ngưỡng 0, kiểm hằng ngày.</td></tr>
+          <tr><td><span class="pill q">Ngầm</span></td><td>Số tiền hoàn sai nhưng không ai phát hiện cho đến kỳ soát sổ.</td><td>Đối chiếu tự động số tiền hoàn với bảng giá; cảnh báo khi lệch &gt; 0 đ. Kiểm hằng tuần.</td></tr>
+          <tr><td><span class="pill no">Ngữ cảnh</span></td><td>Trả lời đúng quy định chung nhưng sai với loại hàng của yêu cầu.</td><td>Bắt buộc đọc trường loại hàng trước khi quyết; chặn nếu trường trống. Đo tỉ lệ thiếu ngữ cảnh.</td></tr>
+          <tr><td><span class="pill ok">Thiếu năng lực</span></td><td>Yêu cầu <code>quoc_te</code> vượt khả năng — chi phí lên 1,88×.</td><td>Loại <code>quoc_te</code> khỏi phạm vi pilot và chuyển thẳng cho nhân viên. Đo tỉ lệ ca ngoài phạm vi.</td></tr>
+          <tr><td><span class="pill q">Kỳ vọng</span></td><td>Khách hiểu "đã tiếp nhận" là "đã được hoàn tiền".</td><td>Chuẩn hoá câu trả lời nêu rõ trạng thái và thời hạn. Đo tỉ lệ khách hỏi lại cùng nội dung.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cpane">
+      <table class="ctable">
+        <thead><tr><th style="width:12%">Ca</th><th style="width:30%">Chuyện gì xảy ra</th><th>Vì sao nó quan trọng với hồ sơ</th></tr></thead>
+        <tbody>
+          <tr><td><b>Ca 7</b></td><td>Hoàn phí hai lần cho cùng một yêu cầu.</td><td>Là lý do điều kiện 1 của đề xuất phải có khoá chống hoàn trùng — không phải khuyến nghị, mà là điều kiện bắt buộc.</td></tr>
+          <tr><td><b>Ca 8</b></td><td>Hai người gắn nhãn khác nhau: một ghi <span class="pill sys">Hệ thống</span>, một ghi <span class="pill q">Ngầm</span>.</td><td>Ca duy nhất lệch nhãn. Người gắn nhãn <b>tự sửa</b> bản ghi của mình và ghi rõ đó là sửa chép nhầm — không ai khác được sửa hộ. Sau đó đồng thuận 20/20.</td></tr>
+          <tr><td><b>Ca 20</b></td><td>Báo thành công trong khi sổ cái ghi lỗi.</td><td>Cho thấy chỉ số chính không đủ: cần một chỉ số an toàn độc lập với lời tự báo của trợ lý.</td></tr>
+          <tr><td><b><code>quoc_te</code></b></td><td>Nhóm yêu cầu quốc tế có chi phí 1,88× mốc thủ công.</td><td>Đây là lý do phạm vi pilot chỉ gồm <code>noi_dia</code> + <code>hang_nang</code>. Thu hẹp phạm vi là một quyết định có số liệu đỡ, không phải để lấy số đẹp.</td></tr>
+          <tr><td><b><code>doi_tac</code></b></td><td>0,85× — rẻ hơn mốc nhưng vẫn bị loại.</td><td>Trả lời câu hỏi "sao không lấy luôn cái này cho đẹp số": nhóm này có quy trình đối tác riêng, đưa vào sẽ làm nhiễu phép so.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cpane">
+      <table class="ctable">
+        <thead><tr><th style="width:36%">Kịch bản</th><th style="width:22%">Chi phí/việc thành công</th><th>So mốc 12.000 đ</th></tr></thead>
+        <tbody>
+          <tr><td>Toàn mẫu, chỉ chi phí trợ lý</td><td class="num">4.472 đ</td><td><span class="pill ok">0,37×</span></td></tr>
+          <tr><td>Toàn mẫu, cộng chi phí nhân viên xử lý ca thất bại</td><td class="num">5.865 đ</td><td><span class="pill ok">0,49×</span></td></tr>
+          <tr><td>Trong phạm vi, có chi phí cố định 40 triệu/tháng</td><td class="num">5.217 đ</td><td><span class="pill ok">0,43×</span> — <b>số dùng để đề xuất</b></td></tr>
+          <tr><td>Chỉ nhóm <code>quoc_te</code></td><td class="num">—</td><td><span class="pill no">1,88×</span> → loại khỏi phạm vi</td></tr>
+          <tr><td>Xấu nhất: xem lại 100% gợi ý, 16,2 phút làm lại</td><td class="num">12.516 đ</td><td><span class="pill no">1,04×</span> → đắt hơn thủ công</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cpane">
+      <table class="ctable">
+        <thead><tr><th style="width:16%">Luật</th><th>Bốn vế: NẾU – TRONG – THÌ – KHÔNG THÌ</th><th style="width:16%">Mức nền</th></tr></thead>
+        <tbody>
+          <tr><td><b>An toàn</b></td><td><b>NẾU</b> tỉ lệ mở lại 7 ngày vượt đối chứng +2 điểm hoặc vượt trần 6% · <b>TRONG</b> một tuần đo · <b>THÌ</b> dừng mở rộng, giữ nguyên lưu lượng và soát ca lỗi · <b>KHÔNG THÌ</b> đi tiếp sang bước phát hành kế tiếp.</td><td class="num">3,97%</td></tr>
+          <tr><td><b>Chi phí</b></td><td><b>NẾU</b> chi phí mỗi việc thành công vượt 8.000 đ hoặc tỉ lệ làm lại vượt 7%/tuần · <b>TRONG</b> hai tuần liên tiếp · <b>THÌ</b> hạ tỉ lệ xem lại và rà lại prompt · <b>KHÔNG THÌ</b> giữ kế hoạch mở rộng.</td><td class="num">4,89%</td></tr>
+          <tr><td><b>Mức dùng</b></td><td><b>NẾU</b> tỉ lệ nhân viên bỏ qua gợi ý vượt 40% · <b>TRONG</b> một tuần đo · <b>THÌ</b> dừng mở rộng và phỏng vấn nhân viên tìm nguyên nhân · <b>KHÔNG THÌ</b> tiếp tục theo lịch.</td><td class="num">27,12%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note"><div class="nh"><b>Hồi 04 · Các case</b><span class="t">5:20 – 5:45</span></div><p><b>Phần này để trả lời, không để trình bày.</b> Nói một câu rồi chuyển sang hồi 05; mở lại các tab khi bị hỏi.</p><p class="say">“Bốn tab này là bốn kiểu câu hỏi nhóm em dự đoán sẽ gặp: năm loại lỗi PAIR kèm biện pháp, các ca lỗi đáng nhớ, năm kịch bản chi phí, và ba luật dừng.”</p><p class="q"><b>Mẽo:</b> khi bị hỏi một con số, mở tab <i>Kịch bản chi phí</i> — cả năm con số nằm cạnh nhau nên trả lời được mọi câu “thế còn trường hợp…” mà không phải tính lại. Tab <i>Luật dừng</i> cho thấy đủ bốn vế NẾU – TRONG – THÌ – KHÔNG THÌ, kèm mức nền đo trước.</p></div>
+  </div>
+</section>
+
+<!-- ACT 5 -->
+<section id="act5">
+  <div class="wrap">
+    <div class="act rv"><span class="no">ACT 05</span><h2>Quyết định</h2></div>
+    <p class="sub rv d1">Gate 2a chỉ duyệt <b>kế hoạch pilot</b>, không duyệt cho trợ lý chạy chính thức. Vì vậy đề xuất không phải là "Go", mà là "Go có điều kiện" — kèm điều kiện có người phụ trách và có ngày kiểm.</p>
+
+    <div class="gate rv d2">
+      <div class="verdict">Đề xuất: <span>Go có điều kiện</span></div>
+      <p style="color:#C6CFD6; max-width:70ch; margin-top:14px">Trợ lý rẻ hơn mốc thủ công ở mọi cách khoanh phạm vi hợp lý (0,37× · 0,49× · 0,43×). Nhưng hai số bất lợi phải nói ra trước khi hội đồng tự tìm thấy: <b style="color:#E8A58F">power chỉ 0,64</b> nếu tác động thật là 5 điểm, và <b style="color:#E8A58F">1,04×</b> trong kịch bản xem lại toàn bộ.</p>
+      <div class="conds">
+        <div class="cond">
+          <div class="ct">Điều kiện 1 · An toàn &amp; chống hoàn trùng</div>
+          <div class="cd">Khoá chống hoàn trùng; không báo thành công khi sổ cái lỗi (Ca 7, Ca 20). Tỉ lệ mở lại 7 ngày trong phạm vi không vượt +2 điểm so đối chứng hoặc trần 6%.</div>
+          <div class="cm">Kỹ sư trưởng agent · kiểm 2026-12-01</div>
+        </div>
+        <div class="cond">
+          <div class="ct">Điều kiện 2 · Chi phí &amp; mức dùng</div>
+          <div class="cd">Giữ chi phí ≤ 8.000 đ/việc thành công, làm lại ≤ 7%/tuần, bỏ qua gợi ý ≤ 40%/tuần, qua các bước phát hành 10% → 25% → 50%.</div>
+          <div class="cm">PM trợ lý hoàn phí · kiểm hằng tuần từ 2026-12-08</div>
+        </div>
+        <div class="cond">
+          <div class="ct">Điều kiện 3 · Quyết định ở bước 0,50</div>
+          <div class="cd">Người kiểm số hoàn tất <code>n_per_arm</code>, <code>design_effect</code>, <code>clusters_per_arm</code> trong <code>pilot_plan.yaml</code> và tổng hợp kết quả đo khi đã đủ mẫu.</div>
+          <div class="cm">Giám đốc vận hành LogiX-VN · kiểm 2027-01-12</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g3 rv d3" style="margin-top:34px">
+      <div class="pcard" style="--c:var(--teal)">
+        <div class="tag">Nếu được hỏi</div>
+        <h3>"Số nào các bạn tin nhất?"</h3>
+        <p><b>0,43×</b> — vì nó đã gồm chi phí cố định và chi phí nhân viên xử lý ca thất bại, lại chỉ tính trong phạm vi đề xuất. Ba số kia có trong hồ sơ để hội đồng kiểm chéo.</p>
+      </div>
+      <div class="pcard" style="--c:var(--amber)">
+        <div class="tag">Nếu được hỏi</div>
+        <h3>"Chỗ nào yếu nhất?"</h3>
+        <p>Cỡ mẫu. Với 20 nhân viên/nhóm, trần mẫu hiệu dụng là 1.000 &lt; 1.251 cần thiết. Chúng tôi không che, chúng tôi hạ cam kết xuống MDE 6 điểm.</p>
+      </div>
+      <div class="pcard" style="--c:var(--rust)">
+        <div class="tag">Nếu được hỏi</div>
+        <h3>"Toàn bộ là số thật chứ?"</h3>
+        <p>Không. Mọi con số tính từ cột <code>_simulated</code> đều mang nhãn <b>simulated</b> trong hồ sơ. Không có chữ "production" ở bất kỳ đâu, vì Gate 2a chưa duyệt chạy chính thức.</p>
+      </div>
+    </div>
+
+    <div class="note"><div class="nh"><b>Hồi 05 · Quyết định</b><span class="t">5:45 – 6:30</span></div><p class="say">“Gate 2a chỉ duyệt kế hoạch pilot, không duyệt cho trợ lý chạy chính thức. Vì vậy đề xuất của nhóm em là Go có điều kiện, và mỗi điều kiện đều có người phụ trách cùng ngày kiểm.”</p><p><b>Rồi nói ra hai số bất lợi, chủ động:</b> power chỉ 0,64 nếu tác động thật là 5 điểm; và 1,04× — tức đắt hơn thủ công — trong kịch bản phải xem lại toàn bộ gợi ý. Kèm cách xử lý ngay sau mỗi số, đừng để số bất lợi đứng một mình.</p><p>Câu kết: <b>“Nhóm em không mang đến một con số đẹp, mà mang đến một kế hoạch có thể dừng được.”</b></p><p class="q"><b>Ba câu hỏi chắc chắn gặp</b> — xem ba thẻ ngay dưới. Số tin nhất là 0,43×. Chỗ yếu nhất là cỡ mẫu. Và toàn bộ là số simulated, không có chữ “production” ở bất kỳ đâu trong hồ sơ.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Nhóm 4mems · Lớp L3B · Lab 13 Launch &amp; Economics · Gate 2a — Trần Minh Đức · Trần Thị Nhài · Ngô Ngọc Hải · Trần Hải Long.<br>
+    Tài liệu liên quan: <a href="flow_du_an.html">flow dự án</a> · <a href="gate2a_slides.html">slide hội đồng</a> · <a href="kich_ban_trinh_bay.md">kịch bản trình bày</a> · <a href="ke_hoach_phan_bien.md">kế hoạch phản biện</a>. Mọi con số: <b>simulated</b>.
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- hero equation, typed in token by token ---- */
+  var toks = [
+    ['tk hot','tiền token'],['tk op','+'],['tk hot','tiền tool'],['tk op','+'],
+    ['tk hot','phút xem lại'],['tk op','+'],['tk hot','phút làm lại'],
+    ['tk op','÷'],['tk cool','số việc THÀNH CÔNG']
+  ];
+  var el = document.getElementById('eqline');
+  toks.forEach(function(t,i){
+    var s = document.createElement('span');
+    s.className = t[0]; s.textContent = t[1];
+    s.style.animationDelay = (reduce ? 0 : 0.28 + i*0.13) + 's';
+    el.appendChild(s);
+  });
+
+  /* ---- reveal on scroll ---- */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+  [].forEach.call(document.querySelectorAll('.rv'), function(n){ io.observe(n); });
+
+  /* ---- animated counters ---- */
+  function run(node){
+    var target = parseFloat(node.getAttribute('data-count'));
+    var dec = parseInt(node.getAttribute('data-dec') || '0', 10);
+    var suf = node.getAttribute('data-suffix') || '';
+    var dur = reduce ? 1 : 1100, t0 = null;
+    function fmt(v){
+      var s = v.toFixed(dec);
+      if(dec > 0){
+        var p = s.split('.');
+        return p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + p[1] + suf;
+      }
+      return s.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + suf;
+    }
+    function step(ts){
+      if(t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      node.textContent = fmt(target * e);
+      if(p < 1) requestAnimationFrame(step); else node.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  var io2 = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ run(e.target); io2.unobserve(e.target); } });
+  }, {threshold:0.5});
+  [].forEach.call(document.querySelectorAll('[data-count]'), function(n){ io2.observe(n); });
+
+  /* ---- workflow player ---- */
+  var steps  = [].slice.call(document.querySelectorAll('#steps li'));
+  var slides = [].slice.call(document.querySelectorAll('#pbody .slide'));
+  var scn = document.getElementById('scn');
+  var playBtn = document.getElementById('play');
+  var cur = 0, timer = null;
+
+  function show(i){
+    cur = (i + slides.length) % slides.length;
+    steps.forEach(function(s, k){
+      s.className = k === cur ? 'on' : (k < cur ? 'done' : '');
+    });
+    slides.forEach(function(s, k){ s.className = k === cur ? 'slide on' : 'slide'; });
+    scn.textContent = cur + 1;
+  }
+  function stop(){ if(timer){ clearInterval(timer); timer = null; } playBtn.textContent = '▶ Chạy'; }
+  function start(){
+    timer = setInterval(function(){
+      if(cur === slides.length - 1){ stop(); return; }
+      show(cur + 1);
+    }, 4200);
+    playBtn.textContent = '❚❚ Dừng';
+  }
+  playBtn.addEventListener('click', function(){ timer ? stop() : start(); });
+  document.getElementById('next').addEventListener('click', function(){ stop(); show(cur + 1); });
+  document.getElementById('prev').addEventListener('click', function(){ stop(); show(cur - 1); });
+  steps.forEach(function(s, k){ s.addEventListener('click', function(){ stop(); show(k); }); });
+  show(0);
+
+  /* ---- case tabs ---- */
+  var tabs  = [].slice.call(document.querySelectorAll('.tab'));
+  var panes = [].slice.call(document.querySelectorAll('.cpane'));
+  function stagger(p){
+    [].forEach.call(p.querySelectorAll('tbody tr'), function(r, i){
+      r.style.animation = 'none';
+      void r.offsetWidth;
+      r.style.animation = 'rowIn .4s ease forwards';
+      r.style.animationDelay = (reduce ? 0 : i * 0.07) + 's';
+    });
+  }
+  tabs.forEach(function(t, k){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x, j){ x.className = j === k ? 'tab on' : 'tab'; });
+      panes.forEach(function(x, j){ x.className = j === k ? 'cpane on' : 'cpane'; });
+      stagger(panes[k]);
+    });
+  });
+  stagger(panes[0]);
+
+  /* ---- progress rail + active dot ---- */
+  var rail = document.getElementById('rail');
+  var dots = [].slice.call(document.querySelectorAll('#dots a'));
+  var secs = ['act0','act1','act2','act3','act4','act5'].map(function(id){ return document.getElementById(id); });
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    rail.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var mid = window.scrollY + window.innerHeight * 0.35, act = 0;
+    secs.forEach(function(s, i){ if(s && s.offsetTop <= mid) act = i; });
+    dots.forEach(function(d, i){ d.className = i === act ? 'on' : ''; });
+  }
+  var queued = false;
+  window.addEventListener('scroll', function(){
+    if(queued) return;
+    queued = true;
+    requestAnimationFrame(function(){ onScroll(); queued = false; });
+  }, {passive:true});
+  onScroll();
+
+  /* ---- speaker notes toggle ---- */
+  var nb = document.getElementById('noteBtn');
+  function toggleNotes(force){
+    var on = (typeof force === 'boolean') ? force : !document.body.classList.contains('notes-on');
+    document.body.classList.toggle('notes-on', on);
+    nb.classList.toggle('on', on);
+    nb.firstChild.nodeValue = on ? 'Ẩn ghi chú ' : 'Ghi chú trình bày ';
+  }
+  nb.addEventListener('click', function(){ toggleNotes(); });
+
+  /* ---- keyboard ---- */
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight'){ stop(); show(cur + 1); }
+    if(e.key === 'ArrowLeft'){ stop(); show(cur - 1); }
+    if(e.key === 'n' || e.key === 'N'){ toggleNotes(); }
+  });
+})();
+</script>
+</body>
+</html>
