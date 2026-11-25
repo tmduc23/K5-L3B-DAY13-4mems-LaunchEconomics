@@ -10,18 +10,18 @@
 #   e) Mức chênh 6 điểm (859 mỗi nhóm), 20 nhân viên mỗi nhóm:
 #
 # D2 · Năm câu kiểm tra "tách được tác động" với cách chia đã chọn (mỗi câu một dòng):
-#   1. Đối chứng chạy cùng thời gian:
-#   2. Chia ngẫu nhiên hay do người chọn:
-#   3. Ảnh hưởng gián tiếp và cách giảm:
-#   4. Chỉ số chính, ngưỡng, ngày quyết định đã viết trước:
-#   5. Ít nhất 20 cụm mỗi nhóm:
+#   1. Đối chứng chạy cùng thời gian: Có — 20 nhân viên đối chứng làm cùng tuần, cùng depot.
+#   2. Chia ngẫu nhiên hay do người chọn: Bốc thăm bằng code với seed ghi trước, phân tầng theo depot.
+#   3. Ảnh hưởng gián tiếp và cách giảm: Có rủi ro chia sẻ câu trả lời trong depot; giảm bằng quyền truy cập theo tài khoản và log lượt mở trợ lý theo staff_id.
+#   4. Chỉ số chính, ngưỡng, ngày quyết định đã viết trước: Có — chốt trước ngày bắt đầu.
+#   5. Ít nhất 20 cụm mỗi nhóm: Có, đúng 20.
 #
 # Đánh đổi đã chấp nhận (nếu cách chia chưa đạt cả hai điều kiện):
 #
 # Tỉ lệ mo_lai_trong_7_ngay hiện tại và ngưỡng an toàn đã chọn:
 
 pilot:
-  owner: "?"                      # một người có tên vai trò, không ghi "cả đội"
+  owner: "?"                      # một người có tên vai trò, không ghi tên tập thể
   scope: "?"                      # loại yêu cầu nào, depot nào; dựa vào kết quả A3
   assignment:
     unit: "?"                     # request | staff | depot
