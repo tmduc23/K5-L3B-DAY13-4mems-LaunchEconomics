@@ -1,48 +1,39 @@
-# Báo cáo cá nhân — Trần Hải Long - 2A202603891
+# Báo cáo cá nhân — TranHaiLong-2A202603891
 
 ## 1. Thông tin thành viên
 
 - Họ tên: Trần Hải Long
 - MSSV: 2A202603891
-- Email:
-- Vai trong nhóm: **Người gắn nhãn 2, kiêm giữ hồ sơ** (điền `ho_so_launch_v0.md` từ đầu buổi)
+- Email: ...
+- Vai trong nhóm: Người gắn nhãn 2, kiêm giữ hồ sơ
 
 ## 2. Phần việc phụ trách
 
-- `report/team/ho_so_launch_v0.md`: giữ và điền dần từ 14:10 — bảy mục, mỗi mục có con số chính, trạng thái (Xong có bằng chứng · Chưa · Giả lập) và một vai trò phụ trách; dòng cuối là đề xuất Go / Go có điều kiện / No-go.
-- Gắn nhãn độc lập cả 20 ca lỗi (bộ nhãn 2) và chọn 5 ca cho bảng khắc phục trong `report/team/bang_loi.md`.
-- `report/team/chi_so.md`: mục E2 rủi ro kinh tế, ít nhất hai dòng, số lấy từ bảng độ nhạy.
-- Trường `scope` của `report/team/pilot_plan.yaml`: phạm vi thu hẹp kèm lý do bằng số từ A3.
-- `report/team/phieu_cham.md`: chấm nhóm n + 1 khi làm hội đồng Gate 2a.
+- Giữ và hoàn thiện hồ sơ launch v0 (`report/team/ho_so_launch_v0.md`) từ đầu buổi qua các mốc CP1–CP5, chốt đề xuất Gate 2a kèm số bất lợi và điều kiện.
+- Gắn nhãn độc lập 20 ca lỗi theo 5 loại PAIR (CP3), cùng Hải đối chiếu đồng thuận, viết quy tắc phân biệt và bảng khắc phục 5 ca (`report/team/bang_loi.md`).
+- Viết `scope` cho `report/team/pilot_plan.yaml` dựa trên số A3.
+- Viết mục E2 rủi ro kinh tế trong `report/team/chi_so.md` dựa trên bảng độ nhạy B1 và B4.
+- Chấm hồ sơ nhóm bạn ở phiên hội đồng (`report/team/phieu_cham.md`) và rà soát `report/team/group_report.md`.
 
 ## 3. Đóng góp cụ thể
 
-- **Hồ sơ launch v0:** đã điền thông tin nhóm `4mems · L3B` và hoàn thành các mục 1, 2, 3, 7 trong `report/team/ho_so_launch_v0.md` (đều ghi trạng thái `Giả lập` vì tính từ hai cột `_simulated`); các mục 4, 5, 6 và đề xuất cuối sẽ điền tiếp sau CP3–CP5.
-- **Mục 1, 2 và 3 của hồ sơ:** mục 1 là **4.472 đ/việc thành công** [simulated, A2]; mục 2 nêu 3 yếu tố nhạy nhất (+51,8% làm lại ×2, +40,7% xem lại ×2, +23,1% lương +25%) [simulated, B1–B2]; mục 3 dùng phạm vi `noi_dia` + `hang_nang` ở quy mô 45.000 yêu cầu/tháng là **5.217 đ/yêu cầu = 0,43×** mốc 12.000 đ (đã gồm chi phí cố định và 82/982 ca nhân viên làm thay) [simulated, A4].
-- **Phạm vi pilot (`scope` trong `pilot_plan.yaml`):** thu hẹp vào `noi_dia` (0,22×) và `hang_nang` (0,69×); loại `quoc_te` (1,88×, thành công 27,3%) và `doi_tac` (0,85×, sát ngưỡng và có điều khoản riêng) [simulated, A3].
-- **Gắn nhãn 20 ca (bộ nhãn 2):** (chờ gắn nhãn độc lập lúc 15:35–15:43)
-- **Bảng khắc phục 5 ca:** (chờ hoàn thiện cùng Hải lúc 15:43–16:08)
-- **E2 rủi ro kinh tế:** đã điền 2 dòng trong `report/team/chi_so.md` lấy số từ B1 (+51,8% lên 6.787 đ/việc thành công, ngưỡng `lam_lai` 9,8%/tuần, PM trợ lý hoàn phí) và B4 (xem lại 100% lên 11.743–12.516 đ = 1,04×, ngưỡng 100% xem lại và ≥ 5 phút/lần, Trưởng nhóm CSKH).
-- **Đề xuất cuối:** (chờ tổng hợp sau CP4–CP5)
-- **Phiếu chấm hội đồng:** (chờ duyệt chéo lúc 17:00–17:45)
+- Điền mục 1, 2, 3 (chi phí A2, độ nhạy B1–B2, so với mốc thủ công 12.000 đ ở A4) và mục 4, 5, 6, 7 trong `report/team/ho_so_launch_v0.md`, kèm đề xuất **Go có điều kiện** và 2 số bất lợi (`power = 0,64` ở MDE 5 điểm; `12.516 đ = 1,04×` khi xem lại 100%).
+- Gắn nhãn độc lập 20 ca lỗi (`Nhãn người 2`), đạt đồng thuận **19/20 = 95%** với Hải, thống nhất quy tắc Ca 8 (Ngầm) và hoàn thiện bảng khắc phục 5 ca có event, ngưỡng, tần suất và một vai trò phụ trách.
+- Viết `scope` trong `report/team/pilot_plan.yaml` (`noi_dia` 0,22×, `hang_nang` 0,69×; loại `quoc_te` 1,88× và `doi_tac` 0,85×).
+- Viết 2 dòng rủi ro kinh tế E2 trong `report/team/chi_so.md` (+51,8% lên 6.787 đ khi làm lại gấp đôi; 12.516 đ = 1,04× khi xem lại 100%).
 
 ## 4. Bằng chứng
 
-Commit, file, bảng hoặc con số do bạn làm.
-
-- (điền hash commit của nhánh `long/cp5-ho-so`)
-- (điền ảnh chụp bộ nhãn độc lập ghi trước khi so với người gắn nhãn 1)
-- `report/team/ho_so_launch_v0.md`, `report/team/phieu_cham.md`
+- `report/team/ho_so_launch_v0.md` (7 mục hoàn chỉnh + đề xuất **Go có điều kiện**).
+- `report/team/bang_loi.md` (20 nhãn độc lập `Nhãn người 2`, đồng thuận 19/20 = 95%, quy tắc Ca 8, bảng khắc phục 5 ca).
+- `report/team/pilot_plan.yaml` (trường `scope`).
+- `report/team/chi_so.md` (bảng E2 rủi ro kinh tế).
 
 ## 5. Công cụ AI đã dùng
 
-Công cụ nào, dùng vào việc gì, bạn tự kiểm tra kết quả ra sao.
-
-- **Công cụ:** (điền; nếu không dùng thì ghi rõ "không dùng")
-- **Dùng vào việc gì:** (điền — lưu ý: **không được** dùng AI để gắn nhãn 20 ca hay để bịa kết quả duyệt chéo)
-- **Tự kiểm tra ra sao:** (điền — mọi con số trong hồ sơ phải truy được về `bang_chi_phi.md` hoặc output của `src/lab13.py`)
-- **Không dùng AI để:** bịa số, bịa nhãn lỗi, hay bịa kết quả duyệt chéo.
+- Dùng trợ lý AI (Antigravity / Gemini 4 Hydrogen) để đọc đề bài 20 ca lỗi, đối chiếu định nghĩa 5 loại lỗi PAIR, kiểm tra các quy tắc hồ sơ (`simulated`, một vai trò phụ trách, không dùng từ bị cấm) và rà soát số liệu từ `bang_chi_phi.md`, `chi_so.md`, `pilot_plan.yaml`.
+- Cách tự kiểm tra: đối chiếu trực tiếp từng con số với `report/team/bang_chi_phi.md`, `report/team/chi_so.md`, `report/team/pilot_plan.yaml`, và chạy `grep` kiểm tra từ khoá bắt buộc trong `report/team/`.
 
 ## 6. Tự đánh giá
 
-...
+- Hoàn thành đúng mốc các phần việc gắn nhãn, phạm vi, rủi ro và hồ sơ launch v0; giữ nguyên hai bộ nhãn độc lập trước khi so sánh và đảm bảo mọi con số giả lập đều có nhãn `simulated`.
