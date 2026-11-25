@@ -40,7 +40,33 @@ Cách tiếp cận: đo chi phí thật từ trace thay vì từ hoá đơn toke
 
 **Đề xuất cuối:** **Go có điều kiện** cho pilot `noi_dia` + `hang_nang`, với ba điều kiện có người phụ trách và ngày kiểm tra, kèm hai con số bất lợi: xem lại 100% đẩy chi phí lên **1,03–1,04×** mốc thủ công, và power 0,64 ở mức chênh 5 điểm.
 
-**Kết quả duyệt chéo Gate 2a:** _(điền sau 17:40: điểm từng tiêu chí C6, C7, C8 nhóm hội đồng cho, quyết định của họ và câu hỏi họ đặt)_
+**Kết quả duyệt chéo Gate 2a:** Hội đồng là nhóm **teamrandom** (L3B), chấm trên commit `18cc364`. Kết quả **30/30**, quyết định **Go có điều kiện**.
+
+| Tiêu chí | Điểm | Nhận xét của hội đồng |
+| --- | ---: | --- |
+| C6 · Đề xuất khớp bằng chứng | 10/10 | Khớp với số của nhóm (4.472 đ/việc thành công; 5.217 đ = 0,43× trong phạm vi khi đã cộng cố định và 82 ca nhân viên làm thay), có nêu cả hai số bất lợi kèm cách xử lý. **Yêu cầu làm rõ:** điều kiện 3 ghi “đủ 859 yêu cầu mỗi nhóm” trong khi `pilot_plan.yaml` ghi cần ≥ 5.980 yêu cầu thực tế (859 là mẫu hiệu dụng). |
+| C7 · Số giả lập và phạm vi | 10/10 | Phạm vi thu hẻp có số đỡ (`quoc_te` 1,88× và thành công 27,3%; `doi_tac` 0,85×), nhãn `simulated` đủ ở mục 1, 2, 3, 7, bảng chi phí, E2 và `simulated_inputs`. **Thiếu nhãn:** hai số 1,88× và 0,85× ở mục 6 của hồ sơ. |
+| C8 · Pilot ra được quyết định | 10/10 | Đối chứng cùng thời gian cùng depot, bốc thăm bằng code có seed, đủ 20 cụm mỗi nhóm; đủ mẫu cho MDE 6 điểm. **Điểm yếu:** luật dừng 1 gộp ca hoàn trùng vào vế “TRONG 3 ngày liên tiếp” thay vì dừng ngay khi có 1 ca; `interim_looks` còn là câu mẫu. |
+
+**Câu hỏi hội đồng đặt:** Điều kiện 3 ghi “chỉ ra quyết định khi bước 0,50 đo đủ 859 yêu cầu mỗi nhóm”, nhưng `pilot_plan.yaml` ghi cần ít nhất 5.980 yêu cầu mỗi nhóm (20 người × 299). Ngưỡng ra quyết định thật là bao nhiêu, và với 2 tuần ở bước 0,50 cộng 7 ngày theo dõi mở lại thì nhóm có đủ dữ liệu trước ngày quyết định 2027-01-12 không?
+
+**Câu trả lời của nhóm tại buổi:** _(ghi tại buổi duyệt chéo, không viết trước)_
+
+**Nhóm đã làm gì với ba ý trên:** xem mục 5.5 dưới đây.
+
+**4mems làm hội đồng cho nhóm nào:** 4mems chấm **teamrandom**, kết quả 30/30 và quyết định Go có điều kiện, ghi đầy đủ trong `report/team/phieu_cham.md`. Câu hỏi 4mems đặt cho teamrandom: ngưỡng 8.000 đ của luật dừng 3 đặt trên số gộp cả phạm vi, trong khi `hang_nang` đứng riêng đã là 8.221 đ nên luật đó có thể không bao giờ kích hoạt.
+
+## 5.5 Ba ý hội đồng nêu và nhóm đã làm gì
+
+Nhóm teamrandom cho 30/30 nhưng nêu ba chỗ cần sửa. Nhóm kiểm lại và xác nhận **cả ba đều đúng**.
+
+**1. Điều kiện 3 ghi sai ngưỡng ra quyết định — đã sửa.** Bản trước ghi “đo đủ 859 yêu cầu mỗi nhóm”, trong khi 859 là **mẫu hiệu dụng**, còn số yêu cầu thực tế cần thu là **5.980 mỗi nhóm** (`m ≥ 299` × 20 người) — đúng như mục 6 của chính hồ sơ và `pilot_plan.yaml` đã ghi. Đây là mâu thuẫn nội bộ trong cùng một file, lọt ra khi nhóm viết lại điều kiện 3 ở phút cuối. Điều kiện 3 nay ghi cả hai số và nói rõ quan hệ giữa chúng qua hệ số thiết kế 6,96.
+
+**2. Mục 6 thiếu nhãn `simulated` ở hai số 1,88× và 0,85× — đã sửa.** Hai số này dẫn xuất từ chi phí tính trên các cột `_simulated` nên phải mang nhãn; cùng hai số ấy ở `pilot_plan.yaml` và `bang_chi_phi.md` đã có nhãn từ trước, riêng mục 6 bị sót. Theo rúbric, số giả lập thiếu nhãn bị trừ điểm, nên đây là ý đáng giá nhất trong ba ý.
+
+**3. Luật dừng 1 gộp ca hoàn trùng vào vế “TRONG 3 ngày liên tiếp” — đã sửa.** Hội đồng đúng về mặt thiết kế: một ca hoàn tiền trùng đã đối soát là lỗi tiền bạc, phải tắt ngay khi có 1 ca chứ không chờ đủ 3 ngày như ngưỡng tỉ lệ mở lại. Nhóm đã **tách hoàn trùng thành luật dừng riêng**, vế TRONG là “bất kỳ ngày nào của pilot, xử lý ngay khi xác nhận”, vế KHÔNG THÌ là không được bật lại khi nguyên nhân chưa sửa và Giám đốc vận hành chưa phê duyệt; luật mở lại 7 ngày giữ vế “3 ngày liên tiếp” của riêng nó. `pilot_plan.yaml` nay có **bốn luật dừng**, và `interim_looks` được viết lại cụ thể: chỉ số nào xem, tần suất nào, ai báo ai, và vì sao không xem chỉ số chính giữa kỳ. Bốn chỗ khác trong `report/team/` ghi “3 luật dừng” cũng được sửa theo trong cùng một lần, để không tạo thêm mâu thuẫn giữa các file như hai ý trên.
+
+Bài học chung từ ba ý: hai ý đầu đều là **mâu thuẫn giữa hai file của chính nhóm**, không phải sai phép tính. Khi bốn người sửa song song ở phút cuối, rủi ro lớn nhất không phải tính sai mà là hai chỗ ghi hai số khác nhau cho cùng một đại lượng.
 
 ## 5. Khó khăn và cách xử lý
 
@@ -65,7 +91,7 @@ nhờ đó `python lab13.py` chạy hết và exit 0 trên máy Windows mà khô
 
 Chi tiết đóng góp của từng thành viên nằm trong [TEAM.md](../../TEAM.md).
 
-- Trần Minh Đức (2A202603977) — nhóm trưởng, người viết code phiên 1: nhiệm vụ A và B, các trường và ba luật dừng của pilot plan, điều phối và đóng gói bài nộp.
+- Trần Minh Đức (2A202603977) — nhóm trưởng, người viết code phiên 1: nhiệm vụ A và B, các trường và bốn luật dừng của pilot plan, điều phối và đóng gói bài nộp.
 - Trần Thị Nhài (2A202603911) — người kiểm số, người viết code phiên 2: kiểm số A và B, năm câu cỡ mẫu D1, tỉ lệ nền của chỉ số an toàn, ba chỉ số E1.
 - Ngô Ngọc Hải (2A202603939) — người gắn nhãn 1: bộ nhãn 1 và bảng khắc phục, đặc tả chỉ số và danh sách event, năm câu D2.
 - Trần Hải Long (2A202603891) — người gắn nhãn 2, kiêm giữ hồ sơ: bộ nhãn 2, hồ sơ launch v0 bảy mục và đề xuất cuối, phạm vi pilot, rủi ro kinh tế E2.

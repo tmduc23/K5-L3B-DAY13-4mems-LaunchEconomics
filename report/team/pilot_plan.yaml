@@ -52,12 +52,13 @@ pilot:
   identifiability:
     concurrent_control: "Có: 20 nhân viên đối chứng làm cùng tuần, cùng depot, cùng loại yêu cầu"
     spillover_risk: "Có rủi ro nhân viên trong cùng depot chia sẻ câu trả lời của trợ lý; giảm bằng quyền truy cập theo tài khoản và log lượt mở trợ lý theo staff_id, kiểm hằng tuần"
-    predeclared: "Có: chỉ số chính, mức chênh 6 điểm, ba luật dừng và ngày quyết định đều chốt trước ngày bắt đầu"
+    predeclared: "Có: chỉ số chính, mức chênh 6 điểm, bốn luật dừng và ngày quyết định đều chốt trước ngày bắt đầu"
   stop_rules:
-    - "NẾU tỉ lệ mở lại trong 7 ngày của nhóm dùng trợ lý cao hơn nhóm đối chứng từ 2 điểm phần trăm trở lên, hoặc vượt trần tuyệt đối 6 phần trăm (đợt chạy thử: 3,97 phần trăm trong phạm vi), hoặc có từ 1 ca hoàn trùng tiền TRONG 3 ngày liên tiếp THÌ Giám đốc vận hành bấm cờ tắt trợ lý trong 30 phút và mở rà soát 20 trace gần nhất KHÔNG THÌ không được chuyển sang bước rollout tiếp theo"
+    - "NẾU có từ 1 ca hoàn tiền trùng được đối soát sổ cái xác nhận TRONG bất kỳ ngày nào của pilot, xử lý ngay khi xác nhận chứ không chờ đủ nhiều ngày, THÌ Giám đốc vận hành bấm cờ tắt trợ lý trong 30 phút, chuyển toàn bộ về luồng nhân viên tự làm và Kỹ sư trưởng agent tìm nguyên nhân KHÔNG THÌ không được bật lại trợ lý khi nguyên nhân chưa sửa xong và Giám đốc vận hành chưa phê duyệt"
+    - "NẾU tỉ lệ mở lại trong 7 ngày của nhóm dùng trợ lý cao hơn nhóm đối chứng từ 2 điểm phần trăm trở lên, hoặc vượt trần tuyệt đối 6 phần trăm (đợt chạy thử: 3,97 phần trăm trong phạm vi, chỉ tính trên yêu cầu đã qua đủ 7 ngày theo dõi), TRONG 3 ngày liên tiếp THÌ Giám đốc vận hành bấm cờ tắt trợ lý trong 30 phút và mở rà soát 20 trace mở lại gần nhất KHÔNG THÌ không được chuyển sang bước rollout tiếp theo khi chưa rà xong nguyên nhân"
     - "NẾU chi phí mỗi việc thành công trong phạm vi vượt 8.000 đ, hoặc tỉ lệ làm lại vượt 7 phần trăm mỗi tuần (đợt chạy thử: 4,89 phần trăm) TRONG 2 tuần liên tiếp THÌ PM trợ lý hoàn phí thu hẹp phạm vi về noi_dia và đặt giới hạn 2 lần chạy KHÔNG THÌ không được mở rộng trở lại cho hang_nang"
     - "NẾU tỉ lệ bỏ qua gợi ý, tính bằng số ca sửa cộng số ca bỏ chia số ca được xem lại, vượt 40 phần trăm (đợt chạy thử: 27,12 phần trăm) TRONG 1 tuần THÌ Trưởng nhóm CSKH phỏng vấn 5 nhân viên trong 3 ngày và báo cáo nguyên nhân KHÔNG THÌ không được chuyển sang bước rollout tiếp theo"
-  interim_looks: "chỉ kiểm tra chỉ số an toàn"
+  interim_looks: "Chỉ xem giữa kỳ hai chỉ số an toàn: ca hoàn trùng đối soát hằng ngày và tỉ lệ mở lại 7 ngày hằng ngày; chi phí và mức độ sử dụng xem hằng tuần. PM trợ lý hoàn phí tổng hợp và báo Giám đốc vận hành. Không xem chênh lệch chỉ số chính giữa hai nhóm trước ngày quyết định 2027-01-12, vì xem giữa kỳ chỉ số chính sẽ làm phồng alpha"
   rollback: "Giám đốc vận hành bấm cờ tắt trợ lý, hiệu lực trong 30 phút; mọi yêu cầu đang mở chuyển sang luồng nhân viên tự làm (6 phút mỗi yêu cầu, 12.000 đ), khách không bị gián đoạn dịch vụ"
   decision_date: "2027-01-12"     # bắt đầu 2026-12-01: 3 tuần rollout + 2 tuần đo ở bước 0.50
   simulated_inputs:               # mọi con số giả lập đã dùng trong kế hoạch này

@@ -11,7 +11,7 @@
 
 - `src/lab13.py`: ba hàm A1, `mo_hinh()`, A3 (tách theo `loai`), A4 (chi phí cố định), và CP2 bảng độ nhạy B1–B4.
 - `report/team/bang_chi_phi.md`: bảng A1, A2, A3, A4 và các câu trả lời của nhiệm vụ A.
-- `report/team/pilot_plan.yaml`: các trường của file và ba luật dừng (CP4).
+- `report/team/pilot_plan.yaml`: các trường của file và bốn luật dừng (CP4).
 - `report/team/group_report.md`, `TEAM.md`, `PHAN_CONG.md`.
 - Vai trưởng nhóm: chủ repo, phân công, merge nhánh, soát 6 file hồ sơ, chốt push và nhắc cả nhóm nộp LMS.
 
@@ -25,7 +25,7 @@
 - **B2:** đổi một cặp (giá token gấp đôi + xem lại gấp đôi) ra 6.543 đ = **+46,3%**, đúng bằng tổng hai tác động riêng vì mô hình cộng tuyến tính các khoản chi phí.
 - **B3:** giới hạn 2 lần chạy rẻ nhất cho công ty (6.901.220 đ cả hệ thống) nhưng **không** trùng giới hạn cho chi phí mỗi việc thành công thấp nhất (1 lần, 4.111 đ). Tối ưu riêng chi phí mỗi việc sẽ đẩy thêm 85 việc sang nhân viên và làm cả hệ thống đắt thêm 548.561 đ.
 - **B4:** xem lại 100% trong phạm vi cho 11.743 đ = **0,98×**, lên 12.415 đ = **1,03×** nếu dùng số phút làm lại thực 15,3 phút [simulated]; mức hoà vốn là mỗi lần xem lại không quá **5,1 phút**.
-- **D:** điền `owner` (Giám đốc vận hành), `assignment.unit: staff`, `rollout`, `identifiability` (chuyển năm câu D2 thành giá trị), `rollback`, `decision_date`, `simulated_inputs` 8 dòng, và **ba luật dừng** đủ bốn vế NẾU – TRONG – THÌ – KHÔNG THÌ cho an toàn, chi phí, mức độ sử dụng. Ngưỡng an toàn đặt theo tỉ lệ nền 3,97% trong phạm vi: chênh ≥ 2 điểm so với đối chứng hoặc trần tuyệt đối 6%, thay vì ngưỡng tuyệt đối 3% sẽ làm pilot dừng ngay tuần đầu.
+- **D:** điền `owner` (Giám đốc vận hành), `assignment.unit: staff`, `rollout`, `identifiability` (chuyển năm câu D2 thành giá trị), `rollback`, `decision_date`, `simulated_inputs` 8 dòng, và **bốn luật dừng** đủ bốn vế NẾU – TRONG – THÌ – KHÔNG THÌ cho hoàn trùng, an toàn, chi phí, mức độ sử dụng (sau duyệt chéo, nhóm tách hoàn trùng thành luật thứ tư dừng ngay trong ngày). Ngưỡng an toàn đặt theo tỉ lệ nền 3,97% trong phạm vi: chênh ≥ 2 điểm so với đối chứng hoặc trần tuyệt đối 6%, thay vì ngưỡng tuyệt đối 3% sẽ làm pilot dừng ngay tuần đầu.
 - **Vai trưởng nhóm:** điền `TEAM.md` và `PHAN_CONG.md`; merge nhánh của người gắn nhãn 1 vào `main` và xử lý 4 lần conflict; soát 6 file hồ sơ; viết `group_report.md`.
 
 ## 4. Bằng chứng
@@ -34,7 +34,7 @@ Commit, file, bảng hoặc con số do bạn làm.
 
 - `src/lab13.py` — ba hàm A1 và `mo_hinh()`; chạy lại ra đúng các số trong `bang_chi_phi.md`.
 - `report/team/bang_chi_phi.md` — bảng A1, A2, A3, A4 và 4 câu trả lời.
-- Commit: (điền hash commit `CP1 A1-A4`)
+- Commit: `eed8a92` — *CP1+CP2: mo hinh chi phi, tach theo loai, chi phi co dinh, bang do nhay* (thêm ba hàm A1 và `mo_hinh()` vào `src/lab13.py`, điền bảng A1–A4 vào `bang_chi_phi.md`). Các commit sau của riêng phần này: `c121a7e` (CP4 các trường và luật dừng), `910069e` (sửa console cp1252), `0d1efa0` (đồng bộ nhãn ca 8 và mục 5 hồ sơ).
 - Con số tự kiểm được: token 245.585 đ · tool 84.000 đ (5.600 lần gọi) · xem lại 890 phút = 1.780.000 đ [sim] · làm lại 1.132 phút = 2.264.000 đ [sim] · tổng 4.373.585 đ · 978 việc thành công · 4.472 đ/việc · chi phí cả hệ thống 5.865 đ/yêu cầu = 0,49×.
 
 ## 5. Công cụ AI đã dùng
