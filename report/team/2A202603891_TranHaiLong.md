@@ -18,7 +18,7 @@
 ## 3. Đóng góp cụ thể
 
 - Điền mục 1, 2, 3 (chi phí A2, độ nhạy B1–B2, so với mốc thủ công 12.000 đ ở A4) và mục 4, 5, 6, 7 trong `report/team/ho_so_launch_v0.md`, kèm đề xuất **Go có điều kiện** và 2 số bất lợi (`power = 0,64` ở MDE 5 điểm; `12.516 đ = 1,04×` khi xem lại 100%).
-- Gắn nhãn độc lập 20 ca lỗi (`Nhãn người 2`), đạt đồng thuận **19/20 = 95%** với Hải, thống nhất quy tắc Ca 8 (Ngầm) và hoàn thiện bảng khắc phục 5 ca có event, ngưỡng, tần suất và một vai trò phụ trách.
+- Gắn nhãn độc lập 20 ca lỗi (`Nhãn người 2`), đạt đồng thuận **19/20 = 95%** với Hải, lệch duy nhất ca 8 (tôi ghi Ngầm, Hải ghi Hệ thống) và nhóm chốt nhãn thống nhất là **Hệ thống** vì lỗi đã lộ ra trong câu trả lời gửi khách; hoàn thiện bảng khắc phục 5 ca có event, ngưỡng, tần suất và một vai trò phụ trách.
 - Viết `scope` trong `report/team/pilot_plan.yaml` (`noi_dia` 0,22×, `hang_nang` 0,69×; loại `quoc_te` 1,88× và `doi_tac` 0,85×).
 - Viết 2 dòng rủi ro kinh tế E2 trong `report/team/chi_so.md` (+51,8% lên 6.787 đ khi làm lại gấp đôi; 12.516 đ = 1,04× khi xem lại 100%).
 

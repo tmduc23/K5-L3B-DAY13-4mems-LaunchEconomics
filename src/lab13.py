@@ -4,7 +4,14 @@ Không cần khoá API. Điền các chỗ ghi VIẾT Ở ĐÂY (đánh dấu TO
 Bản gốc chưa sửa nằm ở lab13_starter.py.
 """
 import math
+import sys
+
 import pandas as pd
+
+# Console Windows mặc định dùng cp1252 nên không in được tiếng Việt (UnicodeEncodeError: charmap).
+# Hai dòng này để file chạy được trên mọi máy mà không cần đặt biến môi trường PYTHONUTF8.
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 # Bảng giá GIẢ ĐỊNH của lab (không phải giá thật của nhà cung cấp nào)
 GIA_VAO = 26        # đồng cho 1.000 token đầu vào

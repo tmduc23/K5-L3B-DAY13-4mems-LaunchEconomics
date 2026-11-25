@@ -15,7 +15,7 @@
 
 ## 3. Đóng góp cụ thể
 
-- Gắn nhãn 20 ca độc lập (Do người dùng 1,6,9,14; Hệ thống 2,7,8,15,20; Ngữ cảnh 3,10,16,18; Giới hạn 4,11,13,19; Ngầm 5,12,17); đồng thuận 20/20 (100%) với Long.
+- Gắn nhãn 20 ca độc lập (Do người dùng 1,6,9,14; Hệ thống 2,7,8,15,20; Ngữ cảnh 3,10,16,18; Giới hạn 4,11,13,19; Ngầm 5,12,17); đồng thuận **19/20 (95%)** với bộ nhãn 2 của Long, lệch duy nhất ca 8 (tôi ghi Hệ thống, Long ghi Ngầm). Nhóm chốt nhãn thống nhất ca 8 là **Hệ thống** vì lỗi đã lộ ra trong câu trả lời gửi khách, nên cả 20 nhãn thống nhất khớp đáp án.
 - Viết bảng khắc phục 5 ca (9,7,18,4,17) có event + ngưỡng + tần suất.
 - Điền E1 (3 chỉ số) + 10 event có `trace_id` và kiểm tra chéo chỉ số ↔ event.
 - Trả lời 5 câu D2.
@@ -33,4 +33,4 @@
 
 ## 6. Tự đánh giá
 
-- Hoàn thành phần gắn nhãn 1 và đặc tả chỉ số, event; nhãn và số khớp bộ nhãn 2 và output.
+- Hoàn thành phần gắn nhãn 1 và đặc tả chỉ số, event; bộ nhãn của tôi trùng 19/20 ca với bộ nhãn 2, và các số ở E1 khớp output của `lab13.py`.
