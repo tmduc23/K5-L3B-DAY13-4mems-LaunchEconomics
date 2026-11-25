@@ -4,7 +4,7 @@
 
 - Họ tên: Trần Minh Đức
 - MSSV: 2A202603977
-- Email:
+- Email:tranminhduc230204@gmail.com
 - Vai trong nhóm: **Nhóm trưởng** · **Người viết code phiên 1** (CP1 nhiệm vụ A, CP2 nhiệm vụ B)
 
 ## 2. Phần việc phụ trách
@@ -21,8 +21,12 @@
 - **A2:** viết `mo_hinh()` — tử số cộng mọi lần chạy kể cả `status == 'loi'`, mẫu số chỉ đếm `ket_qua == 'thanh_cong'`. Kết quả: chi phí mỗi việc thành công **4.472 đ** [simulated], gấp 16,3 lần hoá đơn token chia số yêu cầu (274,7 đ).
 - **A3:** gọi lại `mo_hinh()` cho 4 giá trị `loai` và tính tỉ lệ `ok` theo từng `attempt`. Kết luận: `quoc_te` 1,88× và thành công 27,3%, chạy lại không giúp (30,0% → 11,4% → 2,2%).
 - **A4:** cộng chi phí cố định 40 triệu đ/tháng cho phạm vi `noi_dia + hang_nang`: 1.185 đ/việc ở 45.000 yêu cầu/tháng → 4.599 đ = 0,38×; 2.370 đ/việc nếu còn một nửa khối lượng → 5.784 đ = 0,48× [simulated].
-- **B:** (điền sau CP2)
-- **D:** (điền sau CP4 — các trường YAML và ba luật dừng)
+- **B1:** 9 kịch bản độ nhạy, gốc 4.472 đ. Số ca làm lại gấp đôi **+51,8%** (6.787 đ) · xem lại gấp đôi **+40,7%** (6.292 đ) · lương +25% **+23,1%** (5.506 đ) · giá token gấp đôi chỉ **+5,6%** (4.723 đ) [simulated]. Xếp hạng ba yếu tố nhạy nhất: làm lại → xem lại → lương.
+- **B2:** đổi một cặp (giá token gấp đôi + xem lại gấp đôi) ra 6.543 đ = **+46,3%**, đúng bằng tổng hai tác động riêng vì mô hình cộng tuyến tính các khoản chi phí.
+- **B3:** giới hạn 2 lần chạy rẻ nhất cho công ty (6.901.220 đ cả hệ thống) nhưng **không** trùng giới hạn cho chi phí mỗi việc thành công thấp nhất (1 lần, 4.111 đ). Tối ưu riêng chi phí mỗi việc sẽ đẩy thêm 85 việc sang nhân viên và làm cả hệ thống đắt thêm 548.561 đ.
+- **B4:** xem lại 100% trong phạm vi cho 11.743 đ = **0,98×**, lên 12.415 đ = **1,03×** nếu dùng số phút làm lại thực 15,3 phút [simulated]; mức hoà vốn là mỗi lần xem lại không quá **5,1 phút**.
+- **D:** điền `owner` (Giám đốc vận hành), `assignment.unit: staff`, `rollout`, `identifiability` (chuyển năm câu D2 thành giá trị), `rollback`, `decision_date`, `simulated_inputs` 8 dòng, và **ba luật dừng** đủ bốn vế NẾU – TRONG – THÌ – KHÔNG THÌ cho an toàn, chi phí, mức độ sử dụng. Ngưỡng an toàn đặt theo tỉ lệ nền 3,97% trong phạm vi: chênh ≥ 2 điểm so với đối chứng hoặc trần tuyệt đối 6%, thay vì ngưỡng tuyệt đối 3% sẽ làm pilot dừng ngay tuần đầu.
+- **Vai trưởng nhóm:** điền `TEAM.md` và `PHAN_CONG.md`; merge nhánh của người gắn nhãn 1 vào `main` và xử lý 4 lần conflict; soát 6 file hồ sơ; viết `group_report.md`.
 
 ## 4. Bằng chứng
 
@@ -48,4 +52,6 @@ Công cụ nào, dùng vào việc gì, bạn tự kiểm tra kết quả ra sao
 
 ## 6. Tự đánh giá
 
-...
+- **Làm được:** xong nhiệm vụ A và B đúng mốc, mọi số lệch 0% so với bảng đối chiếu trong `docs/`; nhận ra 4.472 đ / 12.000 đ = 0,37× là con số thiếu nên tính thêm chi phí cả hệ thống 0,49×, nhờ đó hồ sơ nêu được con số bất lợi thay vì chọn số đẹp; phát hiện `mde` 0,05 mâu thuẫn với cỡ mẫu 859 và sửa thành 0,06 trước khi nộp; phát hiện lệnh kiểm trong đề bài crash trên Windows và sửa ở mức file thay vì bắt từng người đặt biến môi trường.
+- **Cần cải thiện:** để `TEAM.md` trống gần hết buổi dù đó là file của mình, chỉ điền lúc gần cuối; điều phối git chậm, có lúc local đi sau remote 3 commit nên cả nhóm làm trên bản cũ và sinh conflict; nhận bản phân công theo nhánh nhưng lại commit thẳng `main` nên mất chỗ để người khác duyệt trước khi merge.
+- **Rút kinh nghiệm:** việc của trưởng nhóm (`TEAM.md`, `group_report.md`) nên làm sớm ngay trong CP1 vì nó không phụ thuộc số liệu, và nên `git pull` trước mỗi lần sửa file dùng chung thay vì sửa xong mới pull.

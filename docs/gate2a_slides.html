@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gate 2a — Trợ lý hoàn phí LogiX-VN</title>
+<style>
+  :root{
+    --ink:#15232E; --paper:#F7F6F1; --paper2:#EDEBE3; --muted:#4E5C66;
+    --rust:#A8402B; --rust-br:#C8553D; --teal:#1F5F5B; --line:#D9D6CB;
+    --h:"Be Vietnam Pro","Segoe UI",Verdana,sans-serif;
+    --b:"Inter","Segoe UI",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#0C1620;font-family:var(--b);color:var(--ink);overflow:hidden}
+
+  .slide{
+    position:absolute;inset:0;display:none;
+    padding:4.2vh 5vw 8vh;background:var(--paper);
+    flex-direction:column;overflow:hidden;
+  }
+  .slide.on{display:flex}
+  .slide.dark{background:var(--ink);color:var(--paper)}
+  .slide.tint{background:var(--paper2)}
+
+  h1{font-family:var(--h);font-size:6.4vh;font-weight:700;line-height:1.05}
+  h2{font-family:var(--h);font-size:4.2vh;font-weight:600;line-height:1.12;margin-bottom:2.4vh}
+  .dark h2,.dark h1{color:var(--paper)}
+  .eyebrow{font-family:var(--h);font-size:1.75vh;font-weight:600;letter-spacing:.22em;
+    color:var(--rust);margin-bottom:1.8vh;text-transform:uppercase}
+  .dark .eyebrow{color:#E59178}
+  .sub{font-size:2.2vh;color:var(--muted);line-height:1.5}
+  .dark .sub{color:#AFC0C9}
+  .lead{font-size:2.6vh;line-height:1.45}
+  b{font-weight:600}
+
+  .foot{position:absolute;left:5vw;right:5vw;bottom:2.6vh;font-size:1.6vh;color:var(--muted);
+    display:flex;justify-content:space-between;gap:2vw}
+  .dark .foot{color:#8FA3AE}
+
+  .kpis{display:flex;gap:1.6vw;margin-bottom:2.6vh}
+  .kpi{flex:1;background:#fff;border:2px solid var(--line);border-radius:14px;padding:2.4vh 1.6vw}
+  .kpi .tag{font-size:1.65vh;font-weight:600;color:var(--rust);letter-spacing:.06em;margin-bottom:.7vh}
+  .kpi .num{font-family:var(--h);font-size:5.2vh;font-weight:700;line-height:1.04}
+  .kpi .cap{font-size:1.8vh;color:var(--muted);line-height:1.35;margin-top:.9vh}
+  .kpi.hot{border-color:var(--rust)} .kpi.hot .num{color:var(--rust)}
+
+  .cards{display:flex;gap:1.6vw}
+  .cards>div{flex:1}
+  .card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:2.2vh 1.5vw}
+  .card .fig{font-family:var(--h);font-size:3.2vh;font-weight:700;color:var(--rust);margin-bottom:.6vh}
+  .card .head{font-family:var(--h);font-size:2.1vh;font-weight:600;margin-bottom:.8vh}
+  .card .body{font-size:1.85vh;color:var(--muted);line-height:1.45}
+
+  table{width:100%;border-collapse:collapse;font-size:2vh}
+  th,td{padding:1.15vh 1vw;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-weight:600;font-family:var(--h);font-size:1.8vh;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.06em}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+  tr.bad td{background:#FBEFEC}
+  tr.good td{background:#EDF4F2}
+
+  .two{display:flex;gap:2.4vw;flex:1}
+  .two>div{flex:1}
+
+  .script{background:#fff;border-left:8px solid var(--rust);border-radius:10px;
+    padding:2.6vh 2vw;font-size:2.35vh;line-height:1.5}
+  .script p+p{margin-top:1.4vh}
+
+  .rows{display:flex;flex-direction:column;gap:1.1vh}
+  .row{display:flex;gap:1.4vw;background:#fff;border:2px solid var(--line);
+    border-radius:12px;padding:1.5vh 1.4vw;align-items:flex-start}
+  .row .who{font-family:var(--h);font-size:1.95vh;font-weight:600;color:var(--rust);
+    width:15vw;flex:none;line-height:1.3}
+  .row .what{font-size:1.95vh;line-height:1.42}
+
+  .qa{display:flex;flex-direction:column;gap:1vh}
+  .qi{background:#fff;border:2px solid var(--line);border-radius:12px;padding:1.4vh 1.3vw}
+  .qi .ask{font-family:var(--h);font-size:1.95vh;font-weight:600;margin-bottom:.5vh}
+  .qi .ans{font-size:1.85vh;color:var(--muted);line-height:1.4}
+  .qi .by{font-size:1.7vh;font-weight:600;color:var(--teal)}
+
+  .stmt{font-family:var(--h);font-size:3.6vh;font-weight:600;line-height:1.3}
+  .pill{display:inline-block;background:var(--rust);color:#fff;border-radius:99px;
+    padding:.5vh 1vw;font-size:1.7vh;font-weight:600;letter-spacing:.04em}
+  .sim{color:var(--teal);font-weight:600;font-size:1.7vh;letter-spacing:.04em}
+  .dark .sim{color:#8FD6CE}
+  ul{margin-left:1.3vw} li{font-size:2.1vh;line-height:1.5;margin-bottom:.8vh}
+
+  /* chrome */
+  #bar{position:fixed;left:0;right:0;bottom:0;height:.5vh;background:rgba(0,0,0,.08);z-index:5}
+  #bar i{display:block;height:100%;background:var(--rust-br);width:0;transition:width .2s}
+  #hud{position:fixed;right:1.2vw;bottom:1.6vh;font-family:var(--b);font-size:1.5vh;
+    color:var(--muted);background:rgba(255,255,255,.85);border:1px solid var(--line);
+    border-radius:99px;padding:.5vh 1vw;z-index:6}
+  #notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;display:none;
+    background:#0C1620;color:#D7E3EA;padding:2.4vh 5vw 3vh;font-size:1.9vh;line-height:1.55;
+    border-top:3px solid var(--rust-br);z-index:7;white-space:pre-wrap}
+  #notes.on{display:block}
+  #notes h4{font-family:var(--h);font-size:1.8vh;letter-spacing:.14em;text-transform:uppercase;
+    color:#E59178;margin-bottom:1.2vh}
+  #help{position:fixed;left:1.2vw;bottom:1.6vh;font-size:1.5vh;color:var(--muted);
+    background:rgba(255,255,255,.85);border:1px solid var(--line);border-radius:99px;
+    padding:.5vh 1vw;z-index:6}
+  @media print{
+    body{overflow:visible;background:#fff}
+    .slide{display:flex!important;position:relative;inset:auto;height:100vh;
+      page-break-after:always;border-bottom:1px solid #ccc}
+    #hud,#help,#bar,#notes{display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide dark on" data-notes="Mục đích: trong 5 giây hội đồng biết nhóm đề xuất gì và cho phạm vi nào. ĐỪNG đọc slide này — chỉ nói tên nhóm rồi chuyển.
+Nếu bị hỏi ngay 'sao không Go thẳng': còn 2 việc chưa xong trước ngày bắt đầu (khoá chống hoàn trùng, ca 7 và 20) và 1 con số bất lợi chưa xử lý (xem lại 100% → 1,03× mốc thủ công).
+THUẬT NGỮ: Gate 2a chỉ duyệt KẾ HOẠCH PILOT. Không ai được nói trợ lý 'đã được duyệt chạy chính thức'.">
+  <p class="eyebrow">Gate 2a · Duyệt kế hoạch pilot</p>
+  <h1>Trợ lý hoàn phí<br>LogiX-VN</h1>
+  <div style="display:flex;gap:3vw;margin-top:4vh;align-items:flex-start">
+    <div style="flex:1">
+      <p class="sub">Hồ sơ launch v0 · Nhóm <b>4mems</b> · Lớp L3B<br><br>
+      Trần Minh Đức (trình) · Trần Thị Nhài (số liệu)<br>Ngô Ngọc Hải (lỗi, chỉ số) · Trần Hải Long (luật dừng)</p>
+    </div>
+    <div style="width:30vw;border-left:3px solid #3A4B57;padding-left:2vw">
+      <p class="eyebrow">Đề xuất</p>
+      <p style="font-family:var(--h);font-size:3.6vh;font-weight:700;line-height:1.15;color:var(--paper)">Go có điều kiện</p>
+      <p class="sub" style="margin-top:.8vh">cho phạm vi <b>noi_dia</b> + <b>hang_nang</b></p>
+    </div>
+  </div>
+  <div class="foot"><span>Toàn bộ dữ liệu là giả lập · mẫu 1.200 yêu cầu, 1.624 lần chạy, 2 tuần ở 6 depot</span><span>1 / 17</span></div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-notes="ĐỨC đọc gần nguyên văn, 55–60 giây. Tập 1 lần trước khi vào. Đừng thêm số ngoài 5 con số in đậm.
+Thứ tự có lý do: (1) chi phí thật so với hoá đơn token → cho thấy nhóm đo đúng chỗ; (2) so với nhân viên bằng con số CÔNG BẰNG 0,49× chứ không phải 0,37× → chủ động nêu điểm bất lợi; (3) phạm vi thu hẹp có lý do bằng số → tiêu chí C7; (4) pilot tách được tác động + đánh đổi → tiêu chí C8; (5) đề xuất + điều kiện → tiêu chí C6.
+Nếu hết thời gian, câu BẮT BUỘC phải nói là câu cuối (đề xuất + 2 con số bất lợi).">
+  <p class="eyebrow">Phần trình · 60 giây · Đức</p>
+  <h2>Kịch bản đọc nguyên văn</h2>
+  <div class="script">
+    <p>“Chi phí thật cho mỗi yêu cầu được giải quyết là <b>4.472 đ</b> <span class="sim">[simulated]</span>, <b>gấp 16,3 lần</b> con số hoá đơn token chia số yêu cầu. Chênh lệch nằm ở giờ nhân viên, chiếm <b>92,5%</b> tổng chi phí.</p>
+    <p>So với nhân viên tự làm 12.000 đ, chúng tôi dùng chi phí cả hệ thống <b>5.865 đ mỗi yêu cầu, bằng 0,49 lần</b>, vì phải tính cả 222 yêu cầu nhân viên làm thay — không dùng con số 0,37 lần dễ nghe hơn.</p>
+    <p>Pilot chỉ chạy <b>noi_dia</b> và <b>hang_nang</b>. Loại <b>quoc_te</b> vì 1,88 lần mốc thủ công, thành công 27,3%, và chạy lại không giúp.</p>
+    <p>Thiết kế pilot chia theo nhân viên, 20 người mỗi nhóm, đủ 20 cụm. Chúng tôi <b>không</b> đủ mẫu cho mức chênh 5 điểm nên chấp nhận 6 điểm, và nói rõ power chỉ còn 0,64 nếu tác động thật là 5 điểm.</p>
+    <p>Đề xuất: <b>Go có điều kiện</b>, ba điều kiện có người phụ trách và ngày kiểm tra.”</p>
+  </div>
+  <div class="foot"><span>Nhịp: 2 câu đầu 20 giây · phạm vi 10 giây · pilot 20 giây · đề xuất 10 giây</span><span>2 / 17</span></div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-notes="MỤC ĐÍCH: trả lời câu 'có đáng chạy không' bằng chi phí ĐO TỪ TRACE, không phải hoá đơn nhà cung cấp.
+CÔNG THỨC: (token + tool + xem lại + làm lại) ÷ số việc thành công. Tử số cộng MỌI lần chạy kể cả lần lỗi; mẫu số chỉ đếm ket_qua = thanh_cong (978, không phải 1.200).
+VÌ SAO: tiền đã tiêu cho lần chạy lỗi vẫn là tiền thật, nhưng nó không tạo ra việc nào xong. Nếu chia cho 1.200 sẽ ra 3.645 đ và che mất phần hỏng.
+SỐ CHI TIẾT nếu bị hỏi: token 245.585 đ (1.624 lần chạy) · tool 84.000 đ (5.600 lần gọi) · xem lại 890 phút = 1.780.000 đ · làm lại 1.132 phút = 2.264.000 đ · tổng 4.373.585 đ · riêng lần chạy 2 và 3 tốn 93.804 đ.
+NHÀI trả lời mọi câu về cách tính.">
+  <p class="eyebrow">Câu 1 · Có đáng chạy không</p>
+  <h2>Chi phí thật gấp 16,3 lần hoá đơn token</h2>
+  <div class="kpis">
+    <div class="kpi hot"><p class="tag">Chi phí mỗi việc thành công</p><p class="num">4.472 đ</p><p class="cap">4.373.585 đ ÷ 978 việc thành công <span class="sim">[simulated]</span></p></div>
+    <div class="kpi"><p class="tag">Hoá đơn token + tool / yêu cầu</p><p class="num">274,7 đ</p><p class="cap">Con số dễ nhầm là “chi phí” — chỉ bằng 1/16</p></div>
+    <div class="kpi"><p class="tag">Giờ nhân viên trong tổng chi phí</p><p class="num">92,5%</p><p class="cap">Làm lại 51,8% · xem lại 40,7% · token + tool 7,5%</p></div>
+  </div>
+  <div class="cards">
+    <div class="card"><p class="head">Tử số: mọi lần chạy</p><p class="body">Cộng cả 1.624 lần chạy, kể cả lần <b>loi</b>. Tiền đã tiêu vẫn là tiền thật.</p></div>
+    <div class="card"><p class="head">Mẫu số: chỉ việc xong</p><p class="body">Chỉ đếm <b>978</b> yêu cầu <b>thanh_cong</b>. Chia cho 1.200 sẽ ra 3.645 đ và che mất phần hỏng.</p></div>
+    <div class="card"><p class="head">Khoản lớn nhất là người</p><p class="body">Làm lại <b>2.264.000 đ</b>, xem lại <b>1.780.000 đ</b> <span class="sim">[simulated]</span>. Giá token gần như không đáng kể.</p></div>
+  </div>
+  <div class="foot"><span>Nguồn: src/lab13.py · report/team/bang_chi_phi.md bảng A2</span><span>3 / 17</span></div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-notes="MỤC ĐÍCH: chứng minh phạm vi pilot thu hẹp CÓ LÝ DO BẰNG SỐ — đây là mức 10 điểm của tiêu chí C7.
+BẢNG BÊN PHẢI là bằng chứng cho câu 'chạy lại có giúp không': với quoc_te, lần 1 đúng 30,0%, lần 2 chỉ 11,4%, lần 3 chỉ 2,2%. Lỗi lặp lại trên cùng một yêu cầu, nên chạy lại chỉ tốn thêm tiền mà không cứu được việc.
+VÌ SAO LOẠI doi_tac dù 0,85× vẫn dưới 1: biên quá mỏng (chỉ rẻ hơn 15%) và khách đối tác có điều khoản riêng nên rủi ro sai chính sách cao. Nếu hội đồng ép 'sao không giữ doi_tac', trả lời: giữ được nhưng phải tách thành nhánh pilot riêng với luật dừng riêng, ngoài phạm vi Gate 2a lần này.
+LONG trả lời slide này (anh viết trường scope).">
+  <p class="eyebrow">Phạm vi · tiêu chí C7</p>
+  <h2>Chỉ giữ hai loại rẻ rõ rệt</h2>
+  <div class="two">
+    <div>
+      <table>
+        <tr><th>Loại</th><th class="n">Yêu cầu</th><th class="n">Thành công</th><th class="n">Chi phí/việc</th><th class="n">So 12.000 đ</th></tr>
+        <tr class="good"><td><b>noi_dia</b></td><td class="n">824</td><td class="n">95,0%</td><td class="n">2.696 đ</td><td class="n"><b>0,22×</b></td></tr>
+        <tr class="good"><td><b>hang_nang</b></td><td class="n">158</td><td class="n">74,1%</td><td class="n">8.221 đ</td><td class="n"><b>0,69×</b></td></tr>
+        <tr class="bad"><td>doi_tac</td><td class="n">68</td><td class="n">54,4%</td><td class="n">10.215 đ</td><td class="n">0,85×</td></tr>
+        <tr class="bad"><td>quoc_te</td><td class="n">150</td><td class="n">27,3%</td><td class="n">22.515 đ</td><td class="n"><b>1,88×</b></td></tr>
+      </table>
+      <p class="sub" style="margin-top:1.6vh">Hai dòng xanh vào pilot · hai dòng hồng để ngoài <span class="sim">[simulated]</span></p>
+    </div>
+    <div>
+      <p class="pill">Chạy lại có giúp không?</p>
+      <table style="margin-top:1.6vh" class="t-sm">
+        <tr><th>Tỉ lệ <code>ok</code> theo lần thử</th><th class="n">Lần 1</th><th class="n">Lần 2</th><th class="n">Lần 3</th></tr>
+        <tr><td>noi_dia</td><td class="n">91,0%</td><td class="n">75,7%</td><td class="n">38,9%</td></tr>
+        <tr><td>hang_nang</td><td class="n">70,9%</td><td class="n">39,1%</td><td class="n">17,9%</td></tr>
+        <tr class="bad"><td>quoc_te</td><td class="n">30,0%</td><td class="n">11,4%</td><td class="n">2,2%</td></tr>
+      </table>
+      <p class="lead" style="margin-top:2.2vh">Với <b>quoc_te</b>, lỗi lặp lại trên cùng yêu cầu: chạy tới 3 lần chỉ <b>tốn thêm tiền</b>, không cứu được việc.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Nguồn: bảng A3 · loại doi_tac vì biên chỉ 15% và có điều khoản riêng</span><span>4 / 17</span></div>
+</section>
+
+<!-- 5 -->
+<section class="slide tint" data-notes="ĐÂY LÀ SLIDE ĂN ĐIỂM C6. Chủ động nêu con số bất lợi trước khi hội đồng tìm ra.
+BA CON SỐ, ĐỪNG LẪN:
+· 0,37× = 4.472 ÷ 12.000. SAI khi dùng làm kết luận, vì chỉ chia cho 978 việc trợ lý làm xong, bỏ qua 222 yêu cầu nhân viên phải làm thay (148 ca chuyen_nhan_vien + 74 ca lam_lai).
+· 0,49× = (4.373.585 + 222 × 12.000) ÷ 1.200 = 5.865 đ/yêu cầu. Đây là con số công bằng trên TOÀN MẪU.
+· 0,43× = (3.072.513 + 82 × 12.000 + 1.185 × 900) ÷ 982 = 5.217 đ/yêu cầu. Con số công bằng TRONG PHẠM VI pilot, đã cộng chi phí cố định.
+Hai con số 0,49× và 0,43× khác nhau vì KHÁC PHẠM VI, không phải mâu thuẫn.
+CHI PHÍ CỐ ĐỊNH: 40 triệu/tháng ÷ 33.750 việc = 1.185 đ/việc ở quy mô đầy đủ; nếu khối lượng còn một nửa thì 2.370 đ/việc, đẩy lên 0,48×.
+NHÀI trả lời slide này.">
+  <p class="eyebrow">Câu 2 · So với nhân viên tự làm 12.000 đ</p>
+  <h2>Chúng tôi không dùng con số dễ nghe nhất</h2>
+  <div class="kpis">
+    <div class="kpi"><p class="tag">Nếu chỉ chia việc đã xong</p><p class="num" style="color:var(--muted)">0,37×</p><p class="cap"><b>Không dùng.</b> Bỏ qua 222 yêu cầu nhân viên làm thay</p></div>
+    <div class="kpi hot"><p class="tag">Chi phí cả hệ thống · toàn mẫu</p><p class="num">0,49×</p><p class="cap">5.865 đ/yêu cầu = (4.373.585 + 222 × 12.000) ÷ 1.200</p></div>
+    <div class="kpi hot"><p class="tag">Trong phạm vi pilot · gồm cố định</p><p class="num">0,43×</p><p class="cap">5.217 đ/yêu cầu, đã cộng 40 triệu đ/tháng chi phí cố định</p></div>
+  </div>
+  <p class="stmt" style="margin-top:1vh">Trợ lý rẻ hơn nhân viên <b>khoảng một nửa</b> — nhưng chỉ khi tính cả phần việc nó không làm được.</p>
+  <p class="sub" style="margin-top:2vh">Chi phí cố định không đổi kết luận ở quy mô đầy đủ (1.185 đ/việc → 0,38×), nhưng nếu khối lượng giảm một nửa thì lên 2.370 đ/việc → <b>0,48×</b>. Hồ sơ ghi rõ con số nào đã cộng cố định và ở khối lượng nào. <span class="sim">[simulated]</span></p>
+  <div class="foot"><span>Nguồn: bảng A2, A4 · 222 ca không thành công = 148 chuyen_nhan_vien + 74 lam_lai</span><span>5 / 17</span></div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-notes="MỤC ĐÍCH: chỉ ra pilot phải THEO DÕI GÌ. Câu chốt: pilot theo dõi tỉ lệ làm lại và tỉ lệ xem lại, KHÔNG theo dõi hoá đơn token.
+KIỂM TÍNH ĐÚNG ĐẮN: mỗi kịch bản 'giảm một nửa' làm chi phí giảm đúng nửa mức tăng của kịch bản 'gấp đôi' (5,6 ↔ 2,8 · 40,7 ↔ 20,3 · 51,8 ↔ 25,9). Đó là bằng chứng code không sai.
+B2 — ĐỔI MỘT CẶP: giá token gấp đôi CÙNG LÚC xem lại gấp đôi ra 6.543 đ = +46,3%, đúng bằng tổng hai tác động riêng (+5,6% + 40,7%). Vì mô hình cộng tuyến tính các khoản chi phí, không có số hạng nhân chéo.
+Nếu hội đồng hỏi 'sao lương chỉ +23,1% khi tăng 25%': vì lương chỉ tác động lên phần giờ người (92,5%), không tác động lên token và tool.
+NHÀI trả lời slide này.">
+  <p class="eyebrow">Độ nhạy · pilot phải theo dõi gì</p>
+  <h2>Yếu tố nhạy nhất là số ca làm lại, không phải giá token</h2>
+  <div class="two">
+    <div>
+      <table class="t-sm">
+        <tr><th>Kịch bản (gốc 4.472 đ)</th><th class="n">Chi phí</th><th class="n">Thay đổi</th></tr>
+        <tr class="bad"><td>Số ca làm lại gấp đôi</td><td class="n">6.787 đ</td><td class="n"><b>+51,8%</b></td></tr>
+        <tr class="bad"><td>Tỉ lệ xem lại gấp đôi</td><td class="n">6.292 đ</td><td class="n"><b>+40,7%</b></td></tr>
+        <tr class="bad"><td>Lương nhân viên tăng 25%</td><td class="n">5.506 đ</td><td class="n">+23,1%</td></tr>
+        <tr><td>Giá token gấp đôi</td><td class="n">4.723 đ</td><td class="n">+5,6%</td></tr>
+        <tr class="good"><td>Làm lại giảm một nửa</td><td class="n">3.315 đ</td><td class="n">−25,9%</td></tr>
+        <tr class="good"><td>Xem lại giảm một nửa</td><td class="n">3.562 đ</td><td class="n">−20,3%</td></tr>
+      </table>
+      <p class="sub" style="margin-top:1.4vh">Kiểm đúng đắn: mỗi mức “giảm nửa” đúng bằng nửa mức “gấp đôi”. <span class="sim">[simulated]</span></p>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.6vh">
+        <p class="fig">1 · 2 · 3</p>
+        <p class="head">Xếp hạng ba yếu tố</p>
+        <p class="body"><b>Số ca làm lại</b> (±51,8%) → <b>tỉ lệ xem lại</b> (±40,7%) → <b>lương nhân viên</b> (+23,1%). Giá token chỉ ±5,6%.</p>
+      </div>
+      <div class="card">
+        <p class="fig">+46,3%</p>
+        <p class="head">Đổi một cặp = tổng hai tác động riêng</p>
+        <p class="body">Giá token gấp đôi cùng lúc xem lại gấp đôi cho 6.543 đ, đúng bằng +5,6% + 40,7%, vì mô hình <b>cộng tuyến tính</b> các khoản chi phí.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Nguồn: bảng B1, B2 · 9 kịch bản một yếu tố + 1 kịch bản cặp</span><span>6 / 17</span></div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-notes="HAI PHÁT HIỆN NGƯỢC TRỰC GIÁC. Hội đồng rất hay hỏi hai chỗ này.
+B3 — GIỚI HẠN SỐ LẦN CHẠY: chi phí cả hệ thống = tổng chi phí trợ lý + 12.000 đ × số yêu cầu KHÔNG thành công, vì nhân viên phải làm thay.
+· 1 lần: trợ lý 3.621.781 đ, 319 ca hỏng → hệ thống 7.449.781 đ, chi phí/việc 4.111 đ (THẤP NHẤT)
+· 2 lần: trợ lý 4.093.220 đ, 234 ca hỏng → hệ thống 6.901.220 đ (RẺ NHẤT CHO CÔNG TY), chi phí/việc 4.237 đ
+· 3 lần: trợ lý 4.373.585 đ, 222 ca hỏng → hệ thống 7.037.585 đ, chi phí/việc 4.472 đ
+Siết còn 1 lần làm chi phí mỗi việc đẹp nhất nhưng đẩy thêm 85 việc sang nhân viên và làm cả hệ thống đắt thêm 548.561 đ. Bài học: tối ưu chỉ số của trợ lý có thể làm công ty tốn hơn.
+B4 — XEM LẠI 100%: 948 yêu cầu có ít nhất một lần chạy ok × 5 phút + 48 ca làm lại × 9 phút + 224.513 đ token/tool, chia 900 việc = 11.743 đ = 0,98×. Dùng số phút làm lại THỰC trong dữ liệu (15,3 phút/ca) thì 12.415 đ = 1,03× — ĐẮT HƠN nhân viên tự làm. Mức hoà vốn: mỗi lần xem lại phải ≤ 5,1 phút.
+ĐỨC trả lời slide này.">
+  <p class="eyebrow">Hai phát hiện ngược trực giác</p>
+  <h2>Giới hạn chạy lại · và cái giá của việc xem lại tất cả</h2>
+  <div class="two">
+    <div>
+      <p class="pill">B3 · Giới hạn số lần chạy</p>
+      <table class="t-sm" style="margin-top:1.4vh">
+        <tr><th>Giới hạn</th><th class="n">Hỏng</th><th class="n">Cả hệ thống</th><th class="n">Chi phí/việc</th></tr>
+        <tr><td>1 lần</td><td class="n">319</td><td class="n">7.449.781 đ</td><td class="n"><b>4.111 đ</b></td></tr>
+        <tr class="good"><td>2 lần</td><td class="n">234</td><td class="n"><b>6.901.220 đ</b></td><td class="n">4.237 đ</td></tr>
+        <tr><td>3 lần (hiện tại)</td><td class="n">222</td><td class="n">7.037.585 đ</td><td class="n">4.472 đ</td></tr>
+      </table>
+      <p class="lead" style="margin-top:1.6vh"><b>2 lần</b> rẻ nhất cho công ty, nhưng <b>1 lần</b> mới cho chi phí mỗi việc thấp nhất. Tối ưu riêng chỉ số của trợ lý đẩy thêm <b>85 việc</b> sang nhân viên và làm cả hệ thống đắt thêm <b>548.561 đ</b>.</p>
+    </div>
+    <div>
+      <p class="pill">B4 · Nếu phải xem lại 100%</p>
+      <table class="t-sm" style="margin-top:1.4vh">
+        <tr><th>Số phút làm lại mỗi ca</th><th class="n">Chi phí/việc</th><th class="n">So 12.000 đ</th></tr>
+        <tr><td>9 phút (đề cho)</td><td class="n">11.743 đ</td><td class="n">0,98×</td></tr>
+        <tr class="bad"><td>15,3 phút (thực trong dữ liệu)</td><td class="n">12.415 đ</td><td class="n"><b>1,03×</b></td></tr>
+      </table>
+      <p class="lead" style="margin-top:1.6vh">Xem lại 100% thì trợ lý <b>không tiết kiệm được gì</b>, vì tiền xem lại chiếm ~90% kịch bản này. Mức hoà vốn: mỗi lần xem lại phải <b>≤ 5,1 phút</b>.</p>
+      <p class="sub" style="margin-top:1.2vh">Đây là một trong hai con số bất lợi nhóm chủ động nêu. <span class="sim">[simulated]</span></p>
+    </div>
+  </div>
+  <div class="foot"><span>Nguồn: bảng B3, B4 · phạm vi B4 là noi_dia + hang_nang (982 yêu cầu, 900 việc thành công)</span><span>7 / 17</span></div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-notes="MỤC ĐÍCH: trả lời câu 'khi hỏng thì sao'. Năm loại lỗi theo Google PAIR.
+QUY TRÌNH: Hải và Long ngồi TÁCH NHAU, gắn nhãn 20 ca trong 8 phút, KHÔNG trao đổi. Sau đó mới so. Đồng thuận 20/20 = 100%, và cả 20 nhãn thống nhất khớp đáp án.
+QUY TẮC GẮN NHÃN: theo NGUYÊN NHÂN GỐC, không theo chỗ cần sửa. Ví dụ ca 9, khách nhập mã sàn TMĐT thay vì mã vận đơn → 'Do người dùng', dù việc trợ lý không gợi ý là thứ cần cải thiện (nằm ở cột khắc phục).
+CẶP DỄ LẪN NHẤT — Hệ thống vs Ngầm: lỗi đã LỘ RA cho người dùng hoặc nhân viên thì là Hệ thống (ca 8 trích dẫn điều khoản bịa nhìn thấy được); Ngầm chỉ dùng khi KHÔNG AI nhận ra cho tới lúc kiểm tra mẫu (ca 12 chi phí gấp 3 suốt 3 tuần, ca 17 sai bảng giá trong bộ nhớ đệm). Tiêu chí là 'có ai thấy được hay không', không phải 'số tiền có đúng hay không'.
+HẢI trả lời slide này.">
+  <p class="eyebrow">Câu 3 · Khi hỏng thì sao</p>
+  <h2>Hai bộ nhãn độc lập, đồng thuận 20/20</h2>
+  <table class="t-sm">
+    <tr><th>Ca</th><th>Loại lỗi (PAIR)</th><th>Phát hiện bằng gì — đo được</th><th>Khắc phục</th><th>Ai phụ trách</th></tr>
+    <tr><td>9</td><td>Do người dùng</td><td>Event <code>input_validation_failed</code>, cảnh báo khi &gt; 2% yêu cầu/ngày</td><td>Nhận diện mã sàn TMĐT, tra sang mã vận đơn</td><td>PM trợ lý hoàn phí</td></tr>
+    <tr><td>7</td><td>Hệ thống</td><td>Đối soát mỗi giờ: tin “đã hoàn” không có bản ghi sổ cái cùng <code>trace_id</code>, ngưỡng 0 ca</td><td>Chỉ báo “đã hoàn” khi sổ cái trả ok</td><td>Kỹ sư trưởng agent</td></tr>
+    <tr><td>18</td><td>Ngữ cảnh</td><td>Tỉ lệ mở lại vì số tiền mà kiểm tra thấy đúng, theo tuần</td><td>Mẫu tin nhắn luôn ghi cách tính số tiền</td><td>Trưởng nhóm CSKH</td></tr>
+    <tr><td>4</td><td>Giới hạn hệ thống</td><td>Event <code>handoff_to_staff</code> với <code>reason=thieu_du_lieu</code>, theo loại</td><td>Giữ cách chuyển kèm tóm tắt; đưa quoc_te ra khỏi pilot</td><td>PM trợ lý hoàn phí</td></tr>
+    <tr><td>17</td><td>Ngầm</td><td>Kiểm tra mẫu 100 đơn/tuần so bảng giá hiện hành, ngưỡng 1% lệch</td><td>Xoá bộ nhớ đệm khi có bảng giá mới, ghi phiên bản vào trace</td><td>Kế toán trưởng</td></tr>
+  </table>
+  <p class="lead" style="margin-top:2vh">Mỗi dòng có <b>cách phát hiện đo được</b> (event + ngưỡng + tần suất) và <b>một vai trò</b> chịu trách nhiệm — không có dòng nào ghi tên tập thể.</p>
+  <div class="foot"><span>Nguồn: report/team/bang_loi.md · gắn nhãn theo nguyên nhân gốc, không theo chỗ cần sửa</span><span>8 / 17</span></div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-notes="MỤC ĐÍCH: trả lời 'nhân viên có dùng không' và 'đo bằng gì'.
+CÁCH DIỄN ĐẠT BẮT BUỘC: 'chỉ số TRONG ĐỢT CHẠY THỬ là 82,83%'. TUYỆT ĐỐI KHÔNG nói 'trợ lý đã nâng chỉ số từ 0,70' — đợt chạy thử KHÔNG có nhóm đối chứng nên không kết luận được nhân quả. Đây là lỗi hội đồng chấm rất nặng.
+BA CHỈ SỐ: chính = đóng trong 24h VÀ không mở lại trong 7 ngày = 82,83% (994/1.200). Dùng = tỉ lệ bỏ qua gợi ý (sửa + bỏ) = 27,12% (48/177 ca được xem lại; chi tiết giữ 129, sửa 41, bỏ 7). An toàn = mở lại trong 7 ngày = 4,25% (51/1.200).
+KIỂM TRA CHÉO: chỉ số nào không tính được từ danh sách event thì CHƯA ĐO ĐƯỢC. Chỉ số chính ← refund_request_created + ticket_closed + ticket_reopened. Bỏ qua gợi ý ← agent_suggestion_shown + staff_review_decision. Mở lại ← ticket_reopened.
+HAI CHỈ SỐ TỰ ĐỀ XUẤT: % yêu cầu của nhóm can thiệp được mở bằng trợ lý (dùng); % đơn hoàn sai tiền qua kiểm tra mẫu hằng tuần (an toàn — bắt lỗi ngầm như ca 5, 17).
+HẢI trả lời slide này.">
+  <p class="eyebrow">Câu 2 · Nhân viên có dùng không</p>
+  <h2>Ba chỉ số, và 10 event để đo được chúng</h2>
+  <div class="kpis">
+    <div class="kpi"><p class="tag">Chính · kết quả</p><p class="num">82,83%</p><p class="cap">Đóng trong 24h và không mở lại 7 ngày · 994/1.200</p></div>
+    <div class="kpi"><p class="tag">Dùng · mức độ tin gợi ý</p><p class="num">27,12%</p><p class="cap">Bỏ qua gợi ý (sửa + bỏ) · 48/177 ca được xem lại</p></div>
+    <div class="kpi"><p class="tag">An toàn · lỗi lọt đến khách</p><p class="num">4,25%</p><p class="cap">Mở lại trong 7 ngày · 51/1.200</p></div>
+  </div>
+  <div class="two">
+    <div>
+      <p class="pill">Kiểm tra chéo chỉ số ↔ event</p>
+      <ul style="margin-top:1.4vh">
+        <li>Chỉ số chính ← <code>refund_request_created</code> + <code>ticket_closed</code> + <code>ticket_reopened</code></li>
+        <li>Bỏ qua gợi ý ← <code>agent_suggestion_shown</code> + <code>staff_review_decision</code></li>
+        <li>Mở lại 7 ngày ← <code>ticket_reopened</code></li>
+      </ul>
+      <p class="sub" style="margin-top:1.2vh">10 event, mỗi event có <code>trace_id</code> để nối với trace của agent. Chỉ số nào không tính được từ danh sách event thì <b>chưa đo được</b>.</p>
+    </div>
+    <div class="card">
+      <p class="head">Cách diễn đạt nhóm tự ràng buộc</p>
+      <p class="body">Chỉ viết “chỉ số <b>trong đợt chạy thử</b> là 82,83%”.<br><br>
+      <b>Không</b> viết “trợ lý đã nâng chỉ số từ 0,70”: đợt chạy thử không có nhóm đối chứng, nên không kết luận được nhân quả. Đó chính là lý do phải có pilot.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Nguồn: report/team/chi_so.md · hai chỉ số tự đề xuất thêm: tỉ lệ mở trợ lý theo staff_id, và % đơn sai tiền qua kiểm tra mẫu</span><span>9 / 17</span></div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-notes="MỤC ĐÍCH: tiêu chí C8 — pilot có ra được quyết định không. Phải chứng minh TÁCH ĐƯỢC TÁC ĐỘNG và ĐỦ MẪU, hoặc nói rõ đánh đổi.
+NĂM CÂU CỠ MẪU (baseline 0,70; +5 điểm; alpha 0,05; power 0,8; ICC 0,02):
+a) Chia theo yêu cầu: 1.251 yêu cầu mỗi nhóm (DE = 1)
+b) Theo nhân viên, m = 75: DE = 1 + 74 × 0,02 = 2,48 → 3.103 mỗi nhóm = 42 người/nhóm, cần 84 người > 40 có sẵn → KHÔNG đủ người
+c) 20 nhân viên mỗi nhóm: trần c/ICC = 20/0,02 = 1.000 < 1.251 → KHÔNG đạt mức 5 điểm
+d) 6 depot mỗi nhóm: trần 6/0,02 = 300 → loại, chỉ 6 cụm, dưới 20
+e) Mức chênh 6 điểm cần 859 mỗi nhóm; giải 20m/(0,98 + 0,02m) ≥ 859 → m ≥ 299 yêu cầu/người, DE 6,96
+VÌ SAO KHÔNG CHIA THEO YÊU CẦU dù đủ mẫu: cùng một nhân viên vừa dùng vừa không dùng trợ lý → tràn tác động, kết quả khó tin.
+VÌ SAO SỐ CỤM QUYẾT ĐỊNH chứ không phải tổng số yêu cầu: khi chia theo cụm, cỡ mẫu hiệu dụng = c × m / DE, và luôn nhỏ hơn c/ICC bất kể m lớn bao nhiêu. Thêm yêu cầu cho cùng một người gần như không thêm thông tin.
+NHÀI trả lời slide này.">
+  <p class="eyebrow">Câu 4 · Pilot thiết kế thế nào</p>
+  <h2>Chia theo nhân viên, 20 cụm mỗi nhóm</h2>
+  <div class="two">
+    <div>
+      <table class="t-sm">
+        <tr><th>Cách chia</th><th class="n">Trần mẫu hiệu dụng</th><th>Kết luận</th></tr>
+        <tr><td>Theo yêu cầu</td><td class="n">1.251 (đủ)</td><td>Tràn tác động — cùng người vừa dùng vừa không</td></tr>
+        <tr><td>Theo nhân viên, m = 75</td><td class="n">3.103 cần/nhóm</td><td>Cần 84 người &gt; 40 có sẵn</td></tr>
+        <tr class="good"><td><b>20 nhân viên mỗi nhóm</b></td><td class="n">1.000 &lt; 1.251</td><td><b>Đã chọn</b> — đủ 20 cụm, chấp nhận mức chênh 6 điểm</td></tr>
+        <tr class="bad"><td>6 depot mỗi nhóm</td><td class="n">300</td><td>Chỉ 6 cụm, dưới mốc 20 — loại</td></tr>
+      </table>
+      <p class="sub" style="margin-top:1.4vh">Nhóm tính đủ năm câu cỡ mẫu <b>trước khi</b> chọn cách chia, không chọn cách dễ triển khai nhất.</p>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.4vh">
+        <p class="head">Thiết kế đã chốt</p>
+        <p class="body"><b>n</b> = 859 mỗi nhóm · <b>DE</b> = 6,96 · <b>20 cụm</b> mỗi nhóm · <b>m</b> ≥ 299 yêu cầu/người<br>Bốc thăm bằng code với seed ghi trước, phân tầng theo depot · rollout 10% → 25% → 50%</p>
+      </div>
+      <div class="card">
+        <p class="head">Năm câu “tách được tác động”</p>
+        <p class="body">Đối chứng chạy <b>cùng thời gian</b>, cùng depot · chia <b>ngẫu nhiên</b> bằng code · rủi ro chia sẻ câu trả lời trong depot, giảm bằng quyền truy cập theo tài khoản và log theo <code>staff_id</code> · chỉ số, ngưỡng, ngày quyết định <b>viết trước</b> · đủ <b>20 cụm</b> mỗi nhóm.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Nguồn: pilot_plan.yaml chú thích D1, D2 · baseline 0,70 · alpha 0,05 · power 0,8 · ICC 0,02</span><span>10 / 17</span></div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-notes="MỤC ĐÍCH: luật dừng phải có NGƯỠNG, THỜI HẠN và NGƯỜI CÓ QUYỀN DỪNG — đó là mức 10 điểm của C8. Mẫu bốn vế: NẾU – TRONG – THÌ – KHÔNG THÌ.
+ĐIỂM QUAN TRỌNG NHẤT CỦA SLIDE NÀY: ngưỡng an toàn được đặt SAU KHI tính tỉ lệ nền. Mở lại 7 ngày hiện tại là 4,25% toàn mẫu và 3,97% trong phạm vi. Nếu đặt ngưỡng tuyệt đối 3% thì pilot bị dừng ngay tuần đầu dù trợ lý không làm gì sai. Vì vậy ngưỡng là 'cao hơn đối chứng ≥ 2 điểm HOẶC vượt trần tuyệt đối 6%'.
+Tương tự, ngưỡng làm lại 7%/tuần được đặt trên nền 4,89% trong phạm vi, và ngưỡng bỏ qua gợi ý 40% trên nền 27,12%.
+VẾ 'KHÔNG THÌ' là vế hay bị bỏ: nó ghi việc BỊ CẤM nếu điều kiện chưa được xử lý, ở đây là không được sang bước rollout tiếp theo.
+LONG trả lời slide này.">
+  <p class="eyebrow">Luật dừng · viết trước khi bắt đầu</p>
+  <h2>Ba luật dừng, mỗi luật đủ bốn vế</h2>
+  <div class="rows">
+    <div class="row"><div class="who">An toàn<br><span style="font-weight:400;font-size:1.65vh;color:var(--muted)">nền: 3,97%</span></div>
+      <div class="what"><b>NẾU</b> mở lại 7 ngày của nhóm dùng trợ lý cao hơn đối chứng ≥ 2 điểm, hoặc vượt trần 6%, hoặc có ≥ 1 ca hoàn trùng tiền <b>TRONG</b> 3 ngày liên tiếp <b>THÌ</b> Giám đốc vận hành bấm cờ tắt trợ lý trong 30 phút và rà 20 trace gần nhất <b>KHÔNG THÌ</b> không được sang bước rollout tiếp theo.</div></div>
+    <div class="row"><div class="who">Chi phí<br><span style="font-weight:400;font-size:1.65vh;color:var(--muted)">nền: 4,89%</span></div>
+      <div class="what"><b>NẾU</b> chi phí mỗi việc thành công vượt 8.000 đ, hoặc tỉ lệ làm lại vượt 7%/tuần <b>TRONG</b> 2 tuần liên tiếp <b>THÌ</b> PM trợ lý hoàn phí thu hẹp về noi_dia và đặt giới hạn 2 lần chạy <b>KHÔNG THÌ</b> không được mở rộng trở lại cho hang_nang.</div></div>
+    <div class="row"><div class="who">Mức độ sử dụng<br><span style="font-weight:400;font-size:1.65vh;color:var(--muted)">nền: 27,12%</span></div>
+      <div class="what"><b>NẾU</b> tỉ lệ bỏ qua gợi ý vượt 40% <b>TRONG</b> 1 tuần <b>THÌ</b> Trưởng nhóm CSKH phỏng vấn 5 nhân viên trong 3 ngày và báo cáo nguyên nhân <b>KHÔNG THÌ</b> không được chuyển bước rollout.</div></div>
+  </div>
+  <p class="lead" style="margin-top:2vh">Mọi ngưỡng đặt <b>sau khi</b> tính tỉ lệ nền. Đặt ngưỡng tuyệt đối 3% cho mở lại thì pilot bị dừng ngay tuần đầu dù trợ lý không làm gì sai.</p>
+  <div class="foot"><span>Rollback: Giám đốc vận hành bấm cờ tắt, hiệu lực 30 phút, khách chuyển sang luồng nhân viên tự làm · Ngày quyết định 2027-01-12</span><span>11 / 17</span></div>
+</section>
+
+<!-- 12 -->
+<section class="slide dark" data-notes="MỤC ĐÍCH: tiêu chí C6 — đề xuất khớp bằng chứng. Ba lựa chọn hợp lệ: Go, Go có điều kiện, No-go. Nhóm chọn GO CÓ ĐIỀU KIỆN.
+VÌ SAO KHÔNG GO THẲNG: hai lỗi hệ thống (ca 7 và 20) liên quan tới tiền của khách — báo 'đã hoàn' khi sổ cái chưa ghi, và thiếu khoá chống hoàn trùng. Chưa sửa thì không được bắt đầu.
+VÌ SAO KHÔNG NO-GO: trong phạm vi noi_dia + hang_nang, chi phí 0,43× mốc thủ công, tỉ lệ thành công 95,0% và 74,1%. Bằng chứng ủng hộ việc thử, chỉ cần chặn đúng chỗ rủi ro.
+MỖI ĐIỀU KIỆN CÓ NGƯỜI PHỤ TRÁCH VÀ NGÀY KIỂM TRA — thiếu hai thứ đó thì 'Go có điều kiện' chỉ là Go trá hình.
+NẾU HỘI ĐỒNG RA QUYẾT ĐỊNH KHÁC: đừng tranh. Hỏi lại họ dựa trên con số nào, ghi vào phiếu, rồi nói nhóm sẽ xử lý điều kiện đó trước khi quay lại cổng.
+ĐỨC trình slide này, LONG trả lời chi tiết điều kiện.">
+  <p class="eyebrow">Đề xuất · tiêu chí C6</p>
+  <h2>Go có điều kiện — cho noi_dia + hang_nang</h2>
+  <div class="rows">
+    <div class="row" style="background:#1E3240;border-color:#3A4B57">
+      <div class="who" style="color:#E59178">Điều kiện 1<br><span style="font-weight:400;font-size:1.65vh;color:#AFC0C9">kiểm tra 2026-12-01</span></div>
+      <div class="what" style="color:var(--paper)"><b>An toàn tiền của khách.</b> Sửa khoá chống hoàn trùng và đối soát sổ cái (ca 7, ca 20) trước ngày bắt đầu. — <b>Kỹ sư trưởng agent</b></div></div>
+    <div class="row" style="background:#1E3240;border-color:#3A4B57">
+      <div class="who" style="color:#E59178">Điều kiện 2<br><span style="font-weight:400;font-size:1.65vh;color:#AFC0C9">kiểm hằng tuần từ 2026-12-08</span></div>
+      <div class="what" style="color:var(--paper)"><b>Giữ trong ngưỡng kinh tế.</b> Chi phí ≤ 8.000 đ/việc, làm lại ≤ 7%/tuần, bỏ qua gợi ý ≤ 40%/tuần qua ba bước rollout. — <b>PM trợ lý hoàn phí</b></div></div>
+    <div class="row" style="background:#1E3240;border-color:#3A4B57">
+      <div class="who" style="color:#E59178">Điều kiện 3<br><span style="font-weight:400;font-size:1.65vh;color:#AFC0C9">kiểm tra 2027-01-12</span></div>
+      <div class="what" style="color:var(--paper)"><b>Ký chấp nhận đánh đổi cỡ mẫu.</b> Chấp nhận mức chênh 6 điểm, biết power còn 0,64 nếu tác động thật là 5 điểm; thay phút giả lập bằng phút đo thật sau tuần 1. — <b>Giám đốc vận hành</b></div></div>
+  </div>
+  <p class="stmt" style="margin-top:2.4vh;color:var(--paper)">Một đề xuất <b>No-go có lý do bằng số</b> vẫn hơn một <b>Go bỏ qua con số bất lợi</b>. Chúng tôi nêu cả hai con số bất lợi ở slide sau.</p>
+  <div class="foot"><span>Gate 2a chỉ duyệt kế hoạch pilot</span><span>12 / 17</span></div>
+</section>
+
+<!-- 13 -->
+<section class="slide tint" data-notes="SLIDE PHÒNG NGỰ. Nêu trước hai con số bất lợi để hội đồng không 'bắt' được — đó là khác biệt giữa 5 điểm và 10 điểm ở C6.
+CON SỐ 1 — POWER 0,64: với 20 nhân viên mỗi nhóm, trần cỡ mẫu hiệu dụng là 1.000 < 1.251 cần cho mức chênh 5 điểm. Nhóm chuyển sang mức 6 điểm (n = 859). Nếu tác động thật chỉ là 5 điểm thì xác suất phát hiện được chỉ còn khoảng 0,64, tức khoảng 36% khả năng BỎ SÓT một tác động có thật. Cách xử lý: Giám đốc vận hành ký chấp nhận, và đo đủ 2 tuần ở bước rollout 0,50.
+CON SỐ 2 — XEM LẠI 100% LÀ 1,03×: nếu tuần đầu nhân viên không tin trợ lý và xem lại tất cả, chi phí lên 12.415 đ, đắt hơn làm tay. Cách xử lý: luật dừng số 3 theo dõi tỉ lệ bỏ qua gợi ý, và kế hoạch giảm xem lại theo bậc khi tỉ lệ sửa + bỏ xuống dưới 15%.
+CON SỐ 3 — NỀN GIẢ LẬP: hai cột _simulated quyết định 92,5% tổng chi phí. Nếu phút thật lệch xa phút giả lập thì mọi kết luận chi phí phải tính lại. Cách xử lý: thay bằng phút đo thật từ event sau tuần 1.
+AI CŨNG CÓ THỂ TRẢ LỜI SLIDE NÀY — nhưng Long chốt.">
+  <p class="eyebrow">Chủ động nêu · tiêu chí C6</p>
+  <h2>Ba con số bất lợi của chính chúng tôi</h2>
+  <div class="cards">
+    <div class="card">
+      <p class="fig">power 0,64</p>
+      <p class="head">Pilot có thể bỏ sót tác động thật</p>
+      <p class="body">20 cụm mỗi nhóm chỉ cho trần 1.000 &lt; 1.251 cần cho mức chênh 5 điểm. Chấp nhận 6 điểm thì nếu tác động thật là 5 điểm, khoảng <b>36%</b> khả năng không phát hiện được.<br><br><b>Xử lý:</b> Giám đốc vận hành ký chấp nhận; đo đủ 2 tuần ở bước 0,50.</p>
+    </div>
+    <div class="card">
+      <p class="fig">1,03×</p>
+      <p class="head">Xem lại 100% thì đắt hơn làm tay</p>
+      <p class="body">Nếu tuần đầu nhân viên xem lại mọi gợi ý, chi phí lên <b>12.415 đ</b> <span class="sim">[simulated]</span>, vượt mốc 12.000 đ. Hoà vốn khi mỗi lần xem lại ≤ 5,1 phút.<br><br><b>Xử lý:</b> luật dừng số 3 và kế hoạch giảm xem lại theo bậc khi tỉ lệ sửa + bỏ &lt; 15%.</p>
+    </div>
+    <div class="card">
+      <p class="fig">92,5%</p>
+      <p class="head">Phần lớn chi phí là số giả lập</p>
+      <p class="body">Hai cột <code>_simulated</code> quyết định 92,5% tổng chi phí. Phút thật lệch xa thì mọi kết luận chi phí phải tính lại.<br><br><b>Xử lý:</b> thay bằng phút đo thật từ <code>staff_review_decision</code> và <code>staff_rework_completed</code> sau tuần 1.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Mọi con số dẫn từ cột _simulated đều ghi nhãn trong hồ sơ</span><span>13 / 17</span></div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-notes="DÙNG SLIDE NÀY TRƯỚC KHI VÀO PHÒNG. Nguyên tắc: người nào viết phần đó thì người đó trả lời. Không ai trả lời chen phần của người khác — hội đồng sẽ thấy nhóm không ai thật sự hiểu.
+NẾU BỊ HỎI CÂU KHÔNG BIẾT: trả lời đúng mẫu 'Số đó chúng tôi chưa tính. Chúng tôi có X, và sẽ tính Y trước ngày quyết định.' TUYỆT ĐỐI KHÔNG đoán số. Một câu 'chưa tính' trung thực tốt hơn một con số bịa, vì giảng viên có thể hỏi lại cách tính.
+NẾU HAI NGƯỜI TRONG NHÓM TRẢ LỜI LỆCH NHAU: Đức chốt ngay 'để tôi xác nhận con số trong hồ sơ', mở file, đọc đúng con số. Đừng tranh luận trước hội đồng.
+QUY TẮC CHUNG: mỗi câu trả lời ≤ 3 câu và PHẢI có ít nhất một con số.">
+  <p class="eyebrow">Chuẩn bị hỏi đáp · phân vai</p>
+  <h2>Ai trả lời câu gì</h2>
+  <div class="rows">
+    <div class="row"><div class="who">Trần Minh Đức<br><span style="font-weight:400;font-size:1.65vh;color:var(--muted)">trình 1 phút</span></div>
+      <div class="what">Mô hình chi phí (A), độ nhạy (B), giới hạn số lần chạy, xem lại 100%, các trường của kế hoạch pilot và <b>ba luật dừng</b>. Chốt mọi mâu thuẫn số liệu bằng cách mở file hồ sơ đọc nguyên con số.</div></div>
+    <div class="row"><div class="who">Trần Thị Nhài<br><span style="font-weight:400;font-size:1.65vh;color:var(--muted)">số liệu và cỡ mẫu</span></div>
+      <div class="what">Vì sao tử số cộng cả lần chạy lỗi mà mẫu số chỉ đếm việc thành công · năm câu cỡ mẫu · hệ số thiết kế và cỡ mẫu hiệu dụng khi chia theo cụm · ba chỉ số E1 và mẫu số của chúng.</div></div>
+    <div class="row"><div class="who">Ngô Ngọc Hải<br><span style="font-weight:400;font-size:1.65vh;color:var(--muted)">lỗi và chỉ số</span></div>
+      <div class="what">Năm loại lỗi PAIR và cách phân biệt Hệ thống vs Ngầm · quy trình gắn nhãn độc lập · bảng khắc phục · danh sách event và kiểm tra chéo chỉ số ↔ event.</div></div>
+    <div class="row"><div class="who">Trần Hải Long<br><span style="font-weight:400;font-size:1.65vh;color:var(--muted)">phạm vi và luật dừng</span></div>
+      <div class="what">Phạm vi pilot và lý do loại quoc_te, doi_tac · ngưỡng an toàn so với tỉ lệ nền · ba điều kiện kèm đề xuất · rủi ro kinh tế E2 · rollback.</div></div>
+  </div>
+  <p class="lead" style="margin-top:2vh">Không biết thì nói: <b>“Số đó chúng tôi chưa tính. Chúng tôi có X, và sẽ tính Y trước ngày quyết định.”</b> Không đoán số.</p>
+  <div class="foot"><span>Mỗi câu trả lời ≤ 3 câu và có ít nhất một con số</span><span>14 / 17</span></div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-notes="ĐÂY LÀ BA CÂU HỘI ĐỒNG ĐƯỢC GỢI Ý SẴN TRONG TÀI LIỆU LAB — gần như chắc chắn bị hỏi. Học thuộc con số, đừng học thuộc câu.
+Câu 1 (xem lại 100%): con số là 11.743 đ = 0,98× với 9 phút làm lại, và 12.415 đ = 1,03× với 15,3 phút thực. Nói luôn mức hoà vốn 5,1 phút để thấy nhóm hiểu cơ chế, không chỉ đọc số.
+Câu 2 (20 cụm): có, đúng 20 cụm mỗi nhóm. Nhưng phải nói ngay phần bất lợi: 20 cụm chỉ cho trần 1.000 < 1.251, nên nhóm chuyển sang mức chênh 6 điểm.
+Câu 3 (ngưỡng an toàn): không bị dừng tuần đầu, vì ngưỡng là tương đối so với đối chứng (≥ 2 điểm) kèm trần 6%, trong khi nền là 3,97%. Nếu đặt tuyệt đối 3% thì CÓ bị dừng — nói thẳng là nhóm đã cân nhắc và loại phương án đó.">
+  <p class="eyebrow">Hỏi đáp · ba câu chắc chắn bị hỏi</p>
+  <h2>Câu hỏi hội đồng và câu trả lời có số</h2>
+  <div class="qa">
+    <div class="qi"><p class="ask">“Chi phí mỗi việc thành công là bao nhiêu nếu tuần đầu phải xem lại 100%?”</p>
+      <p class="ans"><b>11.743 đ = 0,98×</b> với 9 phút làm lại mỗi ca; dùng số phút làm lại thực trong dữ liệu (15,3 phút) thì <b>12.415 đ = 1,03×</b> — đắt hơn nhân viên tự làm. Mức hoà vốn là mỗi lần xem lại ≤ 5,1 phút. <span class="by">→ Đức</span></p></div>
+    <div class="qi"><p class="ask">“Cách chia của nhóm có ít nhất 20 cụm mỗi nhóm không?”</p>
+      <p class="ans">Có, <b>đúng 20 cụm</b> mỗi nhóm (20 nhân viên). Nhưng 20 cụm chỉ cho trần cỡ mẫu hiệu dụng <b>1.000 &lt; 1.251</b> cần cho mức chênh 5 điểm, nên chúng tôi chuyển sang mức <b>6 điểm</b>, n = 859, DE 6,96. <span class="by">→ Nhài</span></p></div>
+    <div class="qi"><p class="ask">“Với tỉ lệ mở lại 4,25% hiện tại, ngưỡng an toàn của nhóm có làm pilot dừng ngay tuần đầu không?”</p>
+      <p class="ans">Không. Ngưỡng là <b>tương đối</b>: cao hơn đối chứng ≥ 2 điểm, kèm trần tuyệt đối 6%, trong khi nền trong phạm vi là <b>3,97%</b>. Chúng tôi đã cân nhắc và loại phương án ngưỡng tuyệt đối 3% vì nó sẽ dừng pilot tuần đầu dù trợ lý không làm gì sai. <span class="by">→ Long</span></p></div>
+    <div class="qi"><p class="ask">“Vì sao tử số cộng cả lần chạy lỗi mà mẫu số chỉ đếm việc thành công?”</p>
+      <p class="ans">Tiền đã tiêu cho lần chạy lỗi vẫn là tiền thật, nhưng nó không tạo ra việc nào xong. Chia cho cả 1.200 yêu cầu sẽ ra <b>3.645 đ</b> và che mất phần hỏng; chia cho <b>978</b> việc xong mới là chi phí thật của một kết quả dùng được. <span class="by">→ Nhài</span></p></div>
+  </div>
+  <div class="foot"><span>Học con số, không học câu · mỗi câu trả lời ≤ 3 câu</span><span>15 / 17</span></div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-notes="NHÓM CÂU HỎI KHÓ HƠN. Đọc qua một lượt trước khi vào phòng.
+Về câu 'sao không giữ doi_tac': nếu hội đồng ép, phương án nhượng bộ hợp lý là tách doi_tac thành nhánh pilot riêng với luật dừng riêng về sai chính sách, không gộp vào pilot lần này.
+Về câu 'số giả lập thì kết luận còn giá trị gì': trả lời theo hướng ĐỘ BỀN của kết luận — ngay cả khi phút làm lại tăng gấp đôi (+51,8%), chi phí trong phạm vi vẫn dưới mốc 12.000 đ. Kết luận chỉ đảo chiều ở kịch bản xem lại 100%.
+Về câu 'vì sao tin 20/20': vì quy trình, không vì kết quả — hai người ngồi tách, 8 phút, không trao đổi, và cả 20 nhãn thống nhất khớp đáp án.
+Về câu 'rollback mất bao lâu': 30 phút, Giám đốc vận hành bấm cờ tắt, khách chuyển sang luồng nhân viên tự làm nên không gián đoạn dịch vụ.">
+  <p class="eyebrow">Hỏi đáp · nhóm câu khó</p>
+  <h2>Bốn câu hỏi khó và cách trả lời</h2>
+  <div class="qa">
+    <div class="qi"><p class="ask">“Phần lớn chi phí là số giả lập, vậy kết luận còn giá trị gì?”</p>
+      <p class="ans">Chúng tôi kiểm độ bền thay vì bảo vệ con số: ngay cả khi số ca làm lại <b>gấp đôi</b> (+51,8%, lên 6.787 đ), chi phí trong phạm vi vẫn dưới mốc 12.000 đ. Kết luận chỉ đảo chiều ở kịch bản xem lại 100%. Sau tuần 1 pilot sẽ thay bằng phút đo thật. <span class="by">→ Đức</span></p></div>
+    <div class="qi"><p class="ask">“Vì sao loại doi_tac khi nó vẫn rẻ hơn (0,85×)?”</p>
+      <p class="ans">Biên chỉ 15% trong khi tỉ lệ thành công 54,4% và khách đối tác có điều khoản riêng, nên rủi ro sai chính sách cao. Nếu hội đồng muốn giữ, chúng tôi đề nghị tách thành nhánh pilot riêng với luật dừng riêng, không gộp vào lần này. <span class="by">→ Long</span></p></div>
+    <div class="qi"><p class="ask">“Hai bộ nhãn trùng 20/20 — làm sao tin là gắn độc lập?”</p>
+      <p class="ans">Tin vào <b>quy trình</b>, không vào kết quả: hai người ngồi tách nhau, gắn trong 8 phút, không trao đổi, và hai bộ nhãn gốc được giữ nguyên trong <code>bang_loi.md</code>. Cả 20 nhãn thống nhất khớp đáp án năm loại PAIR. <span class="by">→ Hải</span></p></div>
+    <div class="qi"><p class="ask">“Nếu đang chạy mà có sự cố thì mất bao lâu để tắt?”</p>
+      <p class="ans"><b>30 phút</b>. Giám đốc vận hành bấm cờ tắt; mọi yêu cầu đang mở chuyển sang luồng nhân viên tự làm (6 phút, 12.000 đ/yêu cầu) nên khách không bị gián đoạn dịch vụ. <span class="by">→ Long</span></p></div>
+  </div>
+  <div class="foot"><span>Không đoán số · chưa tính thì nói chưa tính</span><span>16 / 17</span></div>
+</section>
+
+<!-- 17 -->
+<section class="slide tint" data-notes="ĐỔI VAI: nhóm n chấm nhóm n + 1. Chấm theo BẰNG CHỨNG, không theo cách trình bày.
+NGUYÊN TẮC CHẤM QUAN TRỌNG NHẤT: một đề xuất No-go có lý do bằng số được điểm CAO HƠN một đề xuất Go bỏ qua con số bất lợi. Đừng cho điểm cao chỉ vì nhóm kia tự tin hoặc slide đẹp.
+CÁCH LÀM NHANH: mở hồ sơ nhóm kia, với mỗi tiêu chí tìm MỘT con số làm bằng chứng rồi ghi vào cột lý do. Không có số thì không cho 10.
+BẪY HAY GẶP Ở NHÓM KHÁC, tìm đúng ba chỗ này: (1) dùng 0,37× hoặc tương đương mà chưa tính phần nhân viên làm thay; (2) chia pilot theo depot vì dễ triển khai, chỉ 6 cụm; (3) đặt ngưỡng an toàn tuyệt đối thấp hơn tỉ lệ nền.
+Long điền phiếu, Hải soát tiêu chí 2, Đức và Nhài đối chiếu số. Phải ghi lại câu trả lời của đội trình vào phiếu.">
+  <p class="eyebrow">Đổi vai · nhóm mình làm hội đồng</p>
+  <h2>Chấm nhóm n + 1 theo bằng chứng</h2>
+  <table class="t-sm">
+    <tr><th>Tiêu chí</th><th>0 điểm</th><th>5 điểm</th><th>10 điểm</th></tr>
+    <tr><td><b>Đề xuất khớp bằng chứng</b></td><td>Mâu thuẫn với số của chính nhóm</td><td>Khớp nhưng bỏ qua một con số bất lợi</td><td>Khớp, nêu cả con số bất lợi và cách xử lý</td></tr>
+    <tr><td><b>Số giả lập và phạm vi</b></td><td>Không nhãn, phạm vi “mọi yêu cầu”</td><td>Có nhãn <i>hoặc</i> có thu hẹp phạm vi</td><td>Nhãn ở mọi số giả lập, phạm vi thu hẹp có lý do bằng số</td></tr>
+    <tr><td><b>Pilot ra được quyết định</b></td><td>Không đối chứng hoặc thiếu cỡ mẫu</td><td>Đủ cỡ mẫu, luật dừng chung chung</td><td>Tách được tác động, đủ mẫu, luật dừng có ngưỡng, thời hạn, người có quyền dừng</td></tr>
+  </table>
+  <div class="two" style="margin-top:2.2vh">
+    <div class="card"><p class="head">Ba chỗ nên soi trước</p><p class="body">① Có dùng con số “chia cho việc đã xong” mà quên phần nhân viên làm thay không? ② Có chia pilot theo depot vì dễ triển khai không (chỉ 6 cụm)? ③ Ngưỡng an toàn có thấp hơn tỉ lệ nền không?</p></div>
+    <div class="card"><p class="head">Câu hỏi nhóm mình sẽ đặt</p><p class="body">“Với tỉ lệ mở lại hiện tại của chính các bạn, ngưỡng an toàn các bạn đặt có làm pilot dừng ngay tuần đầu không?” — ghi lại câu trả lời vào phiếu.</p></div>
+  </div>
+  <div class="foot"><span>No-go có lý do bằng số &gt; Go bỏ qua con số bất lợi · phiếu: report/team/phieu_cham.md</span><span>17 / 17</span></div>
+</section>
+
+<div id="bar"><i></i></div>
+<div id="help">← → di chuyển · <b>N</b> ghi chú · <b>F</b> toàn màn hình · <b>Ctrl+P</b> in</div>
+<div id="hud"><span id="cur">1</span> / <span id="tot">17</span></div>
+<div id="notes"><h4>Ghi chú cho người trình</h4><div id="ntext"></div></div>
+
+<script>
+(function(){
+  var s = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0, notes = document.getElementById('notes'), ntext = document.getElementById('ntext');
+  document.getElementById('tot').textContent = s.length;
+  function show(n){
+    i = Math.max(0, Math.min(s.length - 1, n));
+    s.forEach(function(el, k){ el.classList.toggle('on', k === i); });
+    document.getElementById('cur').textContent = i + 1;
+    document.querySelector('#bar i').style.width = ((i + 1) / s.length * 100) + '%';
+    ntext.textContent = s[i].getAttribute('data-notes') || '(không có ghi chú)';
+    try { location.hash = 'slide-' + (i + 1); } catch (e) {}
+  }
+  document.addEventListener('keydown', function(e){
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { show(i + 1); e.preventDefault(); }
+    else if (k === 'ArrowLeft' || k === 'PageUp') { show(i - 1); e.preventDefault(); }
+    else if (k === 'Home') { show(0); }
+    else if (k === 'End') { show(s.length - 1); }
+    else if (k === 'n' || k === 'N') { notes.classList.toggle('on'); }
+    else if (k === 'f' || k === 'F') {
+      if (document.fullscreenElement) { document.exitFullscreen(); }
+      else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
+    }
+  });
+  document.addEventListener('click', function(e){
+    if (e.target.closest('#notes') || e.target.closest('#help')) return;
+    show(i + (e.clientX > window.innerWidth / 2 ? 1 : -1));
+  });
+  var m = (location.hash || '').match(/slide-(\d+)/);
+  show(m ? parseInt(m[1], 10) - 1 : 0);
+})();
+</script>
+</body>
+</html>
