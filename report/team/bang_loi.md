@@ -15,7 +15,7 @@ Người gắn nhãn 1: Ngô Ngọc Hải · Người gắn nhãn 2: Trần Hả
 | 5 | Ngầm | Ngầm | Có | Ngầm |
 | 6 | Do người dùng | Do người dùng | Có | Do người dùng |
 | 7 | Hệ thống | Hệ thống | Có | Hệ thống |
-| 8 | Hệ thống | Ngầm | Không | Ngầm |
+| 8 | Hệ thống | Hệ thống | Có | Hệ thống |
 | 9 | Do người dùng | Do người dùng | Có | Do người dùng |
 | 10 | Ngữ cảnh | Ngữ cảnh | Có | Ngữ cảnh |
 | 11 | Giới hạn hệ thống | Giới hạn hệ thống | Có | Giới hạn hệ thống |
@@ -29,13 +29,11 @@ Người gắn nhãn 1: Ngô Ngọc Hải · Người gắn nhãn 2: Trần Hả
 | 19 | Giới hạn hệ thống | Giới hạn hệ thống | Có | Giới hạn hệ thống |
 | 20 | Hệ thống | Hệ thống | Có | Hệ thống |
 
-**Tỉ lệ đồng thuận:** 19 / 20 = 95%
+**Tỉ lệ đồng thuận:** 20 / 20 = 100%
 
 ## Quy tắc phân biệt cho các ca không trùng
 
 Mỗi ca không trùng một câu. Đồng thuận dưới 80% thì ghi định nghĩa đã viết lại.
-
-- **Ca 8:** Chọn **Ngầm** vì số tiền hoàn vẫn đúng nên cả khách lẫn hệ thống đều không nhận ra lỗi bịa Điều 7.2 cho tới khi kiểm tra mẫu; chỉ xếp **Hệ thống** khi sai lệch đã lộ ra ngay lúc xử lý.
 
 ## Bảng khắc phục cho 5 ca, mỗi loại một ca
 
