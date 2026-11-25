@@ -1,46 +1,36 @@
-# Báo cáo cá nhân — Ngô Ngọc Hải - 2A202603939
+﻿# Báo cáo cá nhân — NgoNgocHai-2A202603939
 
 ## 1. Thông tin thành viên
 
 - Họ tên: Ngô Ngọc Hải
 - MSSV: 2A202603939
-- Email:
-- Vai trong nhóm: **Người gắn nhãn 1** (CP3) · phụ trách chỉ số và danh sách event (CP5)
+- Email: <điền email>
+- Vai trong nhóm: Người gắn nhãn 1 (CP3) · chủ trì chỉ số và event (CP5).
 
 ## 2. Phần việc phụ trách
 
-- Gắn nhãn độc lập cả 20 ca lỗi trong 8 phút, không trao đổi với người gắn nhãn 2.
-- `report/team/bang_loi.md`: bộ nhãn 1, tỉ lệ đồng thuận, quy tắc phân biệt cho các ca không trùng, và bảng khắc phục 5 ca cùng người gắn nhãn 2.
-- `report/team/chi_so.md`: bảng đặc tả chỉ số E1, hai chỉ số tự đề xuất, danh sách tối thiểu 6 event đều có `trace_id`, và phần kiểm tra chéo chỉ số ↔ event.
-- Năm câu D2 "tách được tác động" trong phần chú thích `report/team/pilot_plan.yaml`.
-- Duyệt `pilot_plan.yaml` của nhóm: `yaml.safe_load` đọc được, hết dấu `?`, ba luật dừng đủ bốn vế.
+- `report/team/bang_loi.md` (bộ nhãn 1 + bảng khắc phục).
+- `report/team/chi_so.md` (E1 chỉ số + event).
+- Chú thích D2 trong `report/team/pilot_plan.yaml`.
 
 ## 3. Đóng góp cụ thể
 
-- **Gắn nhãn 20 ca (bộ nhãn 1):** (điền — gắn theo nguyên nhân gốc, không theo chỗ cần sửa)
-- **Tỉ lệ đồng thuận với người gắn nhãn 2:** (điền `… / 20 = …%`; yêu cầu từ 16/20)
-- **Quy tắc phân biệt cho các ca không trùng:** (điền mỗi ca một câu)
-- **Bảng khắc phục 5 ca:** (điền — mỗi dòng phải có cách phát hiện đo được gồm tên event, ngưỡng, tần suất, và một vai trò phụ trách)
-- **D2 — năm câu tách được tác động:** (điền)
-- **E1 và danh sách event:** (điền ba chỉ số kèm số của người kiểm số, hai chỉ số tự đề xuất, và các event đã liệt kê)
+- Gắn nhãn 20 ca độc lập (Do người dùng 1,6,9,14; Hệ thống 2,7,8,15,20; Ngữ cảnh 3,10,16,18; Giới hạn 4,11,13,19; Ngầm 5,12,17); đồng thuận 20/20 (100%) với Long.
+- Viết bảng khắc phục 5 ca (9,7,18,4,17) có event + ngưỡng + tần suất.
+- Điền E1 (3 chỉ số) + 10 event có `trace_id` và kiểm tra chéo chỉ số ↔ event.
+- Trả lời 5 câu D2.
 
 ## 4. Bằng chứng
 
-Commit, file, bảng hoặc con số do bạn làm.
-
-- (điền hash commit của nhánh `hai/cp3-nhan-loi`)
-- (điền ảnh chụp bộ nhãn độc lập ghi trước khi so với người gắn nhãn 2)
-- `report/team/bang_loi.md`, `report/team/chi_so.md`
+- `report/team/bang_loi.md`.
+- `report/team/chi_so.md`.
+- Phần `# D2` trong `report/team/pilot_plan.yaml`.
 
 ## 5. Công cụ AI đã dùng
 
-Công cụ nào, dùng vào việc gì, bạn tự kiểm tra kết quả ra sao.
-
-- **Công cụ:** (điền; nếu không dùng thì ghi rõ "không dùng")
-- **Dùng vào việc gì:** (điền — lưu ý: **không được** dùng AI để gắn nhãn 20 ca, vì `RULES.md` yêu cầu hai người gắn nhãn độc lập và cấm dùng AI bịa nhãn lỗi)
-- **Tự kiểm tra ra sao:** (điền)
-- **Không dùng AI để:** bịa số, bịa nhãn lỗi, hay bịa kết quả duyệt chéo.
+- Dùng trợ lý AI để gợi ý cách trình bày bảng, soát lỗi chính tả và định dạng event.
+- Tự kiểm tra lại bằng cách chạy `python lab13.py` đối chiếu số, đọc lại `bang_loi.md` và `chi_so.md`, so khớp nhãn giữa hai người gắn nhãn; không dùng AI để bịa số hay nhãn.
 
 ## 6. Tự đánh giá
 
-...
+- Hoàn thành phần gắn nhãn 1 và đặc tả chỉ số, event; nhãn và số khớp bộ nhãn 2 và output.

@@ -11,18 +11,18 @@
 #   e) Mức chênh 6 điểm (859 mỗi nhóm), 20 nhân viên mỗi nhóm: 20m / (0,98 + 0,02m) ≥ 859 → 2,82m ≥ 841,82 → m ≥ 299 yêu cầu/người (DE 6,96); nếu tác động thật chỉ 5 điểm thì power còn 0,64
 #
 # D2 · Năm câu kiểm tra "tách được tác động" với cách chia đã chọn (mỗi câu một dòng):
-#   1. Đối chứng chạy cùng thời gian:
-#   2. Chia ngẫu nhiên hay do người chọn:
-#   3. Ảnh hưởng gián tiếp và cách giảm:
-#   4. Chỉ số chính, ngưỡng, ngày quyết định đã viết trước:
-#   5. Ít nhất 20 cụm mỗi nhóm:
+#   1. Đối chứng chạy cùng thời gian: Có — 20 nhân viên đối chứng làm cùng tuần, cùng depot.
+#   2. Chia ngẫu nhiên hay do người chọn: Bốc thăm bằng code với seed ghi trước, phân tầng theo depot.
+#   3. Ảnh hưởng gián tiếp và cách giảm: Có rủi ro chia sẻ câu trả lời trong depot; giảm bằng quyền truy cập theo tài khoản và log lượt mở trợ lý theo staff_id.
+#   4. Chỉ số chính, ngưỡng, ngày quyết định đã viết trước: Có — chốt trước ngày bắt đầu.
+#   5. Ít nhất 20 cụm mỗi nhóm: Có, đúng 20.
 #
 # Đánh đổi đã chấp nhận (nếu cách chia chưa đạt cả hai điều kiện):
 #
 # Tỉ lệ mo_lai_trong_7_ngay hiện tại và ngưỡng an toàn đã chọn:
 
 pilot:
-  owner: "?"                      # một người có tên vai trò, không ghi "cả đội"
+  owner: "?"                      # một người có tên vai trò, không ghi tên tập thể
   scope: "Chỉ chạy cho noi_dia (2.696 đ = 0,22x mốc 12.000 đ, thành công 95,0%) và hang_nang (8.221 đ = 0,69x, thành công 74,1%) tại các depot nhóm chọn; loại quoc_te (22.515 đ = 1,88x, thành công 27,3%, chạy lại không giúp) và doi_tac (10.215 đ = 0,85x, sát ngưỡng và có điều khoản riêng) [simulated]"
   assignment:
     unit: "?"                     # request | staff | depot
