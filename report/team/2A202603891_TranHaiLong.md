@@ -4,7 +4,7 @@
 
 - Họ tên: Trần Hải Long
 - MSSV: 2A202603891
-- Email: <điền email>
+- Email: longhtr028@gmail.com
 - Vai trong nhóm: Người gắn nhãn 2 (CP3) · giữ hồ sơ launch v0.
 
 ## 2. Phần việc phụ trách
