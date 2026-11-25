@@ -260,3 +260,20 @@ if __name__ == '__main__':
     mo_lai_pv = pham_vi_d['mo_lai_trong_7_ngay']
     print(f'\nTi le mo_lai_trong_7_ngay hien tai: toan bo {mo_lai.mean():.2%} ({mo_lai.sum()}/{len(reqs)}) · '
           f'noi_dia + hang_nang {mo_lai_pv.mean():.2%} ({mo_lai_pv.sum()}/{len(pham_vi_d)})')
+
+    # ---------- Nhiệm vụ E1 · Ba chỉ số tính thử trên dữ liệu chạy thử ----------
+    # Đợt chạy thử không có nhóm đối chứng: chỉ được viết "chỉ số trong đợt chạy thử là …".
+    print('\nE1 · Ba chỉ số trong đợt chạy thử')
+    # Chính (kết quả): đóng trong 24 giờ VÀ không mở lại trong 7 ngày, mẫu số là mọi yêu cầu.
+    chinh = (reqs['dong_trong_24h'] == 1) & (reqs['mo_lai_trong_7_ngay'] == 0)
+    # Dùng: tỉ lệ bỏ qua gợi ý = (sua + bo) / số yêu cầu ĐƯỢC XEM LẠI (không phải 1.200).
+    # Ô trống của quyet_dinh_xem_lai đọc là '' nhờ keep_default_na=False.
+    xem = reqs[reqs['duoc_xem_lai'] == 1]
+    bo_qua = xem['quyet_dinh_xem_lai'].isin(['sua', 'bo'])
+    # An toàn: tỉ lệ lỗi lọt đến khách = mở lại trong 7 ngày, mẫu số là mọi yêu cầu.
+    an_toan = reqs['mo_lai_trong_7_ngay'] == 1
+    for ten, tu, mau in [('Chinh: dong 24h & khong mo lai 7 ngay', chinh.sum(), len(reqs)),
+                         ('Dung: bo qua goi y (sua + bo)', bo_qua.sum(), len(xem)),
+                         ('An toan: mo lai trong 7 ngay', an_toan.sum(), len(reqs))]:
+        print(f'{ten:40s} {tu / mau:7.2%} ({tu}/{mau})')
+    print('   Chi tiet quyet_dinh_xem_lai:', xem['quyet_dinh_xem_lai'].value_counts().to_dict())
