@@ -100,7 +100,41 @@ if __name__ == '__main__':
     ket_qua = mo_hinh(runs, reqs)
     for ten, gia_tri in ket_qua.items():
         print(f'{ten:12s} {gia_tri:>14,.0f}')
-    # TODO CP1 · Nhiệm vụ A3: tính lại theo từng giá trị của cột loai.
+    # ---------- Nhiệm vụ A3 · Tách theo loại yêu cầu ----------
+    print('\nA3 · Theo loại yêu cầu')
+    print(f'{"loai":10s} {"so_yc":>6s} {"ti_le_tc":>9s} {"chay/yc":>8s} {"cps":>9s} {"so_voi_12k":>11s}')
+    for loai in ['noi_dia', 'hang_nang', 'quoc_te', 'doi_tac']:
+        con = reqs[reqs['loai'] == loai]
+        r = mo_hinh(runs, con)
+        ti_le_tc = (con['ket_qua'] == 'thanh_cong').mean()
+        chay_moi_yc = con['so_lan_chay'].mean()
+        print(f'{loai:10s} {len(con):6d} {ti_le_tc:8.1%} {chay_moi_yc:8.2f} '
+              f'{r["cps"]:9,.0f} {r["cps"] / BASELINE:10.2f}x')
+
+    # Chạy lại có giúp không: tỉ lệ ok theo từng lần thử, tách theo loại.
+    print('\nA3 · Tỉ lệ ok theo lần thử (attempt)')
+    ok = runs.assign(ok=(runs['status'] == 'ok').astype(int)).merge(
+        reqs[['request_id', 'loai']], on='request_id')
+    print(ok.pivot_table(index='loai', columns='attempt', values='ok',
+                         aggfunc='mean').round(3).to_string())
+
+    # ---------- Nhiệm vụ A4 · Chi phí cố định trong phạm vi pilot ----------
+    CO_DINH_THANG = 40_000_000     # đồng / tháng
+    YC_MOI_THANG = 45_000          # yêu cầu / tháng ở quy mô đầy đủ
+    pham_vi = reqs[reqs['loai'].isin(['noi_dia', 'hang_nang'])]
+    r_pv = mo_hinh(runs, pham_vi)
+    tc_mau = r_pv['thanh_cong']                       # việc thành công trong mẫu 1.200
+    print('\nA4 · Chi phí cố định (phạm vi noi_dia + hang_nang)')
+    print(f'So yeu cau trong pham vi: {len(pham_vi)} · thanh cong: {tc_mau} · '
+          f'cps chua co dinh: {r_pv["cps"]:,.0f} d')
+    for ten, he_so in [('45.000 yc/thang', 1.0), ('mot nua khoi luong', 0.5)]:
+        tc_thang = YC_MOI_THANG * he_so * tc_mau / len(reqs)
+        co_dinh_moi_viec = CO_DINH_THANG / tc_thang
+        cps_tong = r_pv['cps'] + co_dinh_moi_viec
+        print(f'{ten:20s} tc/thang {tc_thang:9,.0f} · co dinh/viec {co_dinh_moi_viec:7,.0f} d '
+              f'· cps {cps_tong:8,.0f} d = {cps_tong / BASELINE:.2f}x')
+
+
     # TODO CP2 · Nhiệm vụ B: đổi từng yếu tố, ghi vào bảng độ nhạy.
     # TODO CP4 · Nhiệm vụ D: cỡ mẫu.
     #   from statsmodels.stats.proportion import proportion_effectsize
