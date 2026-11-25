@@ -23,7 +23,7 @@
 
 pilot:
   owner: "?"                      # một người có tên vai trò, không ghi "cả đội"
-  scope: "?"                      # loại yêu cầu nào, depot nào; dựa vào kết quả A3
+  scope: "Chỉ chạy cho noi_dia (2.696 đ = 0,22x mốc 12.000 đ, thành công 95,0%) và hang_nang (8.221 đ = 0,69x, thành công 74,1%) tại các depot nhóm chọn; loại quoc_te (22.515 đ = 1,88x, thành công 27,3%, chạy lại không giúp) và doi_tac (10.215 đ = 0,85x, sát ngưỡng và có điều khoản riêng) [simulated]"
   assignment:
     unit: "?"                     # request | staff | depot
     control_share: 0.5

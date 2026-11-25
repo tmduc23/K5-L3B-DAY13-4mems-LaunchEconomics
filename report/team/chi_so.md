@@ -35,5 +35,5 @@ Viết "chỉ số trong đợt chạy thử là …", không viết "trợ lý 
 
 | Rủi ro | Tác động đã tính | Dấu hiệu theo dõi | Hành động | Người phụ trách |
 | --- | --- | --- | --- | --- |
-| ... | ... | ... | ... | ... |
-| ... | ... | ... | ... | ... |
+| Số ca làm lại tăng gấp đôi | B1 trên toàn mẫu: **+51,8%**, lên **6.787 đ/việc thành công** [simulated]. | Tỉ lệ `lam_lai` trên các yêu cầu trong phạm vi đạt **9,8%** trong một tuần, khoảng gấp đôi mốc 48/982 ca trong đợt chạy thử. | Tạm hoãn tăng lưu lượng, rà trace ca làm lại theo loại yêu cầu và xử lý nguyên nhân trước khi tăng tiếp. | PM trợ lý hoàn phí |
+| Phải xem lại toàn bộ gợi ý đủ điều kiện | B4: **11.743 đ/việc thành công** với 9 phút làm lại mỗi ca, lên **12.516 đ = 1,04×** mốc thủ công khi dùng số phút làm lại trung bình trong phạm vi [simulated]. | Trong một tuần, **100%** yêu cầu có ít nhất một lần chạy `ok` được xem lại và thời gian xem lại trung bình đạt **5 phút** hoặc hơn. | Giữ mức lưu lượng hiện tại, đo phút xem lại và làm lại thực tế, rồi rút ngắn bước xem lại và đo lại trước khi tăng tiếp. | Trưởng nhóm CSKH |

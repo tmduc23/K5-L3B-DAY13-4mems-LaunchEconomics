@@ -17,13 +17,14 @@
 
 ## 3. Đóng góp cụ thể
 
-- **Hồ sơ launch v0:** (điền — bảy mục đã điền, nêu rõ mục nào ghi trạng thái Giả lập và vì sao)
-- **Mục 1 và 3 của hồ sơ:** chi phí mỗi việc thành công 4.472 đ [simulated]; so với nhân viên tự làm dùng chi phí cả hệ thống 5.865 đ/yêu cầu = **0,49×** của 12.000 đ, không dùng 0,37× vì con số đó chưa tính 222 yêu cầu nhân viên phải làm thay.
-- **Gắn nhãn 20 ca (bộ nhãn 2):** (điền)
-- **Bảng khắc phục 5 ca:** (điền — mỗi loại lỗi một ca)
-- **E2 rủi ro kinh tế:** (điền ít nhất hai dòng, mỗi dòng đủ tác động đã tính, dấu hiệu theo dõi có ngưỡng, hành động, người phụ trách)
-- **Đề xuất cuối:** (điền Go / Go có điều kiện / No-go, kèm con số bất lợi của nhóm và cách xử lý)
-- **Phiếu chấm hội đồng:** (điền nhóm đã chấm, điểm từng tiêu chí và lý do có số)
+- **Hồ sơ launch v0:** đã điền thông tin nhóm `4mems · L3B` và hoàn thành các mục 1, 2, 3, 7 trong `report/team/ho_so_launch_v0.md` (đều ghi trạng thái `Giả lập` vì tính từ hai cột `_simulated`); các mục 4, 5, 6 và đề xuất cuối sẽ điền tiếp sau CP3–CP5.
+- **Mục 1, 2 và 3 của hồ sơ:** mục 1 là **4.472 đ/việc thành công** [simulated, A2]; mục 2 nêu 3 yếu tố nhạy nhất (+51,8% làm lại ×2, +40,7% xem lại ×2, +23,1% lương +25%) [simulated, B1–B2]; mục 3 dùng phạm vi `noi_dia` + `hang_nang` ở quy mô 45.000 yêu cầu/tháng là **5.217 đ/yêu cầu = 0,43×** mốc 12.000 đ (đã gồm chi phí cố định và 82/982 ca nhân viên làm thay) [simulated, A4].
+- **Phạm vi pilot (`scope` trong `pilot_plan.yaml`):** thu hẹp vào `noi_dia` (0,22×) và `hang_nang` (0,69×); loại `quoc_te` (1,88×, thành công 27,3%) và `doi_tac` (0,85×, sát ngưỡng và có điều khoản riêng) [simulated, A3].
+- **Gắn nhãn 20 ca (bộ nhãn 2):** (chờ gắn nhãn độc lập lúc 15:35–15:43)
+- **Bảng khắc phục 5 ca:** (chờ hoàn thiện cùng Hải lúc 15:43–16:08)
+- **E2 rủi ro kinh tế:** đã điền 2 dòng trong `report/team/chi_so.md` lấy số từ B1 (+51,8% lên 6.787 đ/việc thành công, ngưỡng `lam_lai` 9,8%/tuần, PM trợ lý hoàn phí) và B4 (xem lại 100% lên 11.743–12.516 đ = 1,04×, ngưỡng 100% xem lại và ≥ 5 phút/lần, Trưởng nhóm CSKH).
+- **Đề xuất cuối:** (chờ tổng hợp sau CP4–CP5)
+- **Phiếu chấm hội đồng:** (chờ duyệt chéo lúc 17:00–17:45)
 
 ## 4. Bằng chứng
 
