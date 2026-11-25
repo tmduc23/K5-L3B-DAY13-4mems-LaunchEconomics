@@ -3,11 +3,12 @@
 # Kiểm tra đọc được: python -c "import yaml; yaml.safe_load(open('../report/team/pilot_plan.yaml'))"
 #
 # D1 · Cỡ mẫu (baseline 0,70; mục tiêu +5 điểm; alpha 0,05; power 0,8; ICC 0,02)
-#   a) Chia theo yêu cầu:
-#   b) Theo nhân viên, m = 75:
-#   c) 20 nhân viên mỗi nhóm:
-#   d) 6 depot mỗi nhóm:
-#   e) Mức chênh 6 điểm (859 mỗi nhóm), 20 nhân viên mỗi nhóm:
+#   (tính bằng co_mau(), he_so_thiet_ke(), m_toi_thieu() trong src/lab13.py, phần "D1 · Cỡ mẫu mỗi nhóm")
+#   a) Chia theo yêu cầu: co_mau(0.70, 0.75) = 1.251 yêu cầu mỗi nhóm (DE = 1)
+#   b) Theo nhân viên, m = 75: DE = 1 + 74 × 0,02 = 2,48; n = 1.251 × 2,48 = 3.103 mỗi nhóm = 42 người/nhóm, tổng 84 > 40 → không đủ người
+#   c) 20 nhân viên mỗi nhóm: trần c / ICC = 20 / 0,02 = 1.000 < 1.251 → không đạt mức chênh 5 điểm
+#   d) 6 depot mỗi nhóm: trần 6 / 0,02 = 300 → loại (chỉ 6 cụm, dưới 20)
+#   e) Mức chênh 6 điểm (859 mỗi nhóm), 20 nhân viên mỗi nhóm: 20m / (0,98 + 0,02m) ≥ 859 → 2,82m ≥ 841,82 → m ≥ 299 yêu cầu/người (DE 6,96); nếu tác động thật chỉ 5 điểm thì power còn 0,64
 #
 # D2 · Năm câu kiểm tra "tách được tác động" với cách chia đã chọn (mỗi câu một dòng):
 #   1. Đối chứng chạy cùng thời gian:

@@ -93,6 +93,35 @@ def mo_hinh(runs, reqs, gia_vao=26, gia_ra=130, gia_tool=15, luong_phut=2000,
     )
 
 
+# ---------- Nhiệm vụ D1 · Cỡ mẫu ----------
+# TODO CP4 (người viết code phiên 2): cỡ mẫu so hai tỉ lệ và các giới hạn khi chia theo cụm.
+ICC = 0.02
+
+
+def co_mau(p1, p2, alpha=0.05, power=0.8):
+    """Cỡ mẫu MỖI NHÓM để phát hiện chênh p1 → p2 (kiểm định hai phía, so hai tỉ lệ).
+    n = (z_{1-α/2}·√(2·p̄(1−p̄)) + z_{1-β}·√(p1(1−p1) + p2(1−p2)))² ÷ (p2 − p1)², làm tròn lên."""
+    from statistics import NormalDist
+    za = NormalDist().inv_cdf(1 - alpha / 2)    # 1,95996
+    zb = NormalDist().inv_cdf(power)            # 0,84162
+    pb = (p1 + p2) / 2
+    tu = (za * math.sqrt(2 * pb * (1 - pb)) + zb * math.sqrt(p1 * (1 - p1) + p2 * (1 - p2))) ** 2
+    return math.ceil(tu / (p2 - p1) ** 2)
+
+
+def he_so_thiet_ke(m, icc=ICC):
+    """DE = 1 + (m − 1)·ICC, m là số yêu cầu mỗi cụm."""
+    return 1 + (m - 1) * icc
+
+
+def m_toi_thieu(n_can, so_cum, icc=ICC):
+    """m nhỏ nhất để c·m / (1 + (m − 1)·ICC) ≥ n_can.
+    Biến đổi: c·m ≥ n·(1 − ICC) + n·ICC·m → m ≥ n·(1 − ICC) / (c − n·ICC). Vô nghiệm nếu c ≤ n·ICC (vượt trần c/ICC)."""
+    if so_cum <= n_can * icc:
+        return None
+    return math.ceil(n_can * (1 - icc) / (so_cum - n_can * icc))
+
+
 if __name__ == '__main__':
     runs = pd.read_csv('logix_runs.csv')
     reqs = pd.read_csv('logix_requests.csv', keep_default_na=False)
@@ -193,6 +222,41 @@ if __name__ == '__main__':
               f'= {tong / tc_pv / BASELINE:.2f}x · hoa von khi xem lai <= {hoa_von:.1f} phut')
 
 
-    # TODO CP4 · Nhiệm vụ D: cỡ mẫu.
-    #   from statsmodels.stats.proportion import proportion_effectsize
-    #   from statsmodels.stats.power import NormalIndPower
+    # ---------- Nhiệm vụ D1 · Cỡ mẫu (baseline 0,70; +5 điểm; alpha 0,05; power 0,8; ICC 0,02) ----------
+    SO_NHAN_VIEN = 40
+    print('\nD1 · Cỡ mẫu mỗi nhóm')
+    # a) Chia theo yêu cầu: mỗi yêu cầu độc lập, DE = 1.
+    n_a = co_mau(0.70, 0.75)
+    print(f'a) Chia theo yeu cau: co_mau(0.70, 0.75) = {n_a:,} yeu cau/nhom')
+
+    # b) Chia theo nhân viên, mỗi người 75 yêu cầu: nhân cỡ mẫu với DE.
+    de_b = he_so_thiet_ke(75)
+    n_b = math.ceil(n_a * de_b)
+    nv_b = math.ceil(n_b / 75)
+    print(f'b) Theo nhan vien, m = 75: DE = 1 + 74 x {ICC} = {de_b:.2f}; n = {n_a:,} x {de_b:.2f} = {n_b:,}/nhom '
+          f'= {nv_b} nguoi/nhom, tong {2 * nv_b} > {SO_NHAN_VIEN} -> KHONG du nguoi')
+
+    # c), d) Trần cỡ mẫu hiệu dụng: c·m/DE tiến tới c/ICC khi m → ∞, không bao giờ vượt.
+    tran_c, tran_d = 20 / ICC, 6 / ICC
+    print(f'c) 20 nhan vien/nhom: tran c/ICC = 20/{ICC} = {tran_c:,.0f} '
+          f'{"<" if tran_c < n_a else ">="} {n_a:,} -> {"KHONG dat" if tran_c < n_a else "dat"} muc chenh 5 diem')
+    print(f'd) 6 depot/nhom: tran 6/{ICC} = {tran_d:,.0f} -> loai (chi 6 cum, duoi 20)')
+
+    # e) Nâng mức chênh lên 6 điểm, giữ 20 nhân viên mỗi nhóm: tìm m.
+    n_e = co_mau(0.70, 0.76)
+    m_e = m_toi_thieu(n_e, 20)
+    print(f'e) Muc chenh 6 diem: co_mau(0.70, 0.76) = {n_e:,}/nhom; 20m/(1 + (m-1) x {ICC}) >= {n_e} '
+          f'-> m >= {m_e} yeu cau/nguoi (DE {he_so_thiet_ke(m_e):.2f})')
+
+    # Con số bất lợi: nếu tác động thật chỉ 5 điểm mà thiết kế cho 6 điểm (n hiệu dụng = 859).
+    from statsmodels.stats.power import NormalIndPower
+    from statsmodels.stats.proportion import proportion_effectsize
+    power_5 = NormalIndPower().power(effect_size=proportion_effectsize(0.75, 0.70), nobs1=n_e, alpha=0.05)
+    print(f'   Danh doi: neu tac dong that chi 5 diem, power voi n = {n_e} chi con {power_5:.2f}')
+
+    # Tỉ lệ mở lại 7 ngày hiện tại — phải có TRƯỚC khi đặt ngưỡng an toàn trong luật dừng.
+    pham_vi_d = reqs[reqs['loai'].isin(['noi_dia', 'hang_nang'])]
+    mo_lai = reqs['mo_lai_trong_7_ngay']
+    mo_lai_pv = pham_vi_d['mo_lai_trong_7_ngay']
+    print(f'\nTi le mo_lai_trong_7_ngay hien tai: toan bo {mo_lai.mean():.2%} ({mo_lai.sum()}/{len(reqs)}) · '
+          f'noi_dia + hang_nang {mo_lai_pv.mean():.2%} ({mo_lai_pv.sum()}/{len(pham_vi_d)})')
