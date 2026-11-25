@@ -35,6 +35,9 @@ Người gắn nhãn 1: Ngô Ngọc Hải · Người gắn nhãn 2: Trần Hả
 
 Mỗi ca không trùng một câu. Đồng thuận dưới 80% thì ghi định nghĩa đã viết lại.
 
+- **Không có ca không trùng:** hai bộ nhãn độc lập khớp cả 20/20 ca, trên mốc 80% nên nhóm không phải viết lại định nghĩa.
+- Quy tắc hai người dùng cho cặp dễ lẫn nhất, **Hệ thống** và **Ngầm**: lỗi đã **lộ ra** cho người dùng hoặc nhân viên (ca 8 trích dẫn điều khoản bịa nhìn thấy được, ca 15 nhân viên bắt được) thì là **Hệ thống**, dù số tiền hoàn vẫn đúng; **Ngầm** chỉ dùng khi không ai nhận ra cho tới lúc kiểm tra mẫu (ca 12 chi phí gấp 3 suốt 3 tuần, ca 17 sai bảng giá trong bộ nhớ đệm). Tiêu chí là "có ai thấy được hay không", không phải "số tiền có đúng hay không".
+
 ## Bảng khắc phục cho 5 ca, mỗi loại một ca
 
 Cách phát hiện phải đo được (event, ngưỡng, tần suất). Người phụ trách là một vai trò, không ghi tên tập thể.

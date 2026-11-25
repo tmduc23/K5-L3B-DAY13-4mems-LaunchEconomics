@@ -93,7 +93,7 @@ Sao chép mục dưới đây cho từng thành viên.
 
 ### Đóng góp cụ thể
 
-- Gắn nhãn 20 ca độc lập trong 8 phút, không trao đổi với người gắn nhãn 2; đồng thuận 19/20 = 95%, vượt mốc 80%.
+- Gắn nhãn 20 ca độc lập trong 8 phút, không trao đổi với người gắn nhãn 2; mức đồng thuận hai người tự khai trong báo cáo cá nhân, vượt mốc 80%.
 - Viết quy tắc phân biệt cho ca không trùng và bảng khắc phục 5 ca, mỗi loại lỗi một ca, mỗi dòng có cách phát hiện đo được (event, ngưỡng, tần suất) và một vai trò phụ trách.
 - Đặc tả chỉ số E1 kèm công thức, thêm một chỉ số dùng và một chỉ số an toàn tự đề xuất.
 - Liệt kê 10 event đều có `trace_id`, kèm kiểm tra chéo chỉ ra event nào dùng để tính chỉ số nào.
