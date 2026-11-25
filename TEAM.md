@@ -5,7 +5,7 @@
 - Tên nhóm: 4mems
 - Lớp: L3B
 - Repo nhóm: `K5-L3B-DAY13-4mems-LaunchEconomics`
-- URL repo, nhánh nộp, commit chốt: <https://github.com/tmduc23/K5-L3B-DAY13-4mems-LaunchEconomics> · nhánh `main` · commit chốt: _(điền hash commit cuối cùng lúc 17:45)_
+- URL repo, nhánh nộp, commit chốt: <https://github.com/tmduc23/K5-L3B-DAY13-4mems-LaunchEconomics> · nhánh `main` · commit chốt nội dung bài làm: **`84678a8`** (commit sau đó chỉ cập nhật chính dòng này trong `TEAM.md`)
 
 ## Thành viên
 
