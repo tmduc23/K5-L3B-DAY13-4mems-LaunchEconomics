@@ -4,7 +4,7 @@
 
 - Họ tên: Ngô Ngọc Hải
 - MSSV: 2A202603939
-- Email: <điền email>
+- Email: 26ai.hainn2@vinuni.edu.vn
 - Vai trong nhóm: Người gắn nhãn 1 (CP3) · chủ trì chỉ số và event (CP5).
 
 ## 2. Phần việc phụ trách
