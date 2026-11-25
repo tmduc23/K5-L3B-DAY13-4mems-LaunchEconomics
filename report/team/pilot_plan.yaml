@@ -22,11 +22,13 @@
 #   nên tràn tác động; chia theo depot thì quá ít cụm. Căn cứ bằng số: xem D1 câu c, d, e ở trên.
 #
 # Đánh đổi đã chấp nhận (nếu cách chia chưa đạt cả hai điều kiện):
-#   (NGƯỜI KIỂM SỐ điền: trần cỡ mẫu hiệu dụng của cách chia đã chọn so với cỡ mẫu cần cho 5 điểm;
-#    mức chênh nhóm chấp nhận thay thế và n tương ứng; power còn lại nếu tác động thật chỉ là 5 điểm)
+#   Chia theo nhân viên 20 + 20 có trần cỡ mẫu hiệu dụng 20 / 0,02 = 1.000 < 1.251 cần cho mức chênh 5 điểm → không đủ mẫu cho 5 điểm.
+#   Chấp nhận mức chênh 6 điểm (0,70 → 0,76): cần 859 mỗi nhóm, đạt được khi mỗi nhân viên xử lý m ≥ 299 yêu cầu (DE 6,96).
+#   Con số bất lợi: nếu tác động thật chỉ 5 điểm thì power còn 0,64 (NormalIndPower, n = 859), tức khoảng 1/3 khả năng bỏ sót.
+#   Giám đốc vận hành ký chấp nhận đánh đổi này trước ngày bắt đầu.
 #
 # Tỉ lệ mo_lai_trong_7_ngay hiện tại và ngưỡng an toàn đã chọn:
-#   Hiện tại: (NGƯỜI KIỂM SỐ điền tỉ lệ toàn mẫu và tỉ lệ trong phạm vi noi_dia + hang_nang, ghi nhãn simulated)
+#   Hiện tại (tính bằng src/lab13.py, dữ liệu chạy thử giả lập): 4,25% toàn mẫu (51/1.200) · 3,97% trong phạm vi noi_dia + hang_nang (39/982)
 #   Ngưỡng đã chọn: so với nhóm đối chứng, chênh ≥ 2 điểm phần trăm, kèm trần tuyệt đối 6%.
 #   Lý do không dùng ngưỡng tuyệt đối thấp: tỉ lệ nền hiện tại đã cao hơn 3%, đặt 3% là pilot dừng ngay tuần đầu.
 
@@ -41,12 +43,12 @@ pilot:
   primary_metric:
     name: dong_trong_24h_khong_mo_lai_7_ngay
     baseline: 0.70
-    mde: 0.05                     # NGƯỜI KIỂM SỐ: đổi theo mức chênh nhóm thật sự chốt được ở D1 câu e
+    mde: 0.06                     # đánh đổi đã chấp nhận: 20 cụm chỉ đạt trần 1.000 < 1.251 cần cho 0.05 (D1 câu c, e)
     alpha: 0.05
     power: 0.80
-    n_per_arm: "?"                # NGƯỜI KIỂM SỐ: cỡ mẫu mỗi nhóm của cách chia theo nhân viên (D1 câu e)
-    design_effect: "?"            # NGƯỜI KIỂM SỐ: 1 + (m - 1) × ICC với m đã chốt
-    clusters_per_arm: "?"         # NGƯỜI KIỂM SỐ: số nhân viên mỗi nhóm
+    n_per_arm: 859                # co_mau(0.70, 0.76), cỡ mẫu hiệu dụng mỗi nhóm (D1 câu e)
+    design_effect: 6.96           # 1 + (299 - 1) × 0,02, với m = 299 yêu cầu mỗi nhân viên
+    clusters_per_arm: 20          # 20 nhân viên mỗi nhóm; cần ≥ 299 yêu cầu/người, tức ≥ 5.980 yêu cầu mỗi nhóm
   identifiability:
     concurrent_control: "Có: 20 nhân viên đối chứng làm cùng tuần, cùng depot, cùng loại yêu cầu"
     spillover_risk: "Có rủi ro nhân viên trong cùng depot chia sẻ câu trả lời của trợ lý; giảm bằng quyền truy cập theo tài khoản và log lượt mở trợ lý theo staff_id, kiểm hằng tuần"
